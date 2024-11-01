@@ -15,6 +15,7 @@ import com.uoc.tfm.vds_backend.auth.model.AuthResponse;
 import com.uoc.tfm.vds_backend.auth.model.LoginRequest;
 import com.uoc.tfm.vds_backend.jwt.JwtService;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
+import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/auth")
