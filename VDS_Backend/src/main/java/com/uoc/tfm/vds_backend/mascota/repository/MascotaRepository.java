@@ -13,4 +13,6 @@ import com.uoc.tfm.vds_backend.mascota.model.Mascota;
 public interface MascotaRepository extends JpaRepository <Mascota, Long> {
     Optional<Mascota> findByNumChip(String numChip);
     List<Mascota> findByNombre(String nombre);
+
+    // AÑADIR PARA BUSCAR MASCOTAS
 }

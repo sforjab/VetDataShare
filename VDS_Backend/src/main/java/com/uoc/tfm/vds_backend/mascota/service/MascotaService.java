@@ -44,6 +44,8 @@ public class MascotaService {
         
         return usuario.get().getMascotas();
     }
+
+    // AÑADIR PARA BUSCAR MASCOTAS
     
     @Transactional
     public Optional<Mascota> createMascota(Mascota mascota) {       

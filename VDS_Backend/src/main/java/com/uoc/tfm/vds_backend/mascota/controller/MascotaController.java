@@ -74,6 +74,8 @@ public class MascotaController {
         }
     }
 
+    // AÑADIR PARA BUSCAR MASCOTAS
+
     @PostMapping("/create")
     public ResponseEntity<Object> createMascota(@RequestBody Mascota mascota) {
         Optional<Mascota> mascotaCreada = mascotaService.createMascota(mascota);

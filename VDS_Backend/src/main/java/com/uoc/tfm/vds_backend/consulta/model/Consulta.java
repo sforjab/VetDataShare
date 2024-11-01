@@ -36,9 +36,6 @@ public class Consulta {
     @Column(nullable = false)
     private String motivo; // Motivo de la consulta
 
-    @Column(length = 1000)
-    private String observaciones; // Observaciones públicas realizadas por el veterinario (QUITARLAS???)
-
     @Column(length = 500)
     private String notas; // Anotaciones privadas realizadas por el veterinario
 
