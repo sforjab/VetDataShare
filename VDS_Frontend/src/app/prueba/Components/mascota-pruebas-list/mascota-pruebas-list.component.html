@@ -1,0 +1,49 @@
+<div class="pruebas-container" *ngIf="pruebas.length > 0">
+    <h2>Pruebas Realizadas</h2>
+  
+    <table mat-table [dataSource]="pruebas" class="mat-elevation-z8">
+      <!-- Tipo de Prueba -->
+      <ng-container matColumnDef="tipo">
+        <th mat-header-cell *matHeaderCellDef> Tipo de Prueba </th>
+        <td mat-cell *matCellDef="let prueba"> {{ prueba.tipo }} </td>
+      </ng-container>
+  
+      <!-- Fecha de la Prueba -->
+      <ng-container matColumnDef="fecha">
+        <th mat-header-cell *matHeaderCellDef> Fecha </th>
+        <td mat-cell *matCellDef="let prueba"> {{ prueba.fecha | date: 'dd/MM/yyyy' }} </td>
+      </ng-container>
+  
+      <!-- Consulta Asociada -->
+      <ng-container matColumnDef="consulta">
+        <th mat-header-cell *matHeaderCellDef> Consulta Asociada </th>
+        <td mat-cell *matCellDef="let prueba">
+          <button mat-button *ngIf="prueba.consultaId" (click)="navegarConsulta(prueba.consultaId)">
+            Ver Consulta
+          </button>
+          <span *ngIf="!prueba.consultaId">N/A</span>
+        </td>
+      </ng-container>
+  
+      <!-- Acciones -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let prueba">
+          <button mat-button (click)="navegarDetallePrueba(prueba.id)">
+            Ver Detalles
+          </button>
+        </td>
+      </ng-container>
+  
+      <!-- Header -->
+      <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
+      <!-- Filas -->
+      <tr mat-row *matRowDef="let prueba; columns: columnasTabla;"></tr>
+    </table>
+</div>
+
+<!-- Mensaje cuando no hay pruebas -->
+<div *ngIf="pruebas.length === 0">
+    <p>No se encontraron pruebas para esta mascota.</p>
+</div>
+  
