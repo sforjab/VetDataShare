@@ -1,0 +1,25 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Ocupa toda la altura de la pantalla */
+    text-align: center;
+  }
+  
+  .dashboard-buttons {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap; /* Para que los botones se ajusten en pantallas más pequeñas */
+    width: 100%;
+    max-width: 600px; /* Limitar el ancho máximo del contenedor */
+  }
+  
+  button {
+    margin: 10px;
+    width: 200px; /* Tamaño de los botones */
+    height: 50px;
+    cursor: pointer;
+    font-size: 16px; /* Ajustar el tamaño de la fuente */
+  }
+  

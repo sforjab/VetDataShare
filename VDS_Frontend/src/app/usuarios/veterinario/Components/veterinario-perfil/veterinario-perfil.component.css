@@ -1,0 +1,30 @@
+.perfil-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px; // Añadido padding para evitar que los campos queden muy pegados al borde
+  }
+  
+  .perfil-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 80%;
+    max-width: 800px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  .action-buttons {
+    grid-column: span 2; // Los botones ocupan ambas columnas
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  button {
+    min-width: 120px;
+  }
+  

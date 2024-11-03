@@ -1,0 +1,44 @@
+<div class="perfil-container">
+    <form class="perfil-form" #perfilForm="ngForm">
+      <!-- Número de Identificación -->
+      <mat-form-field appearance="fill">
+        <mat-label>Número de Identificación</mat-label>
+        <input matInput [(ngModel)]="usuario.numIdent" name="numIdent" required>
+      </mat-form-field>
+  
+      <!-- Número de Colegiado -->
+      <mat-form-field appearance="fill">
+        <mat-label>Número de Colegiado</mat-label>
+        <input matInput [(ngModel)]="usuario.numColegiado" name="numColegiado" required>
+      </mat-form-field>
+  
+      <!-- Nombre -->
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="usuario.nombre" name="nombre" required>
+      </mat-form-field>
+  
+      <!-- Primer Apellido -->
+      <mat-form-field appearance="fill">
+        <mat-label>Primer Apellido</mat-label>
+        <input matInput [(ngModel)]="usuario.apellido1" name="apellido1" required>
+      </mat-form-field>
+  
+      <!-- Segundo Apellido -->
+      <mat-form-field appearance="fill">
+        <mat-label>Segundo Apellido</mat-label>
+        <input matInput [(ngModel)]="usuario.apellido2" name="apellido2">
+      </mat-form-field>
+  
+      <!-- Botones de acción -->
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" (click)="guardarPerfil()" [disabled]="!perfilForm.form.valid">
+          Guardar
+        </button>
+        <button mat-raised-button color="accent" (click)="volver()">
+          Volver
+        </button>
+      </div>
+    </form>
+</div>
+  

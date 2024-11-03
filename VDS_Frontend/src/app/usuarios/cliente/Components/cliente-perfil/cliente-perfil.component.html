@@ -1,0 +1,38 @@
+<div class="perfil-container">
+    <form class="perfil-form">
+      <mat-form-field appearance="fill">
+        <mat-label>Número de identificación</mat-label>
+        <input matInput [(ngModel)]="usuario.numIdent" name="numIdent" readonly>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="usuario.nombre" name="nombre" readonly>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Primer apellido</mat-label>
+        <input matInput [(ngModel)]="usuario.apellido1" name="apellido1" readonly>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Segundo apellido</mat-label>
+        <input matInput [(ngModel)]="usuario.apellido2" name="apellido2" readonly>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Dirección</mat-label>
+        <input matInput [(ngModel)]="usuario.direccion" name="direccion" readonly>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Teléfono</mat-label>
+        <input matInput [(ngModel)]="usuario.telefono" name="telefono" readonly>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="usuario.email" name="email" readonly>
+      </mat-form-field>
+    </form>
+</div>

@@ -1,0 +1,13 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;   /* Coloca los botones uno debajo del otro */
+    justify-content: center;  /* Centra los botones verticalmente */
+    align-items: center;      /* Centra los botones horizontalmente */
+    height: 100vh;            /* Asegura que ocupe toda la altura de la pantalla */
+  }
+  
+  button {
+    margin-bottom: 20px;      /* Agrega un margen inferior entre los botones */
+    width: 200px;             /* Define un ancho fijo para que todos los botones tengan el mismo tamaño */
+}
+  
