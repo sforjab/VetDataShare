@@ -26,8 +26,18 @@ const routes: Routes = [
   {
     path: 'mascota', 
     loadChildren: () => import('./mascota/mascota.module').then(m => m.MascotaModule),
-    /* canActivate: [AuthGuard],  // Cualquiera que esté autenticado puede acceder
-    data: { roles: ['CLIENTE', 'VETERINARIO', 'ADMIN', 'ADMIN_CLINICA'] } */
+  },
+  {
+    path: 'consulta', 
+    loadChildren: () => import('./consulta/consulta.module').then(m => m.ConsultaModule),
+  },
+  {
+    path: 'prueba', 
+    loadChildren: () => import('./prueba/prueba.module').then(m => m.PruebaModule),
+  },
+  {
+    path: 'vacuna', 
+    loadChildren: () => import('./vacuna/vacuna.module').then(m => m.VacunaModule),
   },
 ];
 

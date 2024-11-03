@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px; // Añadido padding para evitar que los campos queden muy pegados al borde
+    padding: 40px; /* Añadido padding para evitar que los campos queden muy pegados al borde */
   }
   
   .perfil-form {
@@ -18,7 +18,7 @@
   }
   
   .action-buttons {
-    grid-column: span 2; // Los botones ocupan ambas columnas
+    grid-column: span 2; /* Los botones ocupan ambas columnas */
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
