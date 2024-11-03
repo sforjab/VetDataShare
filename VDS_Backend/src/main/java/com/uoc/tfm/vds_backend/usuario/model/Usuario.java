@@ -52,13 +52,10 @@ public class Usuario implements UserDetails {
     
     private String apellido2;
 
-    @Column(nullable = false)
     private String direccion;
 
-    @Column(nullable = false)
     private String telefono;
 
-    @Column(nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
