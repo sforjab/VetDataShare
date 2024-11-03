@@ -19,7 +19,8 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-     @Autowired
+    
+    @Autowired
     Dotenv dotenv;
 
     private Key getSigningKey() {

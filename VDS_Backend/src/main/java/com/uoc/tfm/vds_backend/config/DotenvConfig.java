@@ -9,6 +9,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class DotenvConfig {
     @Bean
     public Dotenv dotenv() {
-        return Dotenv.load();
+        return Dotenv.configure()
+                 .directory(System.getProperty("user.dir") + "/VDS_Backend")
+                 .load();
     }
 }

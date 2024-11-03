@@ -1,4 +1,4 @@
-package com.uoc.tfm.vet_connect.clinica.service;
+package com.uoc.tfm.vds_backend.clinica.service;
 
 import java.util.Optional;
 
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.uoc.tfm.vet_connect.clinica.model.Clinica;
-import com.uoc.tfm.vet_connect.clinica.repository.ClinicaRepository;
+import com.uoc.tfm.vds_backend.clinica.model.Clinica;
+import com.uoc.tfm.vds_backend.clinica.repository.ClinicaRepository;
 
 @Service
 public class ClinicaService {
