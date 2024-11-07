@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './Components/home/home.component';
+import { AccesoRestringidoComponent } from './shared/Components/acceso-restringido/acceso-restringido.component';
 
 const routes: Routes = [
   {
@@ -39,6 +40,10 @@ const routes: Routes = [
     path: 'vacuna', 
     loadChildren: () => import('./vacuna/vacuna.module').then(m => m.VacunaModule),
   },
+  {
+    path: 'acceso-no-autorizado',
+    component: AccesoRestringidoComponent,
+  }
 ];
 
 @NgModule({

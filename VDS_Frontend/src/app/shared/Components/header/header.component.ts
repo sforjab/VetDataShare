@@ -26,13 +26,8 @@ export class HeaderComponent implements OnInit {
     this.authService.isUsuarioLogin.subscribe(isLogged => {
       this.isLogged = isLogged;
       if (this.isLogged) {
-        // Si el usuario está logueado, obtener su rol y datos
+        // Si el usuario está logueado, obtener su id y rol
         this.obtenerDatosUsuario();
-
-        // Obtenemos el rol del usuario logueado
-        /* this.authService.rolUsuario.subscribe(rol => {
-          this.rolUsuario = rol;
-        }); */
       }
     });
   }
@@ -41,44 +36,32 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/auth/login']);  // Redirigimos a la ruta de login
   }
 
-  // Método para obtener los datos del usuario logueado
-  /* obtenerDatosUsuario(): void {
-    const token = this.authService.tokenUsuario;
-    if (token) {
-      const decodedToken: any = jwtDecode(token);  // Decodificamos el token
-      const idUsuario = decodedToken.idUsuario; // Y obtenemos el ID de usuario
-      if (idUsuario) {
-        this.usuarioService.getUsuarioPorId(Number(idUsuario)).subscribe(usuario => {
-          this.usuario = usuario;  // Guardamos los datos del usuario
-        });
-      }
-    }
-  } */
-  /* obtenerDatosUsuario(): void {
-    this.usuarioService.getUsuarioLogueado().subscribe(usuario => {
-      this.usuario = usuario;  // Guardamos los datos del usuario
-    });
-  } */
-
   obtenerDatosUsuario(): void {
-    this.usuarioService.getUsuarioLogueado().subscribe({
-      next: (usuario) => {
-        this.usuario = usuario;
-        console.log('Usuario obtenido:', usuario);
-      },
-      error: (err) => {
-        this.mensajeError = 'Error al obtener los datos del usuario';
-        console.error('Error al obtener usuario logueado:', err);
-      }
-    });
+    const idUsuario = sessionStorage.getItem('idUsuario');
+    if (idUsuario) {
+      this.usuarioService.getUsuarioPorId(Number(idUsuario)).subscribe({
+        next: (usuario) => {
+          this.usuario = usuario;
+          console.log('Usuario obtenido:', usuario);
+        },
+        error: (err) => {
+          this.mensajeError = 'Error al obtener los datos del usuario';
+          console.error('Error al obtener usuario logueado:', err);
+        }
+      });
+    } else {
+      console.error('ID de usuario no encontrado en sessionStorage');
+    }
   }
 
   // Método para cerrar sesión
   logout(): void {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("rol");
+    sessionStorage.removeItem("idUsuario");
     this.authService.usuarioActualLogin.next(false);
     this.authService.usuarioActualRol.next('');
+    this.authService.usuarioActualId.next('');
 
     // Redirigimos a la página de inicio
     this.router.navigate(['/']);

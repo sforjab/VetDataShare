@@ -45,6 +45,14 @@ export class MascotaService {
     );
   }
 
+  // Verificar la propiedad de una mascota
+  verificarPropietario(idMascota: number): Observable<void> {
+    return this.http.get<void>(`${this.mascotaUrl}/verificarPropietario/${idMascota}`).pipe(
+      tap(() => console.log(`Verificación de propietario exitosa para la mascota con ID: ${idMascota}`)),
+      catchError(this.handleError)
+    );
+  }
+
   // Crear una nueva mascota
   createMascota(mascota: Mascota): Observable<Mascota> {
     return this.http.post<Mascota>(`${this.mascotaUrl}/create`, mascota).pipe(
@@ -71,13 +79,10 @@ export class MascotaService {
 
   // Manejo de errores
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let mensajeError = '¡Ha ocurrido un error desconocido!';
-    if (error.error instanceof ErrorEvent) {
-        mensajeError = `Error: ${error.error.message}`;
-    } else {
-        mensajeError = `Código de error: ${error.status}\nMensaje: ${error.message}`;
-    }
-    return throwError(() => new Error(mensajeError));
+    console.error(`Código de error: ${error.status}\nMensaje: ${error.message}`);
+    
+    // Se propaga el error original para que el componente pueda manejar el código de estado
+    return throwError(() => error);
   }
 
   

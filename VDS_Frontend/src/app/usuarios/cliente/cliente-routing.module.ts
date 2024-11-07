@@ -8,7 +8,7 @@ import { GestionClientesComponent } from './Components/gestion-clientes/gestion-
 
 const routes: Routes = [
   {
-    path: '', // Dashboard de cliente
+    path: ':idUsuario', // Dashboard de cliente
     component: ClienteDashboardComponent,
     /* canActivate: [AuthGuard],
     data: { roles: ['CLIENTE'] } */
@@ -26,8 +26,8 @@ const routes: Routes = [
     data: { roles: ['ADMIN'] }
   }, */
   // MIRAR QUÉ RUTAS LLEVAN GUARD O NO
-  { path: 'perfil', component: ClientePerfilComponent },        // Perfil del cliente
-  { path: 'gestion-clientes', component: GestionClientesComponent } // Gestión del cliente
+  { path: 'perfil/:idUsuario', component: ClientePerfilComponent },        // Perfil del cliente
+  { path: 'gestion-clientes', component: GestionClientesComponent } // Gestión del cliente GUARD PARA ESTA RUTA
 ];
 
 @NgModule({

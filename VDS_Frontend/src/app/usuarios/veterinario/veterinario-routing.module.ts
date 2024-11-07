@@ -6,12 +6,12 @@ import { VeterinarioPerfilComponent } from './Components/veterinario-perfil/vete
 
 const routes: Routes = [
   {
-    path: '', // Dashboard de veterinario
+    path: ':id', // Dashboard de veterinario
     component: VeterinarioDashboardComponent,
     canActivate: [AuthGuard],
     data: { roles: ['VETERINARIO'] }
   },
-  { path: 'perfil', component: VeterinarioPerfilComponent }, // Perfil del veterinario
+  { path: 'perfil/:id', component: VeterinarioPerfilComponent }, // Perfil del veterinario
 
 ];
 

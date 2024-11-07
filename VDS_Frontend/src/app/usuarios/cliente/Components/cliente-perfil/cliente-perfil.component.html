@@ -1,38 +1,47 @@
 <div class="perfil-container">
-    <form class="perfil-form">
-      <mat-form-field appearance="fill">
-        <mat-label>Número de identificación</mat-label>
-        <input matInput [(ngModel)]="usuario.numIdent" name="numIdent" readonly>
-      </mat-form-field>
-  
-      <mat-form-field appearance="fill">
-        <mat-label>Nombre</mat-label>
-        <input matInput [(ngModel)]="usuario.nombre" name="nombre" readonly>
-      </mat-form-field>
-  
-      <mat-form-field appearance="fill">
-        <mat-label>Primer apellido</mat-label>
-        <input matInput [(ngModel)]="usuario.apellido1" name="apellido1" readonly>
-      </mat-form-field>
-  
-      <mat-form-field appearance="fill">
-        <mat-label>Segundo apellido</mat-label>
-        <input matInput [(ngModel)]="usuario.apellido2" name="apellido2" readonly>
-      </mat-form-field>
-  
-      <mat-form-field appearance="fill">
-        <mat-label>Dirección</mat-label>
-        <input matInput [(ngModel)]="usuario.direccion" name="direccion" readonly>
-      </mat-form-field>
-  
-      <mat-form-field appearance="fill">
-        <mat-label>Teléfono</mat-label>
-        <input matInput [(ngModel)]="usuario.telefono" name="telefono" readonly>
-      </mat-form-field>
-  
-      <mat-form-field appearance="fill">
-        <mat-label>Email</mat-label>
-        <input matInput [(ngModel)]="usuario.email" name="email" readonly>
-      </mat-form-field>
-    </form>
+  <div class="titulo-container">
+    <h1 class="titulo-perfil">Perfil de Cliente</h1>
+  </div>
+  <form class="perfil-form">
+    <mat-form-field appearance="fill">
+      <mat-label>Número de identificación</mat-label>
+      <input matInput [(ngModel)]="usuario.numIdent" name="numIdent" [readonly]="esCliente">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="usuario.nombre" name="nombre" [readonly]="esCliente">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Primer apellido</mat-label>
+      <input matInput [(ngModel)]="usuario.apellido1" name="apellido1" [readonly]="esCliente">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Segundo apellido</mat-label>
+      <input matInput [(ngModel)]="usuario.apellido2" name="apellido2" [readonly]="esCliente">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Dirección</mat-label>
+      <input matInput [(ngModel)]="usuario.direccion" name="direccion">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Teléfono</mat-label>
+      <input matInput [(ngModel)]="usuario.telefono" name="telefono">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput [(ngModel)]="usuario.email" name="email">
+    </mat-form-field>
+
+    <!-- Contenedor para los botones -->
+    <div class="botones-accion">
+      <button mat-raised-button color="primary" (click)="guardarCambios()">Guardar</button>
+      <button mat-raised-button color="warn" (click)="volver()">Volver</button>
+    </div>
+  </form>
 </div>

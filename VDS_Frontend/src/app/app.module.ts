@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -29,6 +30,7 @@ import { AuthInterceptor } from './auth/Services/auth-interceptor.service';
     MatFormFieldModule,
     MatButtonModule,
     MatSelectModule,
+    MatSnackBarModule,
     HttpClientModule,
   ],
   providers: [

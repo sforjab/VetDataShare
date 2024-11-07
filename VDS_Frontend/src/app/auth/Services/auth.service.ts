@@ -12,10 +12,12 @@ export class AuthService {
   private authUrl = `${environment.APIHost}api/auth/login`;  // URL del backend para el login
   usuarioActualLogin: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   usuarioActualRol: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  usuarioActualId: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
   constructor(private http: HttpClient) {
     this.usuarioActualLogin.next(sessionStorage.getItem("token") !== null);
     this.usuarioActualRol.next(sessionStorage.getItem("rol") || '');
+    this.usuarioActualId.next(sessionStorage.getItem("idUsuario"));
   }
 
   login(credenciales: LoginRequestDTO): Observable<AuthResponseDTO> {
@@ -23,8 +25,10 @@ export class AuthService {
       tap((response: AuthResponseDTO) => {
         sessionStorage.setItem("token", response.token);
         sessionStorage.setItem("rol", response.rol);
+        sessionStorage.setItem("idUsuario", response.idUsuario);
         this.usuarioActualLogin.next(true);
         this.usuarioActualRol.next(response.rol);
+        this.usuarioActualId.next(response.idUsuario);
       }),
       catchError(this.handleError)
     );
@@ -53,6 +57,10 @@ export class AuthService {
 
   get rolUsuario(): Observable<string> {
     return this.usuarioActualRol.asObservable();
+  }
+
+  get idUsuario(): Observable<string | null> { // Nuevo getter para idUsuario
+    return this.usuarioActualId.asObservable();
   }
 
   get tokenUsuario(): string | null {

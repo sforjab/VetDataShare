@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Mascota } from '../../Models/mascota.dto';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MascotaService } from '../../Services/mascota.service';
 import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
@@ -15,17 +15,19 @@ export class MascotaDetalleComponent implements OnInit {
   idMascota: number | null = null;
   propietario: Usuario | null = null;
 
-  constructor(private mascotaService: MascotaService, private usuarioService: UsuarioService, private router: Router) {}
+  constructor(private mascotaService: MascotaService, private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    const navegacion = this.router.getCurrentNavigation();
-    this.idMascota = navegacion?.extras?.state?.['idMascota'] || history.state.idMascota;
-    
-    if (this.idMascota) {
-      this.cargarMascotaDetalle(Number(this.idMascota));  // Convertir a número si es necesario
-    } else {
-      console.error('ID de la mascota no disponible');
-    }
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('idMascota');
+      if (id) {
+        this.idMascota = +id; // Convertir a número
+        this.cargarMascotaDetalle(this.idMascota);
+      } else {
+        console.error('ID de la mascota no disponible en la URL');
+        this.router.navigate(['/acceso-no-autorizado']);
+      }
+    });
   }
   
   cargarMascotaDetalle(id: number): void {
@@ -35,6 +37,9 @@ export class MascotaDetalleComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error obteniendo los detalles de la mascota:', err);
+        if (err.status === 403) {
+          this.router.navigate(['/acceso-no-autorizado']);
+        }
       }
     });
   }
@@ -49,4 +54,8 @@ export class MascotaDetalleComponent implements OnInit {
       }
     });
   }
+
+  volver(): void {
+    this.router.navigate([`/mascota/${this.idMascota}`]);
+}
 }

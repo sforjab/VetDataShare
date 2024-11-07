@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MascotaService } from '../../Services/mascota.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-mascota-dashboard',
@@ -9,40 +11,63 @@ import { Router } from '@angular/router';
 export class MascotaDashboardComponent implements OnInit {
   idMascota: number | undefined;
 
-  constructor(private router: Router) {}
+  constructor(private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    const navegacion = this.router.getCurrentNavigation();
-    
-    // Si no hay navegación, intenta obtener el estado del historial
-    this.idMascota = navegacion?.extras?.state?.['idMascota'] || history.state.idMascota;
-    
-    if (!this.idMascota) {
-      console.error('ID de la mascota no disponible');
-    }
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('idMascota');
+      if (id) {
+        this.idMascota = +id;
+  
+        this.mascotaService.verificarPropietario(this.idMascota).subscribe({
+          next: () => {
+            console.log('Acceso autorizado a la mascota.');
+          },
+          error: (err: HttpErrorResponse) => {
+            console.error('Error de acceso:', err);
+            // Se comprueba el código de estado HTTP
+            if (err.status === 403) {
+              this.router.navigate(['/acceso-no-autorizado']);
+            } else {
+              console.error('Error inesperado:', err);
+            }
+          }
+        });
+      } else {
+        this.router.navigate(['/acceso-no-autorizado']);
+      }
+    });
   }
   
   navegarDetalle() {
-    this.router.navigate(['/mascota/detalle'], {
-      state: { idMascota: this.idMascota }
-    });
+    if (this.idMascota !== null) {
+      this.router.navigate([`/mascota/detalle/${this.idMascota}`]);
+    } else {
+      console.error('ID de la mascota no disponible para navegación');
+    }
   }
   
-  navegarHistorico() { //Este routing hay que verlo porque habrá que cambiarlo a consulta cuando esté creado
-    this.router.navigate(['/mascota/historico'], {
-      state: { idMascota: this.idMascota }
-    });
+  navegarConsultas() { // Este routing hay que verlo porque habrá que cambiarlo a consulta cuando esté creado
+    if (this.idMascota !== null) {
+      this.router.navigate([`/consulta/mascota-consultas-list/${this.idMascota}`]);
+    } else {
+      console.error('ID de la mascota no disponible para navegación');
+    }
   }
   
   navegarPruebas() {
-    this.router.navigate(['/prueba/mascota-pruebas-list'], {
-      state: { idMascota: this.idMascota }
-    });
+    if (this.idMascota !== null) {
+      this.router.navigate([`/prueba/mascota-pruebas-list/${this.idMascota}`]);
+    } else {
+      console.error('ID de la mascota no disponible para navegación');
+    }
   }
 
   navegarVacunas() {
-    this.router.navigate(['/vacuna/mascota-vacunas-list'], {
-      state: { idMascota: this.idMascota }
-    });
+    if (this.idMascota !== null) {
+      this.router.navigate([`/vacuna/mascota-vacunas-list/${this.idMascota}`]);
+    } else {
+      console.error('ID de la mascota no disponible para navegación');
+    }
   }
 }

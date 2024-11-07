@@ -1,44 +1,49 @@
 <h2>Datos de la Mascota</h2>
 <div class="mascota-detalle-container" *ngIf="mascota">
     <div class="detalle-item">
-      <label>Número de Chip:</label>
-      <span>{{ mascota.numChip }}</span>
+        <label>Número de Chip:</label>
+        <span>{{ mascota.numChip }}</span>
     </div>
-  
+
     <div class="detalle-item">
-      <label>Nombre:</label>
-      <span>{{ mascota.nombre }}</span>
+        <label>Nombre:</label>
+        <span>{{ mascota.nombre }}</span>
     </div>
-  
+
     <div class="detalle-item">
-      <label>Especie:</label>
-      <span>{{ mascota.especie }}</span>
+        <label>Especie:</label>
+        <span>{{ mascota.especie }}</span>
     </div>
-  
+
     <div class="detalle-item">
-      <label>Raza:</label>
-      <span>{{ mascota.raza }}</span>
+        <label>Raza:</label>
+        <span>{{ mascota.raza }}</span>
     </div>
 
     <!-- Nueva sección de Fecha de Nacimiento -->
     <div class="detalle-item">
-      <label>Fecha de Nacimiento:</label>
-      <span>{{ mascota.fechaNacimiento | date:'dd/MM/yyyy' }}</span>
+        <label>Fecha de Nacimiento:</label>
+        <span>{{ mascota.fechaNacimiento | date:'dd/MM/yyyy' }}</span>
     </div>
-  
+
     <div class="detalle-item">
         <label>Edad:</label>
         <span>{{ mascota.fechaNacimiento | calcularEdad:'años' }} años {{ mascota.fechaNacimiento | calcularEdad:'meses' }} meses</span>
     </div>
-  
+
     <div class="detalle-item" *ngIf="propietario">
-      <h3>Propietario</h3>
-      <label>Nombre:</label>
-      <span>{{ propietario.nombre }} {{ propietario.apellido1 }} {{ propietario.apellido2 }}</span>
+        <h3>Propietario</h3>
+        <label>Nombre:</label>
+        <span>{{ propietario.nombre }} {{ propietario.apellido1 }} {{ propietario.apellido2 }}</span>
     </div>
-  
+
     <div class="detalle-item" *ngIf="propietario">
-      <label>Número de Identificación:</label>
-      <span>{{ propietario.numIdent }}</span>
+        <label>Número de Identificación:</label>
+        <span>{{ propietario.numIdent }}</span>
     </div>
+</div>
+
+<!-- Botón Volver -->
+<div class="boton-volver">
+    <button mat-raised-button color="primary" (click)="volver()">Volver</button>
 </div>

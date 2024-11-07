@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Mascota } from 'src/app/mascota/Models/mascota.dto';
 import { MascotaService } from 'src/app/mascota/Services/mascota.service';
 import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
@@ -12,25 +12,32 @@ import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 })
 export class ClienteMascotasListComponent implements OnInit {
   mascotas: Mascota[] = [];
-  usuario: Usuario | null = null;
+  idCliente: number | null = null;
 
   columnasTabla: string[] = ['nombre', 'numChip'];
 
-  constructor(private mascotaService: MascotaService, private usuarioService: UsuarioService, private router: Router) {}
+  constructor(private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.obtenerUsuarioYListarMascotas();
-  }
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('idUsuario');
+      if (id) {
+        this.idCliente = +id;
+        const idUsuarioSesion = sessionStorage.getItem('idUsuario');
+        const rolUsuarioSesion = sessionStorage.getItem('rol');
 
-  // Obtener el usuario logueado y cargar sus mascotas
-  obtenerUsuarioYListarMascotas(): void {
-    this.usuarioService.getUsuarioLogueado().subscribe({
-      next: (usuario) => {
-        this.usuario = usuario;
-        this.cargarMascotas(usuario.id!); // Llamamos al servicio de mascotas con el id del usuario logueado
-      },
-      error: (err) => {
-        console.error('Error obteniendo el usuario logueado:', err);
+        if (!idUsuarioSesion || !rolUsuarioSesion) {
+          // Redirige al usuario a la página de "Acceso No Autorizado" si no está logueado
+          this.router.navigate(['/acceso-no-autorizado']);
+          return;
+        }
+
+        if (rolUsuarioSesion === 'CLIENTE' && idUsuarioSesion && Number(idUsuarioSesion) !== this.idCliente) {
+          // Se redirige al usuario a una página de "Acceso No Autorizado" si no coincide el usuario logueado con el propietarios de las mascotas
+          this.router.navigate(['/acceso-no-autorizado']);
+        } else {
+          this.cargarMascotas(this.idCliente);
+        }
       }
     });
   }
@@ -48,10 +55,8 @@ export class ClienteMascotasListComponent implements OnInit {
   }
 
   // Navegar a la página de detalle de la mascota
-  navegarMascotaDashboard(id: number): void {
-    console.log('Navegando a Mascota Dashboard con ID:', id);
-    this.router.navigate(['/mascota'], {
-      state: { idMascota: id } // Pasamos el id de la mascota en el estado de navegación
-    });
+  navegarMascotaDashboard(idMascota: number): void {
+    console.log('Navegando a Mascota Dashboard con ID:', idMascota);
+    this.router.navigate([`/mascota/${idMascota}`]);
   }
 }

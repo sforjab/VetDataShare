@@ -22,29 +22,35 @@ export class UsuarioService {
   }
 
   // Obtener usuario por número de identificación
-  getUsuarioPorNumIdent(numIdent: string): Observable<Usuario> {
+  /* getUsuarioPorNumIdent(numIdent: string): Observable<Usuario> {
     return this.http.get<Usuario>(`${this.usuarioUrl}/getUsuarioPorNumIdent/${numIdent}`).pipe(
       tap(usuario => console.log('Usuario obtenido por número de identificación: ', usuario)),
       catchError(this.handleError)
     );
-  }
+  } */
 
   // Obtener usuario por nombre de usuario
-  getUsuarioPorUsername(username: string): Observable<Usuario> {
+  /* getUsuarioPorUsername(username: string): Observable<Usuario> {
     return this.http.get<Usuario>(`${this.usuarioUrl}/getUsuarioPorUsername/${username}`).pipe(
       tap(usuario => console.log('Usuario obtenido por nombre de usuario: ', usuario)),
       catchError(this.handleError)
     );
-  }
+  } */
 
   // Obtener el usuario logueado
-  getUsuarioLogueado(): Observable<Usuario> {
+  /* getUsuarioLogueado(): Observable<Usuario> {
     const token = sessionStorage.getItem('token');
     if (!token) {
         throw new Error('Token no encontrado');
     }
-    /* const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`); */
-    return this.http.get<Usuario>(`${this.usuarioUrl}/getUsuarioLogueado`/* , { headers } */);
+    return this.http.get<Usuario>(`${this.usuarioUrl}/getUsuarioLogueado`);
+  } */
+
+  verificarIdentidadCliente(idCliente: number): Observable<void> {
+    return this.http.get<void>(`${this.usuarioUrl}/verificarIdentidadCliente/${idCliente}`).pipe(
+      tap(() => console.log(`Verificación de identidad exitosa para cliente con ID: ${idCliente}`)),
+      catchError(this.handleError)
+    );
   }
 
   buscarClientes(filtros: {
@@ -111,12 +117,9 @@ export class UsuarioService {
 
   // Manejo de errores
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let mensajeError = '¡Ha ocurrido un error desconocido!';
-    if (error.error instanceof ErrorEvent) {
-        mensajeError = `Error: ${error.error.message}`;
-    } else {
-        mensajeError = `Código de error: ${error.status}\nMensaje: ${error.message}`;
-    }
-    return throwError(() => new Error(mensajeError));
+    console.error(`Código de error: ${error.status}\nMensaje: ${error.message}`);
+    
+    // Se propaga el error original para que el componente pueda manejar el código de estado
+    return throwError(() => error);
   }
 }

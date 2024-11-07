@@ -27,14 +27,14 @@ export class VeterinarioPerfilComponent implements OnInit {
   }
 
   obtenerDatosUsuario(): void {
-    this.usuarioService.getUsuarioLogueado().subscribe({
+    /* this.usuarioService.getUsuarioLogueado().subscribe({
       next: (usuario) => {
         this.usuario = usuario; // Guardamos los datos del usuario
       },
       error: (err) => {
         console.error('Error al obtener datos del usuario:', err);
       }
-    });
+    }); */
   }
 
   // Guardar los cambios en el perfil
