@@ -76,8 +76,7 @@ public class Usuario implements UserDetails {
     private Clinica clinica;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @ToString.Exclude
+    @JsonIgnore
     private List<Mascota> mascotas;
 
     @Override

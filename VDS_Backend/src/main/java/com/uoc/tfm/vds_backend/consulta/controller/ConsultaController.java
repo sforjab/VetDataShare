@@ -13,12 +13,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.uoc.tfm.vds_backend.consulta.model.Consulta;
 import com.uoc.tfm.vds_backend.consulta.service.ConsultaService;
 import com.uoc.tfm.vds_backend.error.ApiError;
 
-
+@RestController
+@RequestMapping("/api/consultas")
 public class ConsultaController {
     @Autowired
     private ConsultaService consultaService;

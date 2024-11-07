@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uoc.tfm.vds_backend.consulta.model.Consulta;
 import com.uoc.tfm.vds_backend.prueba.model.Prueba;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
@@ -55,11 +56,14 @@ public class Mascota {
     private Usuario usuario;
 
     @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Prueba> pruebas;
 
     @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Vacuna> vacunas;
 
     @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Consulta> consultas;
 }

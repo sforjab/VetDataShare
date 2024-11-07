@@ -45,6 +45,10 @@ public class MascotaService {
         return usuario.get().getMascotas();
     }
 
+    public boolean esPropietarioDeMascota(Long idUsuario, Long idMascota) {
+        return mascotaRepository.existsByIdAndUsuarioId(idMascota, idUsuario);
+    }
+
     // AÑADIR PARA BUSCAR MASCOTAS
     
     @Transactional

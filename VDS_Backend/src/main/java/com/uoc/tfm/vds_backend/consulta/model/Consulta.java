@@ -3,6 +3,7 @@ package com.uoc.tfm.vds_backend.consulta.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
 import com.uoc.tfm.vds_backend.prueba.model.Prueba;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
@@ -54,9 +55,11 @@ public class Consulta {
 
     // Relación con Pruebas asociadas a la consulta
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Prueba> pruebas;
 
     // Relación con Vacunas administradas en la consulta
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Vacuna> vacunas;
 }

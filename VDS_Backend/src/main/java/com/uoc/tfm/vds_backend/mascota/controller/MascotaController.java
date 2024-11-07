@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uoc.tfm.vds_backend.error.ApiError;
+import com.uoc.tfm.vds_backend.jwt.CustomUserDetails;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
 import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
 
@@ -71,6 +74,20 @@ public class MascotaController {
                                 .body(new ApiError("No se encontraron mascotas para el usuario con ID: " + idUsuario));
         } else {
             return ResponseEntity.ok(mascotas);
+        }
+    }
+
+    @GetMapping("/verificarPropietario/{idMascota}")
+    public ResponseEntity<Object> verificarPropietario(@PathVariable Long idMascota) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+
+        boolean esPropietario = mascotaService.esPropietarioDeMascota(userDetails.getIdUsuario(), idMascota);
+
+        if (esPropietario) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiError("No tiene acceso a esta mascota."));
         }
     }
 

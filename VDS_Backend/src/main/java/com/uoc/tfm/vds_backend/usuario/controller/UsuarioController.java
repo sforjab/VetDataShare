@@ -30,6 +30,15 @@ public class UsuarioController {
 
     @GetMapping("/getUsuarioPorId/{id}")
     public ResponseEntity<Object> getUsuarioPorId(@PathVariable Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+
+        // Verificar si el ID del usuario autenticado coincide con el solicitado
+        if (userDetails.getRol().equals("CLIENTE") && !userDetails.getIdUsuario().equals(id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                 .body(new ApiError("Acceso no autorizado."));
+        }
+
         Optional<Usuario> usuario = usuarioService.getUsuarioPorId(id);
 
         if (usuario.isPresent()) {
@@ -40,7 +49,21 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/getUsuarioPorNumIdent/{numIdent}")
+    @GetMapping("/verificarIdentidadCliente/{idCliente}")
+    public ResponseEntity<Object> verificarIdentidadCliente(@PathVariable Long idCliente) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+
+        // Si el usuario es CLIENTE, se comprueba que el ID coincide
+        if (userDetails.getRol().equals("CLIENTE") && !userDetails.getIdUsuario().equals(idCliente)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiError("Acceso no autorizado."));
+        }
+
+        // Permitir acceso para ADMIN o roles superiores
+        return ResponseEntity.ok().build();
+    }
+
+    /* @GetMapping("/getUsuarioPorNumIdent/{numIdent}")
     public ResponseEntity<Object> getUsuarioPorNumIdent(@PathVariable String numIdent) {
         Optional<Usuario> usuario = usuarioService.getUsuarioPorNumIdent(numIdent);
         
@@ -50,9 +73,9 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                                  .body(new ApiError("Usuario no encontrado con número de identificación: " + numIdent));
         }
-    }
+    } */
 
-    @GetMapping("/getUsuarioPorUsername/{username}")
+    /* @GetMapping("/getUsuarioPorUsername/{username}")
     public ResponseEntity<Object> getUsuarioPorUsername(@PathVariable String username) {
         Optional<Usuario> usuario = usuarioService.getUsuarioPorUsername(username);
         
@@ -62,10 +85,10 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                                  .body(new ApiError("Usuario no encontrado con nombre de usuario: " + username));
         }
-    }
+    } */
 
     // Método para obtener el usuario logueado desde el token
-    @GetMapping("/getUsuarioLogueado")
+    /* @GetMapping("/getUsuarioLogueado")
     public ResponseEntity<Object> getUsuarioLogueado(@RequestHeader("Authorization") String token) {
         try {
 
@@ -90,12 +113,21 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiError("Token inválido o usuario no encontrado"));
         }
-    }
+    } */
 
     // AÑADIR PARA BUSCAR CLIENTES
 
-     @PostMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<Object> createUsuario(@RequestBody Usuario usuario) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+
+        // Verificar que el rol no sea CLIENTE
+        if (userDetails.getRol().equals("CLIENTE")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                .body(new ApiError("Acceso no autorizado para crear usuarios."));
+        }
+
         Optional<Usuario> createdUsuario = usuarioService.createUsuario(usuario);
 
         if (createdUsuario.isPresent()) {
@@ -108,6 +140,15 @@ public class UsuarioController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+
+        // Verificar si el usuario autenticado está autorizado a modificar este recurso
+        if (userDetails.getRol().equals("CLIENTE") && !userDetails.getIdUsuario().equals(id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                 .body(new ApiError("Acceso no autorizado para editar este usuario."));
+        }
+
         Optional<Usuario> updatedUsuario = usuarioService.updateUsuario(id, usuario);
 
         if (updatedUsuario.isPresent()) {
@@ -120,6 +161,15 @@ public class UsuarioController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteUsuario(@PathVariable Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+
+        // Verificar que el rol no sea CLIENTE
+        if (userDetails.getRol().equals("CLIENTE")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                .body(new ApiError("Acceso no autorizado para eliminar usuarios."));
+        }
+
         boolean isDeleted = usuarioService.deleteUsuario(id);
         if (isDeleted) {
             return ResponseEntity.noContent().build();

@@ -52,11 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
 
                 // Guardamos el objeto en los detalles del token
                 authToken.setDetails(customDetails);
-                
-                // Guardamos el ID de usuario y el rol en los detalles
-                /* authToken.setDetails(idUsuario);
-                authToken.setDetails(rol); */
-                /* authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); */
 
                 // Guardamos el authentication en el SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authToken);

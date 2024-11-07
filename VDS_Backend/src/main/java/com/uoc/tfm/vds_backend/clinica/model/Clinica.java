@@ -2,6 +2,7 @@ package com.uoc.tfm.vds_backend.clinica.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 
@@ -40,7 +41,6 @@ public class Clinica {
 
     // Relación con veterinarios y administradores de clínica
     @OneToMany(mappedBy = "clinica", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @ToString.Exclude
+    @JsonIgnore
     private List<Usuario> veterinarios;
 }
