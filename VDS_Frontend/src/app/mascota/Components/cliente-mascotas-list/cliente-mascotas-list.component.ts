@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Mascota } from 'src/app/mascota/Models/mascota.dto';
 import { MascotaService } from 'src/app/mascota/Services/mascota.service';
-import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
-import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 
 @Component({
   selector: 'app-cliente-mascotas-list',
@@ -14,7 +12,7 @@ export class ClienteMascotasListComponent implements OnInit {
   mascotas: Mascota[] = [];
   idCliente: number | null = null;
 
-  columnasTabla: string[] = ['nombre', 'numChip'];
+  columnasTabla: string[] = ['nombre', 'numChip', 'acciones'];
 
   constructor(private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router) {}
 
@@ -57,6 +55,16 @@ export class ClienteMascotasListComponent implements OnInit {
   // Navegar a la página de detalle de la mascota
   navegarMascotaDashboard(idMascota: number): void {
     console.log('Navegando a Mascota Dashboard con ID:', idMascota);
-    this.router.navigate([`/mascota/${idMascota}`]);
+    this.router.navigate([`/mascota/dashboard/${idMascota}`]);
+  }
+
+  volver(): void {
+    const idUsuarioSesion = sessionStorage.getItem('idUsuario');
+    if (idUsuarioSesion) {
+      this.router.navigate([`/cliente/dashboard/${idUsuarioSesion}`]);
+    } else {
+      console.error('No se encontró el ID del usuario en sesión.');
+      this.router.navigate(['/acceso-no-autorizado']);
+    }
   }
 }

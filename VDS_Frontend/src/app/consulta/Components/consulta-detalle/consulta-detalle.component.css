@@ -1,0 +1,32 @@
+.detalle-consulta-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .detalle-consulta-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .header-item {
+    flex: 1 1 45%;
+    padding: 10px;
+  }
+  
+  .detalle-section {
+    margin-top: 20px;
+  }
+  
+  table {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .botones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }  

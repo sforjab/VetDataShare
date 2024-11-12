@@ -1,90 +1,112 @@
-<div class="search-container">
-    <h2>Buscar Clientes</h2>
+<mat-card class="search-container">
+  <mat-card-title>Buscar Clientes</mat-card-title>
+  <mat-card-content>
     <form (ngSubmit)="buscarClientes()" class="formulario-busqueda">
       <div class="form-row">
         <mat-form-field class="form-field">
           <mat-label>Num Ident</mat-label>
           <input matInput [(ngModel)]="filtros.numIdent" name="numIdent">
         </mat-form-field>
-  
+
         <mat-form-field class="form-field">
           <mat-label>Nombre</mat-label>
           <input matInput [(ngModel)]="filtros.nombre" name="nombre">
         </mat-form-field>
       </div>
-  
+
       <div class="form-row">
         <mat-form-field class="form-field">
           <mat-label>Apellido 1</mat-label>
           <input matInput [(ngModel)]="filtros.apellido1" name="apellido1">
         </mat-form-field>
-  
+
         <mat-form-field class="form-field">
           <mat-label>Apellido 2</mat-label>
           <input matInput [(ngModel)]="filtros.apellido2" name="apellido2">
         </mat-form-field>
       </div>
-  
+
       <div class="form-row">
         <mat-form-field class="form-field">
           <mat-label>Teléfono</mat-label>
           <input matInput [(ngModel)]="filtros.telefono" name="telefono">
         </mat-form-field>
-  
+
         <mat-form-field class="form-field">
           <mat-label>Email</mat-label>
           <input matInput [(ngModel)]="filtros.email" name="email">
         </mat-form-field>
       </div>
-  
+
       <div class="form-row">
-        <button mat-raised-button color="primary" type="submit" class="boton-buscar">Buscar</button>
+        <button mat-raised-button color="primary" type="submit">Buscar</button>
       </div>
     </form>
-  
-    <hr>
-  
-    <div *ngIf="clientes.length > 0" class="resultados-container">
-      <h3>Resultados de la búsqueda</h3>
-      <table mat-table [dataSource]="clientes" class="clientes-tabla">
-        <tr mat-row *matRowDef="let cliente; columns: columnasTabla;" (click)="navegarDashboardCliente(cliente.id)" class="clickable-row"></tr>
-        <ng-container matColumnDef="numIdent">
-          <th mat-header-cell *matHeaderCellDef> Número de Identificación </th>
-          <td mat-cell *matCellDef="let cliente"> {{cliente.numIdent}} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef> Nombre </th>
-          <td mat-cell *matCellDef="let cliente"> {{cliente.nombre}} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="apellido1">
-          <th mat-header-cell *matHeaderCellDef> Apellido 1 </th>
-          <td mat-cell *matCellDef="let cliente"> {{cliente.apellido1}} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="apellido2">
-          <th mat-header-cell *matHeaderCellDef> Apellido 2 </th>
-          <td mat-cell *matCellDef="let cliente"> {{cliente.apellido2}} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="telefono">
-          <th mat-header-cell *matHeaderCellDef> Teléfono </th>
-          <td mat-cell *matCellDef="let cliente"> {{cliente.telefono}} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef> Email </th>
-          <td mat-cell *matCellDef="let cliente"> {{cliente.email}} </td>
-        </ng-container>
-  
-        <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
-        <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
-      </table>
-    </div>
-  
-    <div *ngIf="clientes.length === 0">
-      <p>No se encontraron clientes.</p>
-    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-divider></mat-divider>
+
+<div *ngIf="!busquedaRealizada" class="no-result-message">
+  <mat-card>
+    <mat-card-content>
+      <p>Por favor, ingresa los filtros y realiza una búsqueda.</p>
+    </mat-card-content>
+  </mat-card>
 </div>
-  
+
+<mat-card *ngIf="busquedaRealizada && dataSource.data.length > 0" class="resultados-container">
+  <mat-card-title>Resultados de la búsqueda</mat-card-title>
+  <mat-card-content>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="numIdent">
+        <th mat-header-cell *matHeaderCellDef>Num Ident</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.numIdent }}</td>
+      </ng-container>
+
+      <!-- Aquí van las otras columnas -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.nombre }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="apellido1">
+        <th mat-header-cell *matHeaderCellDef>Apellido 1</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.apellido1 }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="apellido2">
+        <th mat-header-cell *matHeaderCellDef>Apellido 2</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.apellido2 }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.telefono }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let cliente">
+          <button mat-raised-button color="primary" (click)="navegarDashboardCliente(cliente.id)">Acceder</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
+    </table>
+
+    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="busquedaRealizada && dataSource.data.length === 0">
+  <mat-card-content>
+    <p>No se encontraron clientes.</p>
+  </mat-card-content>
+</mat-card>

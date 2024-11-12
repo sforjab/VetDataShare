@@ -70,4 +70,14 @@ export class MascotaDashboardComponent implements OnInit {
       console.error('ID de la mascota no disponible para navegación');
     }
   }
+
+  volver(): void {
+    const idUsuarioSesion = sessionStorage.getItem('idUsuario');
+    if (idUsuarioSesion) {
+      this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
+    } else {
+      console.error('No se encontró el ID del usuario en sesión.');
+      this.router.navigate(['/acceso-no-autorizado']);
+    }
+  }
 }

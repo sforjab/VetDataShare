@@ -1,30 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Prueba } from '../../Models/prueba.dto';
 import { PruebaService } from '../../Services/prueba.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-mascota-pruebas-list',
   templateUrl: './mascota-pruebas-list.component.html',
   styleUrls: ['./mascota-pruebas-list.component.css']
 })
-export class MascotaPruebasListComponent implements OnInit{
+export class MascotaPruebasListComponent implements OnInit {
   pruebas: Prueba[] = [];
-  idMascota: number | null = null;
+  idMascota: number | undefined;
+  columnasTabla: string[] = ['tipo', 'fecha', 'acciones'];
 
-  columnasTabla: string[] = ['tipo', 'fecha', 'consulta', 'acciones'];
-
-  constructor(private pruebaService: PruebaService, private router: Router) {}
+  constructor(private pruebaService: PruebaService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    const navegacion = this.router.getCurrentNavigation();
-    this.idMascota = navegacion?.extras?.state?.['idMascota'] || history.state.idMascota;
-
-    if (this.idMascota) {
-      this.cargarPruebas(this.idMascota);
-    } else {
-      console.error('ID de la mascota no disponible');
-    }
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('idMascota');
+      if (id) {
+        this.idMascota = +id;
+        this.cargarPruebas(this.idMascota);
+      } else {
+        this.router.navigate(['/acceso-no-autorizado']);
+      }
+    });
   }
 
   cargarPruebas(idMascota: number): void {
@@ -32,21 +33,17 @@ export class MascotaPruebasListComponent implements OnInit{
       next: (pruebas) => {
         this.pruebas = pruebas;
       },
-      error: (err) => {
-        console.error('Error obteniendo las pruebas:', err);
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al cargar las pruebas:', err);
       }
     });
   }
 
-  navegarDetallePrueba(idPrueba: number): void {
-    this.router.navigate(['/prueba-detalle'], {
-      state: { idPrueba }
-    });
+  verDetallePrueba(idPrueba: number): void {
+    this.router.navigate([`/prueba/detalle/${idPrueba}`]);
   }
 
-  navegarConsulta(idConsulta: number): void {
-    this.router.navigate(['/consulta-detalle'], {
-      state: { idConsulta }
-    });
+  volver(): void {
+    this.router.navigate([`/mascota/dashboard/${this.idMascota}`]);
   }
 }

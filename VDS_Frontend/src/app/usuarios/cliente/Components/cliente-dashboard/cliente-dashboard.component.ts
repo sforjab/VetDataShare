@@ -8,7 +8,7 @@ import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
   templateUrl: './cliente-dashboard.component.html',
   styleUrls: ['./cliente-dashboard.component.css']
 })
-export class ClienteDashboardComponent {
+export class ClienteDashboardComponent implements OnInit {
 
   idCliente: number | null = null;
 

@@ -1,18 +1,30 @@
-<div class="dashboard-container">
-    <button mat-raised-button color="primary" (click)="navegarDetalle()">
-      Consultar datos
-    </button>
-  
-    <button mat-raised-button color="accent" (click)="navegarConsultas()">
-      Histórico de consultas
-    </button>
-  
-    <button mat-raised-button color="warn" (click)="navegarPruebas()">
-      Pruebas
-    </button>
+<h2>Dashboard de Mascota</h2>
 
-    <button mat-raised-button color="primary" (click)="navegarVacunas()">
-      Vacunas
-    </button>
+<mat-card class="dashboard-card">
+  <mat-card-content>
+    <div class="dashboard-buttons">
+      <button mat-raised-button color="primary" (click)="navegarDetalle()">
+        Consultar datos
+      </button>
+
+      <button mat-raised-button color="accent" (click)="navegarConsultas()">
+        Histórico de consultas
+      </button>
+
+      <button mat-raised-button color="warn" (click)="navegarPruebas()">
+        Pruebas
+      </button>
+
+      <button mat-raised-button color="primary" (click)="navegarVacunas()">
+        Vacunas
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- Botón Volver -->
+<div class="boton-volver">
+  <button mat-raised-button color="accent" (click)="volver()">
+    Volver
+  </button>
 </div>
-  

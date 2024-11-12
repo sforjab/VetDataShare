@@ -3,13 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { MascotaDashboardComponent } from './Components/mascota-dashboard/mascota-dashboard.component';
 import { MascotaDetalleComponent } from './Components/mascota-detalle/mascota-detalle.component';
 import { ClienteMascotasListComponent } from './Components/cliente-mascotas-list/cliente-mascotas-list.component';
+import { GestionMascotasComponent } from './Components/gestion-mascotas/gestion-mascotas.component';
 
 const routes: Routes = [
-  { path: ':idMascota', component: MascotaDashboardComponent },  // Dashboard de la mascota
+  { path: 'dashboard/:idMascota', component: MascotaDashboardComponent },  // Dashboard de la mascota
   { path: 'detalle/:idMascota', component: MascotaDetalleComponent },      // Detalle de la mascota
-  { path: 'cliente-mascotas-list/:idUsuario', component: ClienteMascotasListComponent } // Lista de mascotas del cliente
-  /* { path: 'pruebas-list', component: MascotaPruebasComponent },      // Pruebas de una mascota */
-  /* { path: 'all-pruebas-list', component: PruebasListComponent } */      // Pruebas de todas las mascotas
+  { path: 'cliente-mascotas-list/:idUsuario', component: ClienteMascotasListComponent }, // Lista de mascotas del cliente
+  { path: 'gestion-mascotas', component: GestionMascotasComponent } // Gestión de mascotas
 ];
 
 @NgModule({

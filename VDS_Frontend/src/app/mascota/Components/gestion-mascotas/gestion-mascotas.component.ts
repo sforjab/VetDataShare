@@ -1,33 +1,30 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
-import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { Router } from '@angular/router';
+import { Mascota } from '../../Models/mascota.dto';
+import { MascotaService } from '../../Services/mascota.service';
 
 @Component({
-  selector: 'app-gestion-clientes',
-  templateUrl: './gestion-clientes.component.html',
-  styleUrls: ['./gestion-clientes.component.css']
+  selector: 'app-gestion-mascotas',
+  templateUrl: './gestion-mascotas.component.html',
+  styleUrls: ['./gestion-mascotas.component.css']
 })
-export class GestionClientesComponent implements OnInit, AfterViewInit {
-  
+export class GestionMascotasComponent implements OnInit, AfterViewInit {
   filtros = {
-    numIdent: '',
-    telefono: '',
-    email: '',
+    numChip: '',
     nombre: '',
-    apellido1: '',
-    apellido2: ''
+    especie: '',
+    raza: '',
   };
 
-  dataSource = new MatTableDataSource<Usuario>();
+  dataSource = new MatTableDataSource<Mascota>();
   busquedaRealizada: boolean = false;
-  columnasTabla: string[] = ['numIdent', 'nombre', 'apellido1', 'apellido2', 'telefono', 'email', 'acciones'];
+  columnasTabla: string[] = ['numChip', 'nombre', 'especie', 'raza', 'fechaNacimiento', 'acciones'];
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor(private usuarioService: UsuarioService, private router: Router) {}
+  constructor(private mascotaService: MascotaService, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -40,14 +37,14 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  buscarClientes() {
+  buscarMascotas() {
     this.busquedaRealizada = true;
     const filtrosAplicados = this.prepararFiltros(this.filtros);
-  
-    this.usuarioService.buscarClientes(filtrosAplicados).subscribe((result: Usuario[]) => {
+
+    this.mascotaService.buscarMascotas(filtrosAplicados).subscribe((result: Mascota[]) => {
       this.dataSource.data = result || [];
       console.log('Datos del DataSource antes de vincular el paginador:', this.dataSource.data);
-  
+
       setTimeout(() => {
         if (this.paginator) {
           this.dataSource.paginator = this.paginator;
@@ -57,23 +54,21 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
         }
       });
     }, error => {
-      console.log('Error en la llamada al backend: ', error);
+      console.error('Error al buscar mascotas:', error);
       this.dataSource.data = [];
     });
-  }  
+  }
 
   private prepararFiltros(filtros: any): any {
     return {
-      numIdent: filtros.numIdent || undefined,
+      numChip: filtros.numChip || undefined,
       nombre: filtros.nombre || undefined,
-      apellido1: filtros.apellido1 || undefined,
-      apellido2: filtros.apellido2 || undefined,
-      telefono: filtros.telefono || undefined,
-      email: filtros.email || undefined
+      especie: filtros.especie || undefined,
+      raza: filtros.raza || undefined,
     };
   }
 
-  navegarDashboardCliente(idUsuario: number): void {
-    this.router.navigate([`/cliente/dashboard/${idUsuario}`]);
+  navegarDashboardMascota(idMascota: number): void {
+    this.router.navigate([`/mascota/dashboard/${idMascota}`]);
   }
 }

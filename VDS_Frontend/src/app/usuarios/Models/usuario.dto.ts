@@ -11,7 +11,8 @@ export interface Usuario {
     rol: Rol;
     username: string;
     password: string;
-    clinicaId?: string; // ID de la clínica asociada (solo para veterinarios o admin de clínica)
+    clinicaId?: string; // Clínica asociada (solo para veterinarios o admin de clínica
+    //CAMBIAR A CLINICA
   }
   
   export enum Rol {

@@ -1,0 +1,45 @@
+<h2>Detalle de prueba</h2>
+
+<mat-card>
+  <mat-card-content>
+    <div class="detalle-prueba-header">
+      <div>
+        <label>Fecha:</label>
+        <span>{{ prueba.fecha | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <div>
+        <label>Número de chip:</label>
+        <span>{{ prueba.mascota?.numChip }}</span>
+      </div>
+      <div>
+        <label>Veterinario:</label>
+        <span>{{ prueba.consulta?.veterinario?.numColegiado }}</span>
+      </div>
+      <div>
+        <label>Nombre de mascota:</label>
+        <span>{{ prueba.mascota?.nombre }}</span>
+      </div>
+    </div>
+
+    <div>
+      <label for="tipo">Tipo:</label>
+      <mat-select [(value)]="prueba.tipo" placeholder="Selecciona un tipo">
+        <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+
+    <div>
+      <label>Descripción:</label>
+      <textarea matInput placeholder="Descripción" [(ngModel)]="prueba.descripcion"></textarea>
+    </div>
+
+    <div>
+      <h3>Documentos:</h3>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div class="botones">
+  <button mat-raised-button color="primary" (click)="guardar()">Guardar</button>
+  <button mat-raised-button color="warn" (click)="volver()">Volver</button>
+</div>

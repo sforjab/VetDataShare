@@ -8,7 +8,7 @@ import { GestionClientesComponent } from './Components/gestion-clientes/gestion-
 
 const routes: Routes = [
   {
-    path: ':idUsuario', // Dashboard de cliente
+    path: 'dashboard/:idUsuario', // Dashboard de cliente
     component: ClienteDashboardComponent,
     /* canActivate: [AuthGuard],
     data: { roles: ['CLIENTE'] } */

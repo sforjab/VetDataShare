@@ -1,11 +1,14 @@
+import { Consulta } from "src/app/consulta/Models/consulta.dto";
+import { Mascota } from "src/app/mascota/Models/mascota.dto";
+
 export interface Prueba {
-    id: number;
+    id?: number;
     tipo: TipoPrueba; // TipoPrueba: "IMAGEN" o "ANALÍTICA"
     descripcion?: string;
     fecha: string; // La fecha como string para simplificar la manipulación
     resultado?: string;
-    consultaId?: number; // ID de la consulta asociada (opcional)
-    mascotaId: number;
+    consulta: Consulta;
+    mascota: Mascota;
 }
   
 export enum TipoPrueba {

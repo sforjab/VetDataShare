@@ -47,4 +47,10 @@ export class MascotaConsultasListComponent {
   verDetalleConsulta(idConsulta: number): void {
     this.router.navigate([`/consulta/detalle/${idConsulta}`]);
   }
+
+  volver(): void {
+    if (this.idMascota) {
+      this.router.navigate([`/mascota/${this.idMascota}`]);
+    }
+  }
 }

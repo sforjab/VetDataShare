@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -49,6 +49,33 @@ export class MascotaService {
   verificarPropietario(idMascota: number): Observable<void> {
     return this.http.get<void>(`${this.mascotaUrl}/verificarPropietario/${idMascota}`).pipe(
       tap(() => console.log(`Verificación de propietario exitosa para la mascota con ID: ${idMascota}`)),
+      catchError(this.handleError)
+    );
+  }
+
+  // Búsqueda de mascotas
+  buscarMascotas(filtros: {
+    numChip?: string;
+    nombre?: string;
+    especie?: string;
+    raza?: string;
+  }): Observable<Mascota[]> {
+    let params = new HttpParams();
+    if (filtros.numChip) {
+      params = params.set('numChip', filtros.numChip);
+    }
+    if (filtros.nombre) {
+      params = params.set('nombre', filtros.nombre);
+    }
+    if (filtros.especie) {
+      params = params.set('especie', filtros.especie);
+    }
+    if (filtros.raza) {
+      params = params.set('raza', filtros.raza);
+    }
+
+    return this.http.get<Mascota[]>(`${this.mascotaUrl}/buscarMascotas`, { params }).pipe(
+      tap((mascotas) => console.log('Mascotas encontradas:', mascotas)),
       catchError(this.handleError)
     );
   }

@@ -1,13 +1,34 @@
-.dashboard-container {
-    display: flex;
-    flex-direction: column;   /* Coloca los botones uno debajo del otro */
-    justify-content: center;  /* Centra los botones verticalmente */
-    align-items: center;      /* Centra los botones horizontalmente */
-    height: 100vh;            /* Asegura que ocupe toda la altura de la pantalla */
-  }
-  
-  button {
-    margin-bottom: 20px;      /* Agrega un margen inferior entre los botones */
-    width: 200px;             /* Define un ancho fijo para que todos los botones tengan el mismo tamaño */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
 }
-  
+
+.dashboard-card {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center; /* Centra el contenido dentro del card */
+}
+
+.dashboard-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; /* Espacio entre botones */
+}
+
+button {
+  width: auto; /* Botones de tamaño normal */
+  padding: 10px 20px; /* Espaciado adecuado */
+}
+
+.boton-volver {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.boton-volver button {
+  width: auto; /* Botón "Volver" de tamaño normal */
+  padding: 10px 20px;
+}

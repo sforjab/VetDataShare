@@ -12,6 +12,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { GestionClientesComponent } from './Components/gestion-clientes/gestion-clientes.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @NgModule({
@@ -30,6 +33,9 @@ import { GestionClientesComponent } from './Components/gestion-clientes/gestion-
     MatFormFieldModule,
     MatTableModule,
     MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatPaginatorModule,
     RouterModule
   ]
 })

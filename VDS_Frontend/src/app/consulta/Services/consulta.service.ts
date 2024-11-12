@@ -5,6 +5,8 @@ import { environment } from 'src/environments/environment';
 import { Consulta } from '../Models/consulta.dto';
 import { catchError, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { Prueba } from 'src/app/prueba/Models/prueba.dto';
+import { Vacuna } from 'src/app/vacuna/Models/vacuna.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +36,22 @@ export class ConsultaService {
   getConsultasPorIdMascota(idMascota: number): Observable<Consulta[]> {
     return this.http.get<Consulta[]>(`${this.consultaUrl}/getConsultasPorIdMascota/${idMascota}`).pipe(
       tap((consultas) => console.log('Consultas obtenidas para la mascota:', consultas)),
+      catchError(this.handleError)
+    );
+  }
+
+  // Obtener pruebas por ID de consulta
+  getPruebasPorConsultaId(idConsulta: number): Observable<Prueba[]> {
+    return this.http.get<Prueba[]>(`${this.consultaUrl}/getPruebasPorConsultaId/${idConsulta}`).pipe(
+      tap((pruebas) => console.log('Pruebas obtenidas para la consulta:', pruebas)),
+      catchError(this.handleError)
+    );
+  }
+
+  // Obtener vacunas por ID de consulta
+  getVacunasPorConsultaId(idConsulta: number): Observable<Vacuna[]> {
+    return this.http.get<Vacuna[]>(`${this.consultaUrl}/getVacunasPorConsultaId/${idConsulta}`).pipe(
+      tap((vacunas) => console.log('Vacunas obtenidas para la consulta:', vacunas)),
       catchError(this.handleError)
     );
   }

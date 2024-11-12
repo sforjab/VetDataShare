@@ -56,6 +56,6 @@ export class MascotaDetalleComponent implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate([`/mascota/${this.idMascota}`]);
+    this.router.navigate([`/mascota/dashboard/${this.idMascota}`]);
 }
 }

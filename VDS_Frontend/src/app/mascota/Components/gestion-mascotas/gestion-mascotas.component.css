@@ -1,17 +1,20 @@
+/* Estilos generales para el contenedor de búsqueda */
 .search-container {
     max-width: 900px; /* Reduce el ancho del contenedor principal */
-    margin: 0 auto; /* Centra el contenedor */
+    margin: 20px auto; /* Centra el contenedor con separación superior */
     padding: 15px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Títulos */
 h2 {
     text-align: center;
     color: #333;
 }
 
+/* Formulario de búsqueda */
 .formulario-busqueda {
     display: flex;
     flex-direction: column;
@@ -31,13 +34,15 @@ h2 {
 
 .boton-buscar {
     display: block;
-    margin: 10px auto;
+    margin: 20px auto; /* Centra el botón */
 }
 
-hr {
-    margin: 15px 0;
+/* Línea divisoria */
+hr, .divider {
+    margin: 20px 0; /* Mayor separación entre secciones */
 }
 
+/* Contenedor de resultados */
 .resultados-container {
     margin-top: 15px;
     background-color: #ffffff;
@@ -52,10 +57,11 @@ h3 {
     color: #1976d2; /* Azul Material Design */
 }
 
+/* Tabla de resultados */
 .clientes-tabla {
     width: 100%;
     margin-top: 10px;
-    overflow-x: auto; /* Maneja desbordamiento */
+    overflow-x: auto; /* Maneja desbordamiento horizontal */
 }
 
 table {
@@ -82,6 +88,7 @@ td {
     background-color: #e3f2fd; /* Hover azul claro */
 }
 
+/* Mensajes */
 p {
     text-align: center;
     color: red;
@@ -103,4 +110,14 @@ p {
 /* Hover en filas */
 .clickable-row:hover {
     background-color: #f0f0f0;
+}
+
+/* Paginador */
+.mat-paginator {
+    margin-top: 15px; /* Separación del paginador respecto a la tabla */
+}
+
+/* Ajuste de celdas con formato de fecha */
+td.date-cell {
+    text-align: center; /* Centra las fechas */
 }

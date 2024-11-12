@@ -2,7 +2,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/Services/auth.service';
 import { Rol, Usuario } from 'src/app/usuarios/Models/usuario.dto';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 
@@ -25,7 +24,6 @@ export class ClientePerfilComponent implements OnInit {
     password: ''
   };
 
-  /* usuario: Usuario | null = null; */
   idCliente: number | null = null;
   esCliente: boolean = false;
 
@@ -89,6 +87,6 @@ export class ClientePerfilComponent implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate([`/cliente/${this.idCliente}`]);
+    this.router.navigate([`/cliente/dashboard/${this.idCliente}`]);
   }
 }
