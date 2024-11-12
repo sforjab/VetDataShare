@@ -3,7 +3,6 @@ package com.uoc.tfm.vds_backend.clinica.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 
 import jakarta.persistence.CascadeType;
@@ -16,7 +15,6 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @AllArgsConstructor
