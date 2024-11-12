@@ -71,13 +71,23 @@ export class MascotaDashboardComponent implements OnInit {
     }
   }
 
-  volver(): void {
-    const idUsuarioSesion = sessionStorage.getItem('idUsuario');
-    if (idUsuarioSesion) {
-      this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
-    } else {
-      console.error('No se encontró el ID del usuario en sesión.');
-      this.router.navigate(['/acceso-no-autorizado']);
+    volver(): void {
+      const idUsuarioSesion = sessionStorage.getItem('idUsuario');
+      const rolUsuarioSesion = sessionStorage.getItem('rol');
+    
+      if (!idUsuarioSesion || !rolUsuarioSesion) {
+        console.error('No se encontraron datos de sesión. Redirigiendo a acceso no autorizado.');
+        this.router.navigate(['/acceso-no-autorizado']);
+        return;
+      }
+    
+      if (rolUsuarioSesion === 'CLIENTE') {
+        // Navegar al listado de mascotas del cliente
+        this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
+      } else {
+        // Navegar a la gestión de mascotas
+        this.router.navigate(['/mascota/gestion-mascotas']);
+      }
     }
-  }
+    
 }

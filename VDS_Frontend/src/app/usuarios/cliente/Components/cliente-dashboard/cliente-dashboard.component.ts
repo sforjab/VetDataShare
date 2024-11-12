@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 
 @Component({
@@ -11,6 +11,7 @@ import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 export class ClienteDashboardComponent implements OnInit {
 
   idCliente: number | null = null;
+  rolUsuarioSesion: string | null = null; // Guardamos el rol del usuario logueado
 
   constructor(private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router) {}
 
@@ -20,15 +21,15 @@ export class ClienteDashboardComponent implements OnInit {
       if (id) {
         this.idCliente = +id;
         const idUsuarioSesion = sessionStorage.getItem('idUsuario');
-        const rolUsuarioSesion = sessionStorage.getItem('rol');
+        this.rolUsuarioSesion = sessionStorage.getItem('rol');
 
-        if (!idUsuarioSesion || !rolUsuarioSesion) {
+        if (!idUsuarioSesion || !this.rolUsuarioSesion) {
           // Redirigir si no está logueado
           this.router.navigate(['/acceso-no-autorizado']);
           return;
         }
 
-        if (rolUsuarioSesion === 'CLIENTE' && Number(idUsuarioSesion) !== this.idCliente) {
+        if (this.rolUsuarioSesion === 'CLIENTE' && Number(idUsuarioSesion) !== this.idCliente) {
           // Redirigir si el cliente intenta acceder a otro perfil
           this.router.navigate(['/acceso-no-autorizado']);
         }
@@ -60,4 +61,11 @@ export class ClienteDashboardComponent implements OnInit {
     this.router.navigate([`/mascota/cliente-mascotas-list/${this.idCliente}`]);
   }
 
+  navegarGestionClientes() {
+    this.router.navigate(['/cliente/gestion-clientes']);
+  }
+
+  mostrarBotonVolver(): boolean {
+    return this.rolUsuarioSesion !== 'CLIENTE'; // Se muestra únicamente si no es CLIENTE
+  }
 }

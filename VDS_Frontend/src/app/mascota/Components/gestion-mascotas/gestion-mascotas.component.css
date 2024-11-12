@@ -121,3 +121,8 @@ p {
 td.date-cell {
     text-align: center; /* Centra las fechas */
 }
+
+.boton-volver {
+    margin-top: 20px;
+    text-align: center;
+}

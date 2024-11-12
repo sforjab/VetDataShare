@@ -76,4 +76,14 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
   navegarDashboardCliente(idUsuario: number): void {
     this.router.navigate([`/cliente/dashboard/${idUsuario}`]);
   }
+
+  volver(): void {
+    const idVeterinario = sessionStorage.getItem('idUsuario');
+    if (idVeterinario) {
+      this.router.navigate([`/veterinario/dashboard/${idVeterinario}`]);
+    } else {
+      console.error('ID del veterinario no encontrado en la sesión.');
+      this.router.navigate(['/acceso-no-autorizado']);
+    }
+  }
 }
