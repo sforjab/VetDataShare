@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,7 +51,24 @@ public class MascotaService {
         return mascotaRepository.existsByIdAndUsuarioId(idMascota, idUsuario);
     }
 
-    // AÑADIR PARA BUSCAR MASCOTAS
+    @Transactional
+public List<Mascota> buscarMascotas(String numChip, String nombre, String especie, String raza) {
+    Mascota probe = new Mascota();
+    probe.setNombre(numChip);
+    probe.setNombre(nombre);
+    probe.setEspecie(especie);
+    probe.setRaza(raza);
+
+    ExampleMatcher matcher = ExampleMatcher.matching()
+            .withIgnorePaths("id", "sexo", "fechaNacimiento")
+            .withIgnoreNullValues()
+            .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+            .withIgnoreCase();
+
+    Example<Mascota> example = Example.of(probe, matcher);
+    return mascotaRepository.findAll(example);
+}
+
     
     @Transactional
     public Optional<Mascota> createMascota(Mascota mascota) {       

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uoc.tfm.vds_backend.error.ApiError;
@@ -82,6 +83,12 @@ public class MascotaController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
 
+        // Se debe permitir el acceso a usuarios no CLIENTE
+        if (!userDetails.getRol().equals("CLIENTE")) {
+            return ResponseEntity.ok().build();
+        }
+
+         // Se valida si el usuario CLIENTE es el propietario
         boolean esPropietario = mascotaService.esPropietarioDeMascota(userDetails.getIdUsuario(), idMascota);
 
         if (esPropietario) {
@@ -91,7 +98,17 @@ public class MascotaController {
         }
     }
 
-    // AÑADIR PARA BUSCAR MASCOTAS
+    @GetMapping("/buscarMascotas")
+    public ResponseEntity<List<Mascota>> buscarMascotas(
+        @RequestParam(required = false) String numChip,
+        @RequestParam(required = false) String nombre,
+        @RequestParam(required = false) String especie,
+        @RequestParam(required = false) String raza) {
+
+        List<Mascota> mascotas = mascotaService.buscarMascotas(numChip, nombre, especie, raza);
+        return ResponseEntity.ok(mascotas);
+    }
+
 
     @PostMapping("/create")
     public ResponseEntity<Object> createMascota(@RequestBody Mascota mascota) {

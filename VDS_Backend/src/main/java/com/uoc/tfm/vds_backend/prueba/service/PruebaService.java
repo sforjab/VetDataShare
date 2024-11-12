@@ -18,24 +18,34 @@ public class PruebaService {
     @Autowired
     private PruebaRepository pruebaRepository;
 
-    @Autowired
-    private MascotaService mascotaService;
+    /* @Autowired
+    private MascotaService mascotaService; */
 
     @Transactional
     public Optional<Prueba> getPruebaPorId(Long id) {
         return pruebaRepository.findById(id);
     }
 
-    @Transactional
-    public List<Prueba> getPruebasPorIdMascota(Long idMascota) {
-        Optional<Mascota> mascota = mascotaService.getMascotaPorId(idMascota);
+    /* @Transactional
+    public List<Prueba> getPruebasPorIdMascota(Long idMascota) { */
+        /* Optional<Mascota> mascota = mascotaService.getMascotaPorId(idMascota); */
 
         // Si la mascota no existe, se devuelve lista vacía
-        if (!mascota.isPresent()) {
+        /* if (!mascota.isPresent()) {
             return List.of();
         }
         
         return mascota.get().getPruebas();
+    } */
+
+    @Transactional
+    public List<Prueba> getPruebasPorIdMascota(Long idMascota) {
+        return pruebaRepository.findByMascotaId(idMascota);
+    }
+
+    @Transactional
+    public List<Prueba> getPruebasPorConsultaId(Long consultaId) {
+        return pruebaRepository.findByConsultaId(consultaId);
     }
 
     @Transactional

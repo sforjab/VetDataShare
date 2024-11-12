@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.uoc.tfm.vds_backend.clinica.model.Clinica;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
 

@@ -19,12 +19,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uoc.tfm.vds_backend.consulta.model.Consulta;
 import com.uoc.tfm.vds_backend.consulta.service.ConsultaService;
 import com.uoc.tfm.vds_backend.error.ApiError;
+import com.uoc.tfm.vds_backend.prueba.model.Prueba;
+import com.uoc.tfm.vds_backend.prueba.service.PruebaService;
+import com.uoc.tfm.vds_backend.vacuna.model.Vacuna;
+import com.uoc.tfm.vds_backend.vacuna.service.VacunaService;
 
 @RestController
 @RequestMapping("/api/consultas")
 public class ConsultaController {
     @Autowired
     private ConsultaService consultaService;
+
+    @Autowired
+    private PruebaService pruebaService;
+
+    @Autowired
+    private VacunaService vacunaService;
 
     // Obtener consulta por ID
     @GetMapping("/getConsultaPorId/{id}")
@@ -67,6 +77,18 @@ public class ConsultaController {
         } else {
             return ResponseEntity.ok(consultas);
         }
+    }
+
+    @GetMapping("/getPruebasPorConsultaId/{consultaId}")
+    public ResponseEntity<Object> getPruebasPorConsultaId(@PathVariable Long consultaId) {
+        List<Prueba> pruebas = pruebaService.getPruebasPorConsultaId(consultaId);
+        return ResponseEntity.ok(pruebas);
+    }
+
+    @GetMapping("/getVacunasPorConsultaId/{consultaId}")
+    public ResponseEntity<Object> getVacunasPorConsultaId(@PathVariable Long consultaId) {
+        List<Vacuna> vacunas = vacunaService.getVacunasPorConsultaId(consultaId);
+        return ResponseEntity.ok(vacunas);
     }
 
     @PostMapping("/create")

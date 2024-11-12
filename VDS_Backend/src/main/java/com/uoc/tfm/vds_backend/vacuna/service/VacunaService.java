@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.uoc.tfm.vds_backend.mascota.model.Mascota;
-import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
 import com.uoc.tfm.vds_backend.vacuna.model.Vacuna;
 import com.uoc.tfm.vds_backend.vacuna.repository.VacunaRepository;
 
@@ -17,8 +15,6 @@ public class VacunaService {
     @Autowired
     private VacunaRepository vacunaRepository;
 
-    @Autowired
-    private MascotaService mascotaService;
 
     @Transactional
     public Optional<Vacuna> getVacunaPorId(Long id) { // COMPROBAR SI REALMENTE ESTE Y EL DE PRUEBA HACE FALTA PORQUE NO ACCEDO AL DETALLE...AUNQUE SE PUEDE ELIMINAR Y EDITAR
@@ -27,14 +23,12 @@ public class VacunaService {
 
     @Transactional
     public List<Vacuna> getVacunasPorIdMascota(Long idMascota) {
-        Optional<Mascota> mascota = mascotaService.getMascotaPorId(idMascota);
+        return vacunaRepository.findByMascotaId(idMascota);
+    }
 
-        // Si la mascota no existe, se devuelve lista vacía
-        if (!mascota.isPresent()) {
-            return List.of();
-        }
-        
-        return mascota.get().getVacunas();
+    @Transactional
+    public List<Vacuna> getVacunasPorConsultaId(Long consultaId) {
+        return vacunaRepository.findByConsultaId(consultaId);
     }
 
     @Transactional

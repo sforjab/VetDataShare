@@ -1,9 +1,12 @@
 package com.uoc.tfm.vds_backend.usuario.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +36,26 @@ public class UsuarioService {
         return usuarioRepository.findByUsername(username);
     }
 
-    // AÑADIR PARA BUSCAR CLIENTES
+    @Transactional
+    public List<Usuario> buscarClientes(String numIdent, String nombre, String apellido1, String apellido2, String telefono, String email) {
+        Usuario probe = new Usuario();
+        probe.setRol(Rol.CLIENTE);
+        probe.setNumIdent(numIdent);
+        probe.setNombre(nombre);
+        probe.setApellido1(apellido1);
+        probe.setApellido2(apellido2);
+        probe.setTelefono(telefono);
+        probe.setEmail(email);
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnorePaths("id", "direccion", "username", "password") // Se ignoran campos irrelevantes para la búsqueda
+                .withIgnoreNullValues()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase();
+
+        Example<Usuario> example = Example.of(probe, matcher);
+        return usuarioRepository.findAll(example);
+    }
 
     @Transactional
     public Optional<Usuario> createUsuario(Usuario usuario) {

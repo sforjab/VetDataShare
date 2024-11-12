@@ -1,5 +1,6 @@
 package com.uoc.tfm.vds_backend.usuario.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uoc.tfm.vds_backend.error.ApiError;
@@ -87,35 +89,18 @@ public class UsuarioController {
         }
     } */
 
-    // Método para obtener el usuario logueado desde el token
-    /* @GetMapping("/getUsuarioLogueado")
-    public ResponseEntity<Object> getUsuarioLogueado(@RequestHeader("Authorization") String token) {
-        try {
+    @GetMapping("/buscarClientes")
+    public ResponseEntity<Object> buscarClientes(
+            @RequestParam(required = false) String numIdent,
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String apellido1,
+            @RequestParam(required = false) String apellido2,
+            @RequestParam(required = false) String telefono,
+            @RequestParam(required = false) String email) {
 
-            // Obtenemos la autenticación actual desde el SecurityContextHolder
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-            CustomUserDetails customDetails = (CustomUserDetails) authentication.getDetails();
-
-            Long idUsuario = customDetails.getIdUsuario();
-
-            // Se busca el usuario en la base de datos a partir del id
-            Optional<Usuario> usuario = usuarioService.getUsuarioPorId(idUsuario);
-
-            if (usuario.isPresent()) {
-                return ResponseEntity.ok(usuario.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ApiError("Usuario no encontrado"));
-            }
-        } catch (Exception e) {
-            System.out.println("Error en getUsuarioLogueado: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiError("Token inválido o usuario no encontrado"));
-        }
-    } */
-
-    // AÑADIR PARA BUSCAR CLIENTES
+        List<Usuario> clientes = usuarioService.buscarClientes(numIdent, nombre, apellido1, apellido2, telefono, email);
+        return ResponseEntity.ok(clientes);
+    }
 
     @PostMapping("/create")
     public ResponseEntity<Object> createUsuario(@RequestBody Usuario usuario) {
