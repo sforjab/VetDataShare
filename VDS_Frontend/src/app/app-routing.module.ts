@@ -41,6 +41,10 @@ const routes: Routes = [
     loadChildren: () => import('./vacuna/vacuna.module').then(m => m.VacunaModule),
   },
   {
+    path: 'acceso_temporal', 
+    loadChildren: () => import('./acceso-temporal/acceso-temporal.module').then(m => m.AccesoTemporalModule),
+  },
+  {
     path: 'acceso-no-autorizado',
     component: AccesoRestringidoComponent,
   }

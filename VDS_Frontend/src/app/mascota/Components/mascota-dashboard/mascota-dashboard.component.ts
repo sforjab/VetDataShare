@@ -71,23 +71,30 @@ export class MascotaDashboardComponent implements OnInit {
     }
   }
 
-    volver(): void {
-      const idUsuarioSesion = sessionStorage.getItem('idUsuario');
-      const rolUsuarioSesion = sessionStorage.getItem('rol');
-    
-      if (!idUsuarioSesion || !rolUsuarioSesion) {
-        console.error('No se encontraron datos de sesión. Redirigiendo a acceso no autorizado.');
-        this.router.navigate(['/acceso-no-autorizado']);
-        return;
-      }
-    
-      if (rolUsuarioSesion === 'CLIENTE') {
-        // Navegar al listado de mascotas del cliente
-        this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
-      } else {
-        // Navegar a la gestión de mascotas
-        this.router.navigate(['/mascota/gestion-mascotas']);
-      }
+  navegarAccesoTemporal(): void {
+    if (this.idMascota !== null) {
+      this.router.navigate([`/acceso_temporal/generar/${this.idMascota}`]);
+    } else {
+      console.error('ID de la mascota no disponible para navegación');
     }
-    
+  }
+
+  volver(): void {
+    const idUsuarioSesion = sessionStorage.getItem('idUsuario');
+    const rolUsuarioSesion = sessionStorage.getItem('rol');
+  
+    if (!idUsuarioSesion || !rolUsuarioSesion) {
+      console.error('No se encontraron datos de sesión. Redirigiendo a acceso no autorizado.');
+      this.router.navigate(['/acceso-no-autorizado']);
+      return;
+    }
+  
+    if (rolUsuarioSesion === 'CLIENTE') {
+      // Navegar al listado de mascotas del cliente
+      this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
+    } else {
+      // Navegar a la gestión de mascotas
+      this.router.navigate(['/mascota/gestion-mascotas']);
+    }
+  }
 }

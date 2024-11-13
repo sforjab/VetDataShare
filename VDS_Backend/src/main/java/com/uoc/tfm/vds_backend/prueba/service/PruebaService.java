@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.uoc.tfm.vds_backend.mascota.model.Mascota;
-import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
 import com.uoc.tfm.vds_backend.prueba.model.Prueba;
 import com.uoc.tfm.vds_backend.prueba.repository.PruebaRepository;
 

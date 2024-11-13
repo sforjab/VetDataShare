@@ -44,7 +44,7 @@ public class AccesoTemporalController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Mascota no encontrada"));
 
         AccesoTemporal acceso = accesoTemporalService.generarAccesoTemporal(usuario, mascota, request.getTipo(), 
-                LocalDateTime.now().plusMinutes(15));
+                LocalDateTime.now().plusMinutes(60));
 
         return ResponseEntity.ok(acceso);
     }
