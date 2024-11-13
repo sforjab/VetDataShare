@@ -6,8 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { QRCodeModule } from 'angularx-qrcode';
-import { AccesoTemporalValidarComponent } from './Components/acceso-temporal-validar/acceso-temporal-validar.component';
+/* import { QRCodeModule } from 'angularx-qrcode';
+ */import { AccesoTemporalValidarComponent } from './Components/acceso-temporal-validar/acceso-temporal-validar.component';
 import { NumeroColegiadoComponent } from './Components/numero-colegiado/numero-colegiado.component';
 import { MatOptionModule } from '@angular/material/core';
 
@@ -25,7 +25,7 @@ import { MatOptionModule } from '@angular/material/core';
     MatButtonModule,
     MatOptionModule,
     FormsModule,
-    QRCodeModule
+    /* QRCodeModule */
   ]
 })
 export class AccesoTemporalModule { }
