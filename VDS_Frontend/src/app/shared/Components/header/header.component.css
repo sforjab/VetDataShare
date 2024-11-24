@@ -27,7 +27,8 @@
       }
   
       .login-btn,
-      .logout-btn {
+      .logout-btn,
+      .acceso-temporal-btn {
         background-color: white;
         color: #3f51b5;
         border: none;
@@ -36,6 +37,7 @@
         cursor: pointer;
         font-weight: bold;
         transition: background-color 0.3s;
+        margin-left: 1rem;
   
         &:hover {
           background-color: #c5cae9;

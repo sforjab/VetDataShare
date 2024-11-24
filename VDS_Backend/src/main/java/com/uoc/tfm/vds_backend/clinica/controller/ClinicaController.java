@@ -5,16 +5,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.uoc.tfm.vds_backend.clinica.model.Clinica;
+import com.uoc.tfm.vds_backend.clinica.dto.ClinicaDTO;
 import com.uoc.tfm.vds_backend.clinica.service.ClinicaService;
 import com.uoc.tfm.vds_backend.error.ApiError;
 
@@ -27,34 +20,33 @@ public class ClinicaController {
 
     @GetMapping("/getClinicaPorId/{id}")
     public ResponseEntity<Object> getClinicaPorId(@PathVariable Long id) {
-        Optional<Clinica> clinica = clinicaService.getClinicaPorId(id);
-
-        if (clinica.isPresent()) {
-            return ResponseEntity.ok(clinica.get());
+        Optional<ClinicaDTO> clinicaDTO = clinicaService.getClinicaPorId(id);
+        if (clinicaDTO.isPresent()) {
+            return ResponseEntity.ok(clinicaDTO.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiError("Clínica no encontrada con ID: " + id));
         }
     }
 
+
     @GetMapping("/getClinicaPorNombre/{nombre}")
     public ResponseEntity<Object> getClinicaPorNombre(@PathVariable String nombre) {
-        Optional<Clinica> clinica = clinicaService.getClinicaPorNombre(nombre);
-
-        if (clinica.isPresent()) {
-            return ResponseEntity.ok(clinica.get());
+        Optional<ClinicaDTO> clinicaDTO = clinicaService.getClinicaPorNombre(nombre);
+        if (clinicaDTO.isPresent()) {
+            return ResponseEntity.ok(clinicaDTO.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiError("Clínica no encontrada con nombre: " + nombre));
         }
-    }
+    }    
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createClinica(@RequestBody Clinica clinica) {
-        Optional<Clinica> clinicaCreada = clinicaService.createClinica(clinica);
+    public ResponseEntity<Object> createClinica(@RequestBody ClinicaDTO clinicaDTO) {
+        Optional<ClinicaDTO> clinicaCreada = clinicaService.createClinica(clinicaDTO);
 
         if (clinicaCreada.isPresent()) {
-            return ResponseEntity.ok(clinicaCreada.get());
+            return ResponseEntity.status(HttpStatus.CREATED).body(clinicaCreada.get());
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new ApiError("Error al crear la clínica. Nombre ya en uso."));
@@ -62,11 +54,11 @@ public class ClinicaController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Object> updateClinica(@PathVariable Long id, @RequestBody Clinica clinica) {
-        Optional<Clinica> clinicaModificada = clinicaService.updateClinica(id, clinica);
+    public ResponseEntity<Object> updateClinica(@PathVariable Long id, @RequestBody ClinicaDTO clinicaDTO) {
+        Optional<ClinicaDTO> clinicaActualizada = clinicaService.updateClinica(id, clinicaDTO);
 
-        if (clinicaModificada.isPresent()) {
-            return ResponseEntity.ok(clinicaModificada.get());
+        if (clinicaActualizada.isPresent()) {
+            return ResponseEntity.ok(clinicaActualizada.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiError("No se pudo actualizar. Clínica no encontrada."));

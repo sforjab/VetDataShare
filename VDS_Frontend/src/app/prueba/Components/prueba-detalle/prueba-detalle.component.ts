@@ -3,6 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Prueba, TipoPrueba } from '../../Models/prueba.dto';
 import { PruebaService } from '../../Services/prueba.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Mascota } from 'src/app/mascota/Models/mascota.dto';
+import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
+import { MascotaService } from 'src/app/mascota/Services/mascota.service';
+import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
+import { ConsultaService } from 'src/app/consulta/Services/consulta.service';
 
 @Component({
   selector: 'app-prueba-detalle',
@@ -10,13 +15,14 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./prueba-detalle.component.css']
 })
 export class PruebaDetalleComponent implements OnInit {
-  /* prueba: Prueba | null = null; */
-
   prueba: Partial<Prueba> = {};
-  tiposPrueba: TipoPrueba[] = [TipoPrueba.IMAGEN, TipoPrueba.ANALÍTICA]; // Valores del desplegable
+  tiposPrueba: TipoPrueba[] = [TipoPrueba.IMAGEN, TipoPrueba.ANALÍTICA];
   idPrueba: number | undefined;
+  mascota: Mascota | null = null;
+  veterinario: Usuario | null = null;
 
-  constructor(private pruebaService: PruebaService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private pruebaService: PruebaService, private consultaService: ConsultaService, private mascotaService: MascotaService, private usuarioService: UsuarioService, 
+              private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -34,15 +40,52 @@ export class PruebaDetalleComponent implements OnInit {
     this.pruebaService.getPruebaPorId(idPrueba).subscribe({
       next: prueba => {
         this.prueba = prueba;
-        if (!this.prueba.tipo) {
-          this.prueba.tipo = this.tiposPrueba[0]; // Valor por defecto si falta
+
+        // Cargar detalles adicionales
+        if (prueba.mascotaId) {
+          this.cargarMascota(prueba.mascotaId);
         }
-        if (!this.prueba.descripcion) {
-          this.prueba.descripcion = ''; // Inicializa con un valor vacío
+        if (prueba.consultaId) {
+          this.cargarVeterinarioDesdeConsulta(prueba.consultaId);
         }
+
+        // Valores predeterminados
+        this.prueba.tipo = this.prueba.tipo || this.tiposPrueba[0];
+        this.prueba.descripcion = this.prueba.descripcion || '';
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar la prueba:', err);
+      }
+    });
+  }
+
+  cargarMascota(idMascota: number): void {
+    this.mascotaService.getMascotaPorId(idMascota).subscribe({
+      next: mascota => {
+        this.mascota = mascota;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al cargar la mascota:', err);
+      }
+    });
+  }
+
+  cargarVeterinarioDesdeConsulta(idConsulta: number): void {
+    this.consultaService.getConsultaPorId(idConsulta).subscribe({
+      next: consulta => {
+        if (consulta.veterinarioId) {
+          this.usuarioService.getUsuarioPorId(consulta.veterinarioId).subscribe({
+            next: veterinario => {
+              this.veterinario = veterinario;
+            },
+            error: (err: HttpErrorResponse) => {
+              console.error('Error al cargar el veterinario:', err);
+            }
+          });
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al cargar la consulta:', err);
       }
     });
   }
@@ -52,6 +95,6 @@ export class PruebaDetalleComponent implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate([`/prueba/mascota-pruebas-list/${this.prueba.mascota?.id}`]);
+    this.router.navigate([`/prueba/mascota-pruebas-list/${this.prueba.mascotaId}`]);
   }
 }

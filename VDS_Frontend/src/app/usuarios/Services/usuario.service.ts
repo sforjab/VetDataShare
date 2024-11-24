@@ -91,6 +91,36 @@ export class UsuarioService {
     );
   }
 
+  buscarEmpleados(idClinica: number, filtros: {
+    nombre?: string;
+    apellido1?: string;
+    apellido2?: string;
+    rol?: string;
+  }): Observable<Usuario[]> {
+    let params = new HttpParams();
+
+    // Solo agregamos los parámetros que no son nulos o vacíos
+    if (filtros.nombre) {
+      params = params.set('nombre', filtros.nombre);
+    }
+    if (filtros.apellido1) {
+      params = params.set('apellido1', filtros.apellido1);
+    }
+    if (filtros.apellido2) {
+      params = params.set('apellido2', filtros.apellido2);
+    }
+    if (filtros.rol) {
+      params = params.set('rol', filtros.rol);
+    }
+
+    console.log('Filtros enviados: ', filtros);
+
+    return this.http.get<Usuario[]>(`${this.usuarioUrl}/buscarEmpleados/${idClinica}`, { params }).pipe(
+      tap(empleados => console.log('Empleados encontrados: ', empleados)),
+      catchError(this.handleError)
+    );
+  }
+
   // Crear un nuevo usuario
   createUsuario(usuario: Usuario): Observable<Usuario> {
     return this.http.post<Usuario>(`${this.usuarioUrl}/create`, usuario).pipe(

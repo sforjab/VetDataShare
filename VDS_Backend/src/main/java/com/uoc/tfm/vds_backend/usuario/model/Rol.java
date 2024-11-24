@@ -4,5 +4,6 @@ public enum Rol {
     ADMIN,
     ADMIN_CLINICA,
     VETERINARIO,
-    CLIENTE
+    CLIENTE,
+    TEMPORAL
 }

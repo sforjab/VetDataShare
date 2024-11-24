@@ -1,1 +1,9 @@
-<p>numero-colegiado works!</p>
+<h1>Número de Colegiado</h1>
+<mat-form-field appearance="fill">
+  <mat-label>Introduce el número de colegiado</mat-label>
+  <input matInput [(ngModel)]="numColegiado">
+</mat-form-field>
+
+<button mat-raised-button color="primary" (click)="validarColegiado()">Validar y Registrar</button>
+
+<p *ngIf="mensaje">{{ mensaje }}</p>

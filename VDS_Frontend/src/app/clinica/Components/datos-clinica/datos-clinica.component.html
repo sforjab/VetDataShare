@@ -1,0 +1,33 @@
+<div class="datos-clinica-container">
+    <div class="titulo-container">
+      <h1 class="titulo-clinica">Datos de la Clínica</h1>
+    </div>
+    <form class="datos-clinica-form">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="clinica.nombre" name="nombre">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Dirección</mat-label>
+        <input matInput [(ngModel)]="clinica.direccion" name="direccion">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Teléfono</mat-label>
+        <input matInput [(ngModel)]="clinica.telefono" name="telefono">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="clinica.email" name="email">
+      </mat-form-field>
+  
+      <!-- Contenedor para los botones -->
+      <div class="botones-accion">
+        <button mat-raised-button color="primary" (click)="guardarCambios()">Guardar</button>
+        <button mat-raised-button color="warn" (click)="volver()">Volver</button>
+      </div>
+    </form>
+</div>
+  

@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uoc.tfm.vds_backend.auth.model.AuthResponse;
 import com.uoc.tfm.vds_backend.auth.model.LoginRequest;
 import com.uoc.tfm.vds_backend.jwt.JwtService;
+import com.uoc.tfm.vds_backend.usuario.dto.UsuarioDTO;
+import com.uoc.tfm.vds_backend.usuario.mapper.UsuarioMapper;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
     @Autowired
     private UsuarioService usuarioService;
 
@@ -31,15 +34,22 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
-        Optional<Usuario> usuario = usuarioService.getUsuarioPorUsername(loginRequest.getUsername());
+        // Recuperar el usuario directamente desde la base de datos (no usar DTO aquí).
+        Optional<Usuario> usuario = usuarioService.getUsuarioEntityPorUsername(loginRequest.getUsername());
 
         if (usuario.isEmpty()) {
             System.out.println("Usuario no encontrado: " + loginRequest.getUsername());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        if (usuario.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), usuario.get().getPassword())) {
+        // Verificar la contraseña usando la entidad Usuario
+        if (passwordEncoder.matches(loginRequest.getPassword(), usuario.get().getPassword())) {
             System.out.println("Usuario autenticado: " + loginRequest.getUsername());
+
+            // Generar token JWT
             String token = jwtService.generateToken(usuario.get(), usuario.get().getId());
+
+            // Devolver respuesta con el token
             return ResponseEntity.ok(new AuthResponse(token, usuario.get().getRol().toString(), usuario.get().getId()));
         }
 

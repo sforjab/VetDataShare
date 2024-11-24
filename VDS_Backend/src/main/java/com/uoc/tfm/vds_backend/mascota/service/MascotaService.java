@@ -2,17 +2,18 @@ package com.uoc.tfm.vds_backend.mascota.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.uoc.tfm.vds_backend.mascota.dto.MascotaDTO;
+import com.uoc.tfm.vds_backend.mascota.mapper.MascotaMapper;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
 import com.uoc.tfm.vds_backend.mascota.repository.MascotaRepository;
-import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
 
 @Service
@@ -24,105 +25,129 @@ public class MascotaService {
     @Autowired
     UsuarioService usuarioService;
 
-    public Optional<Mascota> getMascotaPorId(Long id) {
-        return mascotaRepository.findById(id);
+    @Autowired
+    MascotaMapper mascotaMapper;
+
+    @Transactional
+    public Optional<MascotaDTO> getMascotaPorId(Long id) {
+        return mascotaRepository.findById(id)
+                .map(mascotaMapper::toDTO);
+    }
+
+    @Transactional
+    public Mascota getEntityById(Long id) {
+        return mascotaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada con ID: " + id));
+    }
+
+
+    @Transactional
+    public Optional<MascotaDTO> getMascotaPorNumChip(String numChip) {
+        return mascotaRepository.findByNumChip(numChip)
+                .map(mascotaMapper::toDTO);
+    }
+
+    @Transactional
+    public List<MascotaDTO> getMascotaPorNombre(String nombre) {
+        return mascotaRepository.findByNombre(nombre).stream()
+                .map(mascotaMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<MascotaDTO> getMascotasPorIdUsuario(Long idUsuario) {
+        return mascotaRepository.findByUsuarioId(idUsuario).stream()
+                .map(mascotaMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public boolean verificarPropietario(Long idMascota, Long idUsuario) {
+        System.out.println("Verificando propietario para mascota ID: " + idMascota + ", usuario ID: " + idUsuario);
+    
+        Optional<Mascota> mascotaOpt = mascotaRepository.findById(idMascota);
+    
+        if (mascotaOpt.isPresent()) {
+            Mascota mascota = mascotaOpt.get();
+            Long idPropietario = mascota.getUsuario().getId();
+            System.out.println("Propietario registrado en la base de datos: " + idPropietario);
+    
+            boolean esPropietario = idPropietario.equals(idUsuario);
+            System.out.println("¿Usuario autenticado es propietario?: " + esPropietario);
+    
+            return esPropietario;
+        }
+    
+        System.out.println("Mascota no encontrada en la base de datos.");
+        return false;
     }
     
-    public Optional<Mascota> getMascotaPorNumChip(String numChip) {
-        return mascotaRepository.findByNumChip(numChip);
-    }
 
-    public List<Mascota> getMascotaPorNombre(String nombre) {
-        return mascotaRepository.findByNombre(nombre);
-    }
-
-    public List<Mascota> getMascotasPorIdUsuario(Long idUsuario) {
-        Optional<Usuario> usuario = usuarioService.getUsuarioPorId(idUsuario);
-        
-        // Si el usuario no existe, se devuelve lista vacía
-        if (!usuario.isPresent()) {
-            return List.of();
-        }
-        
-        return usuario.get().getMascotas();
-    }
-
+    @Transactional
     public boolean esPropietarioDeMascota(Long idUsuario, Long idMascota) {
         return mascotaRepository.existsByIdAndUsuarioId(idMascota, idUsuario);
     }
 
     @Transactional
-public List<Mascota> buscarMascotas(String numChip, String nombre, String especie, String raza) {
-    Mascota probe = new Mascota();
-    probe.setNombre(numChip);
-    probe.setNombre(nombre);
-    probe.setEspecie(especie);
-    probe.setRaza(raza);
+    public List<MascotaDTO> buscarMascotas(String numChip, String nombre, String especie, String raza) {
+        Mascota probe = new Mascota();
+        probe.setNumChip(numChip);
+        probe.setNombre(nombre);
+        probe.setEspecie(especie);
+        probe.setRaza(raza);
 
-    ExampleMatcher matcher = ExampleMatcher.matching()
-            .withIgnorePaths("id", "sexo", "fechaNacimiento")
-            .withIgnoreNullValues()
-            .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-            .withIgnoreCase();
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnorePaths("id", "sexo", "fechaNacimiento")
+                .withIgnoreNullValues()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase();
 
-    Example<Mascota> example = Example.of(probe, matcher);
-    return mascotaRepository.findAll(example);
-}
-
-    
-    @Transactional
-    public Optional<Mascota> createMascota(Mascota mascota) {       
-        try {
-            // Si existe otra mascota con el mismo número de chip, se devuelve 'Optional' vacío
-            if (mascotaRepository.findByNumChip(mascota.getNumChip()).isPresent()) {
-                return Optional.empty();
-            }
-
-            Mascota mascotaCreada = mascotaRepository.save(mascota);
-            return Optional.of(mascotaCreada);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        Example<Mascota> example = Example.of(probe, matcher);
+        return mascotaRepository.findAll(example).stream()
+                .map(mascotaMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public Optional<Mascota> updateMascota(Long id, Mascota mascotaModificada) {
-        try {
-            Optional<Mascota> mascota = mascotaRepository.findById(id);
+    public Optional<MascotaDTO> createMascota(MascotaDTO mascotaDTO) {
+        if (mascotaRepository.findByNumChip(mascotaDTO.getNumChip()).isPresent()) {
+            return Optional.empty();
+        }
+        Mascota mascota = mascotaMapper.toEntity(mascotaDTO);
+        Mascota mascotaCreada = mascotaRepository.save(mascota);
+        return Optional.of(mascotaMapper.toDTO(mascotaCreada));
+    }
 
-            // Si la mascota no existe, devolvemos 'Optional' vacío
-            if (!mascota.isPresent()) {
-                return Optional.empty();
-            }
+    @Transactional
+    public Optional<MascotaDTO> updateMascota(Long id, MascotaDTO mascotaDTO) {
+        Optional<Mascota> mascotaExistente = mascotaRepository.findById(id);
 
-            Optional<Mascota> mascotaMismoChip = mascotaRepository.findByNumChip(mascotaModificada.getNumChip());
-            // Si existe otra mascota con el mismo 'numChip', se devuelve 'Optional' vacío
+        if (mascotaExistente.isPresent()) {
+            Mascota mascota = mascotaExistente.get();
+
+            Optional<Mascota> mascotaMismoChip = mascotaRepository.findByNumChip(mascotaDTO.getNumChip());
             if (mascotaMismoChip.isPresent() && !mascotaMismoChip.get().getId().equals(id)) {
                 return Optional.empty();
             }
 
-            // Copiamos las propiedades de 'mascotaModificada' a 'mascota' existente, excluyendo el 'id'
-            BeanUtils.copyProperties(mascotaModificada, mascota.get(), "id");
-            
-            // Guardamos y devolvemos la mascota actualizada
-            Mascota mascotaAct = mascotaRepository.save(mascota.get());
-            return Optional.of(mascotaAct);
-        } catch (Exception e) {
-            return Optional.empty();
+            mascota.setNumChip(mascotaDTO.getNumChip());
+            mascota.setNombre(mascotaDTO.getNombre());
+            mascota.setEspecie(mascotaDTO.getEspecie());
+            mascota.setRaza(mascotaDTO.getRaza());
+            mascota.setSexo(mascotaDTO.getSexo());
+            mascota.setFechaNacimiento(mascotaDTO.getFechaNacimiento());
+            Mascota mascotaActualizada = mascotaRepository.save(mascota);
+
+            return Optional.of(mascotaMapper.toDTO(mascotaActualizada));
         }
+        return Optional.empty();
     }
 
     @Transactional
     public boolean deleteMascota(Long id) {
-        try {
-            if(mascotaRepository.existsById(id)) {
-                mascotaRepository.deleteById(id);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
+        if (mascotaRepository.existsById(id)) {
+            mascotaRepository.deleteById(id);
+            return true;
         }
+        return false;
     }
 }

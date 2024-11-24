@@ -73,7 +73,7 @@ export class MascotaDashboardComponent implements OnInit {
 
   navegarAccesoTemporal(): void {
     if (this.idMascota !== null) {
-      this.router.navigate([`/acceso_temporal/generar/${this.idMascota}`]);
+      this.router.navigate([`/acceso-temporal/generar/${this.idMascota}`]);
     } else {
       console.error('ID de la mascota no disponible para navegación');
     }

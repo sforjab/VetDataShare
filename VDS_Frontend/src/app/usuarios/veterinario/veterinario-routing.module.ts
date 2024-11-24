@@ -8,8 +8,8 @@ const routes: Routes = [
   {
     path: 'dashboard/:idUsuario', // Dashboard de veterinario
     component: VeterinarioDashboardComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['VETERINARIO'] }
+    /* canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO'] } */
   },
   { path: 'perfil/:idUsuario', component: VeterinarioPerfilComponent }, // Perfil del veterinario
 

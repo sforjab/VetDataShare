@@ -10,7 +10,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.authService.tokenUsuario;
+    const token = sessionStorage.getItem('jwtTemporal') || this.authService.tokenUsuario;
 
     let modifiedReq = req.clone({
       setHeaders: {
@@ -26,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       });
     }
-
+    console.log('Token enviado en el request:', token);
     return next.handle(modifiedReq);
   }
 }

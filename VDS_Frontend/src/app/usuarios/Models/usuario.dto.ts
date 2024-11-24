@@ -1,3 +1,5 @@
+import { Clinica } from "src/app/clinica/Models/clinica.dto";
+
 export interface Usuario {
     id?: number;
     numIdent: string;
@@ -11,14 +13,14 @@ export interface Usuario {
     rol: Rol;
     username: string;
     password: string;
-    clinicaId?: string; // Clínica asociada (solo para veterinarios o admin de clínica
-    //CAMBIAR A CLINICA
+    clinicaId?: number; // Clínica asociada (solo para veterinarios o admin de clínica)
   }
   
   export enum Rol {
     ADMIN = 'ADMIN',
     ADMIN_CLINICA = 'ADMIN_CLINICA',
     VETERINARIO = 'VETERINARIO',
-    CLIENTE = 'CLIENTE'
+    CLIENTE = 'CLIENTE',
+    TEMPORAL = 'TEMPORAL'
   }
   

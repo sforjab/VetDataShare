@@ -1,78 +1,73 @@
 package com.uoc.tfm.vds_backend.vacuna.service;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.uoc.tfm.vds_backend.vacuna.dto.VacunaDTO;
+import com.uoc.tfm.vds_backend.vacuna.mapper.VacunaMapper;
 import com.uoc.tfm.vds_backend.vacuna.model.Vacuna;
 import com.uoc.tfm.vds_backend.vacuna.repository.VacunaRepository;
 
 @Service
 public class VacunaService {
+
     @Autowired
     private VacunaRepository vacunaRepository;
 
+    @Autowired
+    private VacunaMapper vacunaMapper;
 
     @Transactional
-    public Optional<Vacuna> getVacunaPorId(Long id) { // COMPROBAR SI REALMENTE ESTE Y EL DE PRUEBA HACE FALTA PORQUE NO ACCEDO AL DETALLE...AUNQUE SE PUEDE ELIMINAR Y EDITAR
-        return vacunaRepository.findById(id);
+    public Optional<VacunaDTO> getVacunaPorId(Long id) {
+        return vacunaRepository.findById(id).map(vacunaMapper::toDTO);
     }
 
     @Transactional
-    public List<Vacuna> getVacunasPorIdMascota(Long idMascota) {
-        return vacunaRepository.findByMascotaId(idMascota);
+    public List<VacunaDTO> getVacunasPorIdMascota(Long idMascota) {
+        return vacunaRepository.findByMascotaId(idMascota).stream()
+                .map(vacunaMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public List<Vacuna> getVacunasPorConsultaId(Long consultaId) {
-        return vacunaRepository.findByConsultaId(consultaId);
+    public List<VacunaDTO> getVacunasPorConsultaId(Long consultaId) {
+        return vacunaRepository.findByConsultaId(consultaId).stream()
+                .map(vacunaMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public Optional<Vacuna> createVacuna(Vacuna vacuna) {
+    public Optional<VacunaDTO> createVacuna(VacunaDTO vacunaDTO) {
         try {
+            Vacuna vacuna = vacunaMapper.toEntity(vacunaDTO);
             Vacuna vacunaCreada = vacunaRepository.save(vacuna);
-            return Optional.of(vacunaCreada);
+            return Optional.of(vacunaMapper.toDTO(vacunaCreada));
         } catch (Exception e) {
             return Optional.empty();
         }
     }
 
     @Transactional
-    public Optional<Vacuna> updatePrueba(Long id, Vacuna vacunaModificada) {
-        try {
-            Optional<Vacuna> vacuna = vacunaRepository.findById(id);
-
-            // Si la vacuna no existe, devolvemos 'Optional' vacío
-            if (!vacuna.isPresent()) {
-                return Optional.empty();
-            }
-
-            // Copiamos las propiedades de 'vacunaModificada' a 'vacuna', excluyendo el 'id'
-            BeanUtils.copyProperties(vacunaModificada, vacuna.get(), "id");
-
-            // Guardamos y devolvemos la prueba actualizada
-            Vacuna vacunaAct = vacunaRepository.save(vacuna.get());
-            return Optional.of(vacunaAct);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+    public Optional<VacunaDTO> updateVacuna(Long id, VacunaDTO vacunaDTO) {
+        return vacunaRepository.findById(id).map(vacunaExistente -> {
+            vacunaExistente.setNombre(vacunaDTO.getNombre());
+            vacunaExistente.setFecha(vacunaDTO.getFecha());
+            Vacuna vacunaActualizada = vacunaRepository.save(vacunaExistente);
+            return vacunaMapper.toDTO(vacunaActualizada);
+        });
     }
 
     @Transactional
     public boolean delete(Long id) {
-        try {
-            if (vacunaRepository.existsById(id)) {
-                vacunaRepository.deleteById(id);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
+        if (vacunaRepository.existsById(id)) {
+            vacunaRepository.deleteById(id);
+            return true;
         }
+        return false;
     }
 }

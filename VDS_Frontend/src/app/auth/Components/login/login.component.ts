@@ -25,10 +25,8 @@ export class LoginComponent {
 
         if (rolUsuario === 'CLIENTE') {
           this.router.navigate([`/cliente/dashboard/${idUsuario}`]);
-        } else if (rolUsuario === 'VETERINARIO') {
+        } else if (rolUsuario === 'VETERINARIO' || rolUsuario === 'ADMIN_CLINICA') {
           this.router.navigate([`/veterinario/dashboard/${idUsuario}`]);
-        } else if (rolUsuario === 'ADMIN_CLINICA,') {
-          this.router.navigate([`/admin-clinica/dashboard/${idUsuario}`]); 
         } else if (rolUsuario === 'ADMIN') {
           this.router.navigate([`/admin/dashboard/${idUsuario}`]);
         } else {

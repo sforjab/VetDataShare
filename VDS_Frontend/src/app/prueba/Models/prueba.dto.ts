@@ -3,15 +3,15 @@ import { Mascota } from "src/app/mascota/Models/mascota.dto";
 
 export interface Prueba {
     id?: number;
-    tipo: TipoPrueba; // TipoPrueba: "IMAGEN" o "ANALÍTICA"
+    tipo: TipoPrueba;
     descripcion?: string;
-    fecha: string; // La fecha como string para simplificar la manipulación
+    fecha: string;
     resultado?: string;
-    consulta: Consulta;
-    mascota: Mascota;
-}
+    consultaId: number;
+    mascotaId: number;
+  }
   
-export enum TipoPrueba {
+  export enum TipoPrueba {
     IMAGEN = 'IMAGEN',
     ANALÍTICA = 'ANALÍTICA'
-}
+  }

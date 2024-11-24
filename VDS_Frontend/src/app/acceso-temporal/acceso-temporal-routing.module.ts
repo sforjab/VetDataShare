@@ -6,8 +6,8 @@ import { NumeroColegiadoComponent } from './Components/numero-colegiado/numero-c
 
 const routes: Routes = [
   { path: 'generar/:idMascota', component: AccesoTemporalGenerarComponent },
-  { path: 'validar/:token', component: AccesoTemporalValidarComponent },
-  { path: 'colegiado', component: NumeroColegiadoComponent }
+  { path: 'validar', component: AccesoTemporalValidarComponent },
+  { path: 'numero-colegiado/:token', component: NumeroColegiadoComponent }
 ];
 
 @NgModule({

@@ -53,7 +53,12 @@ public class JwtService {
         return extractClaim(token, claims -> claims.get("idUsuario", Long.class));
     }
 
-    // Generar el token con rol e ID de usuario
+    // Extraemos el ID de la mascota desde el token (para acceso temporal)
+    public Long extractIdMascota(String token) {
+        return extractClaim(token, claims -> claims.get("idMascota", Long.class));
+    }
+
+    // Generamos el token con rol e ID de usuario
     public String generateToken(UserDetails userDetails, Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("rol", userDetails.getAuthorities().iterator().next().getAuthority());
@@ -75,5 +80,20 @@ public class JwtService {
 
     private boolean isTokenExpired(String token) {
         return extractClaim(token, Claims::getExpiration).before(new Date());
+    }
+
+    // Generamos el token para usuarios temporales
+    public String generateTemporalToken(String tokenAccesoTemporal, Long idMascota) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("rol", "TEMPORAL"); // Rol temporal para accesos temporales
+        claims.put("idMascota", idMascota);
+    
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(tokenAccesoTemporal)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Expira en 1 hora
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 }

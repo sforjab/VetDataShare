@@ -1,17 +1,10 @@
-<!-- <h1>Generar acceso temporal</h1>
-<p>Mascota: {{ mascotaId }}</p>
-<mat-form-field>
-  <mat-label>Selecciona tipo de acceso</mat-label>
-  <mat-select [(value)]="tipo">
-    <mat-option value="qr">Código QR</mat-option>
-    <mat-option value="numerico">Código numérico</mat-option>
-  </mat-select>
-</mat-form-field>
+<h1>Generar acceso temporal</h1>
+<p>Mascota: {{ numChip }}</p>
+
 <button mat-raised-button color="primary" (click)="generarAcceso()">Generar</button>
-<div *ngIf="codigoGenerado">
-  <p *ngIf="tipo === 'numerico'">Código generado: {{ codigoGenerado }}</p>
-  <div *ngIf="tipo === 'qr'">
-    <qrcode [qrdata]="codigoGenerado" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
-  </div>
+
+<div *ngIf="codigoGeneradoQR && codigoGeneradoNumerico">
+  <p>Código QR:</p>
+  <qrcode [qrdata]="codigoGeneradoQR" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+  <p>Código numérico: {{ codigoGeneradoNumerico }}</p>
 </div>
- -->

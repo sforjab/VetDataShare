@@ -50,7 +50,7 @@ export class MascotaConsultasListComponent {
 
   volver(): void {
     if (this.idMascota) {
-      this.router.navigate([`/mascota/${this.idMascota}`]);
+      this.router.navigate([`/mascota/dashboard/${this.idMascota}`]);
     }
   }
 }

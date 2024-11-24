@@ -8,7 +8,5 @@ export interface Mascota {
     raza: string;
     fechaNacimiento: string;  // Usamos string para simplificar la manipulación de fechas
     usuario: Usuario;  // Referencia al usuario propietario de la mascota
-    /* pruebas?: Prueba[];  // Lista de pruebas asociadas a la mascota, opcional
-    vacunas?: Vacuna[];  // Lista de vacunas asociadas a la mascota, opcional */
 }
   

@@ -7,15 +7,23 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class AccesoTemporalService {
-  private acessoTemporalUrl = `${environment.APIHost}api/accesos-temporales`;  // URL del backend para la gestión de mascotas
+  private acessoTemporalUrl = `${environment.APIHost}api/accesos-temporales`;
 
   constructor(private http: HttpClient) {}
 
-  generarAccesoTemporal(data: { usuarioId: number; mascotaId: number; tipo: string }): Observable<any> {
+  generarAccesoTemporal(data: { usuarioId: number; mascotaId: number }): Observable<any> {
     return this.http.post(`${this.acessoTemporalUrl}/generar`, data);
   }
 
-  validarToken(token: string): Observable<any> {
-    return this.http.get(`${this.acessoTemporalUrl}/validar/${token}`);
+  validarTokenSinExpiracion(token: string): Observable<any> {
+    return this.http.get(`${this.acessoTemporalUrl}/validar-sin-expiracion/${token}`);
+  }
+
+  actualizarAccesoTemporal(data: { token: string; numColegiado: string; fechaExpiracion: string }): Observable<any> {
+    return this.http.put(`${this.acessoTemporalUrl}/actualizar`, data);
+  }
+
+  getAccesoTemporalPorId(id: number): Observable<any> {
+    return this.http.get(`${this.acessoTemporalUrl}/${id}`);
   }
 }

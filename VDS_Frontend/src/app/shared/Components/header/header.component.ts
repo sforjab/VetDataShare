@@ -66,4 +66,8 @@ export class HeaderComponent implements OnInit {
     // Redirigimos a la página de inicio
     this.router.navigate(['/']);
   }
+
+  navegarAccesoTemporalValidar(): void {
+    this.router.navigate(['/acceso-temporal/validar']);
+  }
 }

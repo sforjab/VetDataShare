@@ -1,89 +1,79 @@
 package com.uoc.tfm.vds_backend.prueba.controller;
-import java.util.List;
-import java.util.Optional;
+
+import com.uoc.tfm.vds_backend.prueba.dto.PruebaDTO;
+import com.uoc.tfm.vds_backend.prueba.service.PruebaService;
+import com.uoc.tfm.vds_backend.error.ApiError;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.uoc.tfm.vds_backend.error.ApiError;
-import com.uoc.tfm.vds_backend.prueba.model.Prueba;
-import com.uoc.tfm.vds_backend.prueba.service.PruebaService;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pruebas")
 public class PruebaController {
 
     @Autowired
-    PruebaService pruebaService;
+    private PruebaService pruebaService;
 
     @GetMapping("/getPruebaPorId/{id}")
     public ResponseEntity<Object> getPruebaPorId(@PathVariable Long id) {
-        Optional<Prueba> prueba = pruebaService.getPruebaPorId(id);
+        Optional<PruebaDTO> pruebaDTO = pruebaService.getPruebaPorId(id);
 
-        if (prueba.isPresent()) {
-            return ResponseEntity.ok(prueba.get());
+        if (pruebaDTO.isPresent()) {
+            return ResponseEntity.ok(pruebaDTO.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body(new ApiError("Prueba no encontrada con ID: " + id));
+                    .body(new ApiError("Prueba no encontrada con ID: " + id));
         }
     }
 
-    @GetMapping("/getPruebasPorIdMascota/{id}")
-    public ResponseEntity<Object> getPruebasPorIdMascota(@PathVariable Long id) {
-        List<Prueba> pruebas = pruebaService.getPruebasPorIdMascota(id);
+    @GetMapping("/getPruebasPorIdMascota/{idMascota}")
+    public ResponseEntity<List<PruebaDTO>> getPruebasPorIdMascota(@PathVariable Long idMascota) {
+        List<PruebaDTO> pruebas = pruebaService.getPruebasPorIdMascota(idMascota);
+        return ResponseEntity.ok(pruebas);
+    }
 
-        if (pruebas.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body(new ApiError("No se encontraron pruebas para la mascota con ID: " + id));
-        } else {
-            return ResponseEntity.ok(pruebas);
-        }
+    @GetMapping("/getPruebasPorConsultaId/{idConsulta}")
+    public ResponseEntity<List<PruebaDTO>> getPruebasPorConsultaId(@PathVariable Long idConsulta) {
+        List<PruebaDTO> pruebas = pruebaService.getPruebasPorConsultaId(idConsulta);
+        return ResponseEntity.ok(pruebas);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createPrueba(@RequestBody Prueba prueba) {
-        Optional<Prueba> pruebaCreada = pruebaService.createPrueba(prueba);
+    public ResponseEntity<Object> createPrueba(@RequestBody PruebaDTO pruebaDTO) {
+        Optional<PruebaDTO> pruebaCreada = pruebaService.createPrueba(pruebaDTO);
 
         if (pruebaCreada.isPresent()) {
-            return ResponseEntity.ok(pruebaCreada.get());
+            return ResponseEntity.status(HttpStatus.CREATED).body(pruebaCreada.get());
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                                 .body(new ApiError("Error al crear la prueba."));
+                    .body(new ApiError("Error al crear la prueba."));
         }
     }
 
-    // Actualizar una prueba existente
     @PutMapping("/update/{id}")
-    public ResponseEntity<Object> updatePrueba(@PathVariable Long id, @RequestBody Prueba prueba) {
-        Optional<Prueba> pruebaModificada = pruebaService.updatePrueba(id, prueba);
+    public ResponseEntity<Object> updatePrueba(@PathVariable Long id, @RequestBody PruebaDTO pruebaDTO) {
+        Optional<PruebaDTO> pruebaActualizada = pruebaService.updatePrueba(id, pruebaDTO);
 
-        if (pruebaModificada.isPresent()) {
-            return ResponseEntity.ok(pruebaModificada.get());
+        if (pruebaActualizada.isPresent()) {
+            return ResponseEntity.ok(pruebaActualizada.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body(new ApiError("No se pudo actualizar. Prueba no encontrada."));
+                    .body(new ApiError("Prueba no encontrada con ID: " + id));
         }
     }
 
-    // Eliminar una prueba por su ID
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deletePrueba(@PathVariable Long id) {
-        boolean pruebaEliminada = pruebaService.delete(id);
-
-        if (pruebaEliminada) {
+        if (pruebaService.delete(id)) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body(new ApiError("Prueba no encontrada con ID: " + id));
+                    .body(new ApiError("Prueba no encontrada con ID: " + id));
         }
     }
 }

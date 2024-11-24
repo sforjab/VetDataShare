@@ -7,6 +7,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Prueba } from 'src/app/prueba/Models/prueba.dto';
 import { Vacuna } from 'src/app/vacuna/Models/vacuna.dto';
 import { Mascota } from 'src/app/mascota/Models/mascota.dto';
+import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
+import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 
 @Component({
   selector: 'app-consulta-detalle',
@@ -15,12 +17,14 @@ import { Mascota } from 'src/app/mascota/Models/mascota.dto';
 })
 export class ConsultaDetalleComponent implements OnInit {
   consulta: Consulta | null = null;
-  /* mascota: Mascota | null = null; */
+  veterinario: Usuario | null = null; // Detalles del veterinario
+  mascota: Mascota | null = null; // Detalles de la mascota
   pruebas: Prueba[] = [];
   vacunas: Vacuna[] = [];
   idConsulta: number | undefined;
 
-  constructor(private consultaService: ConsultaService, /* private mascotaService: MascotaService, */ private route: ActivatedRoute, private router: Router) {}
+  constructor(private consultaService: ConsultaService, private usuarioService: UsuarioService, private mascotaService: MascotaService, 
+              private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -38,49 +42,64 @@ export class ConsultaDetalleComponent implements OnInit {
 
   cargarConsulta(idConsulta: number): void {
     this.consultaService.getConsultaPorId(idConsulta).subscribe({
-      next: consulta => {
+      next: (consulta) => {
         this.consulta = consulta;
-        /* if (this.consulta.mascota.id !== undefined) {
-          this.cargarMascota(this.consulta.mascota.id);
-        } */
+
+        // Cargar detalles relacionados por ID
+        if (consulta.mascotaId) {
+          this.cargarMascota(consulta.mascotaId);
+        }
+        if (consulta.veterinarioId) {
+          this.cargarVeterinario(consulta.veterinarioId);
+        }
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar la consulta:', err);
-        /* this.router.navigate(['/']); */
-      }
+      },
     });
   }
 
- /*  cargarMascota(idMascota: number): void {
+  cargarMascota(idMascota: number): void {
     this.mascotaService.getMascotaPorId(idMascota).subscribe({
-      next: mascota => {
+      next: (mascota) => {
         this.mascota = mascota;
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar la mascota:', err);
-      }
+      },
     });
-  } */
+  }
+
+  cargarVeterinario(idVeterinario: number): void {
+    this.usuarioService.getUsuarioPorId(idVeterinario).subscribe({
+      next: (veterinario) => {
+        this.veterinario = veterinario;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al cargar el veterinario:', err);
+      },
+    });
+  }
 
   cargarPruebas(idConsulta: number): void {
     this.consultaService.getPruebasPorConsultaId(idConsulta).subscribe({
-      next: pruebas => {
+      next: (pruebas) => {
         this.pruebas = pruebas;
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar las pruebas:', err);
-      }
+      },
     });
   }
 
   cargarVacunas(idConsulta: number): void {
     this.consultaService.getVacunasPorConsultaId(idConsulta).subscribe({
-      next: vacunas => {
+      next: (vacunas) => {
         this.vacunas = vacunas;
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar las vacunas:', err);
-      }
+      },
     });
   }
 
@@ -89,7 +108,6 @@ export class ConsultaDetalleComponent implements OnInit {
   }
 
   volver(): void {
-    console.log(this.consulta?.mascota?.id);
-    this.router.navigate([`/consulta/mascota-consultas-list/${this.consulta?.mascota?.id}`]);
+    this.router.navigate([`/consulta/mascota-consultas-list/${this.consulta?.mascotaId}`]);
   }
 }

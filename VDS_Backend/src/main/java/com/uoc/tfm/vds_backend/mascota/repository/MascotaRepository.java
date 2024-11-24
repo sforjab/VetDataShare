@@ -14,6 +14,5 @@ public interface MascotaRepository extends JpaRepository <Mascota, Long> {
     Optional<Mascota> findByNumChip(String numChip);
     List<Mascota> findByNombre(String nombre);
     boolean existsByIdAndUsuarioId(Long idUsuario, Long idMascota);
-
-    // AÑADIR PARA BUSCAR MASCOTAS
+    List<Mascota> findByUsuarioId(Long usuarioId);
 }

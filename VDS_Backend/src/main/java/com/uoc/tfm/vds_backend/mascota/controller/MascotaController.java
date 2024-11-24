@@ -8,52 +8,78 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.uoc.tfm.vds_backend.error.ApiError;
 import com.uoc.tfm.vds_backend.jwt.CustomUserDetails;
-import com.uoc.tfm.vds_backend.mascota.model.Mascota;
+import com.uoc.tfm.vds_backend.mascota.dto.MascotaDTO;
 import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
-
 
 @RestController
 @RequestMapping("/api/mascotas")
 public class MascotaController {
+
     @Autowired
     MascotaService mascotaService;
 
     @GetMapping("/getMascotaPorId/{id}")
     public ResponseEntity<Object> getMascotaPorId(@PathVariable Long id) {
-        Optional<Mascota> mascota = mascotaService.getMascotaPorId(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (mascota.isPresent()) {
-            return ResponseEntity.ok(mascota.get());
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            if ("TEMPORAL".equals(userDetails.getRol()) &&
+                (userDetails.getIdMascota() == null || !userDetails.getIdMascota().equals(id))) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ApiError("No tiene acceso a esta mascota."));
+            }
+        }
+
+        Optional<MascotaDTO> mascotaDTO = mascotaService.getMascotaPorId(id);
+
+        if (mascotaDTO.isPresent()) {
+            return ResponseEntity.ok(mascotaDTO.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .body(new ApiError("Mascota no encontrada con ID: " + id));
+                    .body(new ApiError("Mascota no encontrada con ID: " + id));
         }
     }
 
-    @GetMapping("/getMascotaPorNumChip/{numChip}")
-    public ResponseEntity<Object> getMascotaPorNumChip(@PathVariable String numChip) {
-        Optional<Mascota> mascota = mascotaService.getMascotaPorNumChip(numChip);
-
-        if (mascota.isPresent()) {
-            return ResponseEntity.ok(mascota.get());
-        } else {
+     @GetMapping("/getMascotasPorIdUsuario/{id}")
+    public ResponseEntity<List<MascotaDTO>> getMascotasPorIdUsuario(@PathVariable Long id) {
+        List<MascotaDTO> mascotas = mascotaService.getMascotasPorIdUsuario(id);
+        if (mascotas.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .body(new ApiError("Mascota no encontrada con número de chip: " + numChip));
+                .body(mascotas); // Devolver una lista vacía
+        }
+        return ResponseEntity.ok(mascotas);
+    }
+
+    @GetMapping("/verificarPropietario/{idMascota}")
+    public ResponseEntity<Object> verificarPropietario(@PathVariable Long idMascota) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+
+        // Permitir acceso a roles diferentes de CLIENTE
+        if (!"CLIENTE".equals(userDetails.getRol())) {
+            return ResponseEntity.ok().build();
+        }
+
+        // Validar si el cliente es propietario de la mascota
+        boolean esPropietario = mascotaService.esPropietarioDeMascota(userDetails.getIdUsuario(), idMascota);
+
+        if (esPropietario) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ApiError("No tiene acceso a esta mascota."));
         }
     }
 
+    
+    /* ADAPTAR ESTO BIEN
+    
     @GetMapping("/getMascotaPorNombre/{nombre}")
     public ResponseEntity<Object> getMascotaPorNombre(@PathVariable String nombre) {
         List<Mascota> mascotas = mascotaService.getMascotaPorNombre(nombre);
@@ -65,83 +91,49 @@ public class MascotaController {
             return ResponseEntity.ok(mascotas);
         }
     }
+ */
 
-    @GetMapping("/getMascotasPorIdUsuario/{idUsuario}")
-    public ResponseEntity<Object> getMascotasPorIdUsuario(@PathVariable Long idUsuario) {
-        List<Mascota> mascotas = mascotaService.getMascotasPorIdUsuario(idUsuario);
-
-        if (mascotas.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .body(new ApiError("No se encontraron mascotas para el usuario con ID: " + idUsuario));
-        } else {
-            return ResponseEntity.ok(mascotas);
-        }
-    }
-
-    @GetMapping("/verificarPropietario/{idMascota}")
-    public ResponseEntity<Object> verificarPropietario(@PathVariable Long idMascota) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
-
-        // Se debe permitir el acceso a usuarios no CLIENTE
-        if (!userDetails.getRol().equals("CLIENTE")) {
-            return ResponseEntity.ok().build();
-        }
-
-         // Se valida si el usuario CLIENTE es el propietario
-        boolean esPropietario = mascotaService.esPropietarioDeMascota(userDetails.getIdUsuario(), idMascota);
-
-        if (esPropietario) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiError("No tiene acceso a esta mascota."));
-        }
-    }
 
     @GetMapping("/buscarMascotas")
-    public ResponseEntity<List<Mascota>> buscarMascotas(
-        @RequestParam(required = false) String numChip,
-        @RequestParam(required = false) String nombre,
-        @RequestParam(required = false) String especie,
-        @RequestParam(required = false) String raza) {
-
-        List<Mascota> mascotas = mascotaService.buscarMascotas(numChip, nombre, especie, raza);
-        return ResponseEntity.ok(mascotas);
+    public ResponseEntity<List<MascotaDTO>> buscarMascotas(
+            @RequestParam(required = false) String numChip,
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String especie,
+            @RequestParam(required = false) String raza) {
+        return ResponseEntity.ok(mascotaService.buscarMascotas(numChip, nombre, especie, raza));
     }
 
-
     @PostMapping("/create")
-    public ResponseEntity<Object> createMascota(@RequestBody Mascota mascota) {
-        Optional<Mascota> mascotaCreada = mascotaService.createMascota(mascota);
+    public ResponseEntity<Object> createMascota(@RequestBody MascotaDTO mascotaDTO) {
+        Optional<MascotaDTO> mascotaCreada = mascotaService.createMascota(mascotaDTO);
 
         if (mascotaCreada.isPresent()) {
             return ResponseEntity.ok(mascotaCreada.get());
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                                .body(new ApiError("Ya existe una mascota con el número de chip: " + mascota.getNumChip()));
+                    .body(new ApiError("Ya existe una mascota con el número de chip: " + mascotaDTO.getNumChip()));
         }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Object> updateMascota(@PathVariable Long id, @RequestBody Mascota mascota) {
-        Optional<Mascota> mascotaModificada = mascotaService.updateMascota(id, mascota);
+    public ResponseEntity<Object> updateMascota(@PathVariable Long id, @RequestBody MascotaDTO mascotaDTO) {
+        Optional<MascotaDTO> mascotaModificada = mascotaService.updateMascota(id, mascotaDTO);
 
         if (mascotaModificada.isPresent()) {
             return ResponseEntity.ok(mascotaModificada.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .body(new ApiError("No se pudo actualizar. Mascota no encontrada o número de chip duplicado."));
+                    .body(new ApiError("No se pudo actualizar. Mascota no encontrada o número de chip duplicado."));
         }
     }
 
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteMascota(@PathVariable Long id) {
-        boolean mascotaEliminada = mascotaService.deleteMascota(id);
-        if (mascotaEliminada) {
+        if (mascotaService.deleteMascota(id)) {
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .body(new ApiError("Mascota no encontrada con ID: " + id));
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ApiError("Mascota no encontrada con ID: " + id));
     }
 }

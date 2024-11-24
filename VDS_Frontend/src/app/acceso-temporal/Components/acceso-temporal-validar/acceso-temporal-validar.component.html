@@ -1,1 +1,10 @@
-<p>acceso-temporal-validar works!</p>
+<h1>Validar Acceso Temporal</h1>
+<mat-form-field>
+  <mat-label>Introduce el código numérico</mat-label>
+  <input matInput [(ngModel)]="codigoNumerico" maxlength="6">
+</mat-form-field>
+
+<button mat-raised-button color="primary" (click)="validarCodigo()">Validar</button>
+
+<p *ngIf="mensaje">{{ mensaje }}</p>
+

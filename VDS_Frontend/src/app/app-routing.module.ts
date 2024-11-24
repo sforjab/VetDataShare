@@ -41,7 +41,11 @@ const routes: Routes = [
     loadChildren: () => import('./vacuna/vacuna.module').then(m => m.VacunaModule),
   },
   {
-    path: 'acceso_temporal', 
+    path: 'clinica', 
+    loadChildren: () => import('./clinica/clinica.module').then(m => m.ClinicaModule),
+  },
+  {
+    path: 'acceso-temporal', 
     loadChildren: () => import('./acceso-temporal/acceso-temporal.module').then(m => m.AccesoTemporalModule),
   },
   {

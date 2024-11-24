@@ -1,34 +1,91 @@
 package com.uoc.tfm.vds_backend.acceso_temporal.service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.uoc.tfm.vds_backend.acceso_temporal.dto.AccesoTemporalDTO;
+import com.uoc.tfm.vds_backend.acceso_temporal.mapper.AccesoTemporalMapper;
 import com.uoc.tfm.vds_backend.acceso_temporal.model.AccesoTemporal;
 import com.uoc.tfm.vds_backend.acceso_temporal.repository.AccesoTemporalRepository;
+import com.uoc.tfm.vds_backend.jwt.JwtService;
+import com.uoc.tfm.vds_backend.mascota.mapper.MascotaMapper;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
+import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
+import com.uoc.tfm.vds_backend.usuario.mapper.UsuarioMapper;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
+import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class AccesoTemporalService {
+
     @Autowired
     private AccesoTemporalRepository accesoTemporalRepository;
 
-    public AccesoTemporal generarAccesoTemporal(Usuario usuario, Mascota mascota, String tipo, LocalDateTime fechaExpiracion) {
-        AccesoTemporal acceso = new AccesoTemporal();
-        acceso.setToken(UUID.randomUUID().toString()); // Generamos un token único
-        acceso.setFechaExpiracion(fechaExpiracion);
-        acceso.setUsuario(usuario);
-        acceso.setMascota(mascota);
-        accesoTemporalRepository.save(acceso);
-        return acceso;
+    @Autowired
+    private MascotaService mascotaService;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private MascotaMapper mascotaMapper;
+
+    @Autowired
+    private UsuarioMapper usuarioMapper;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private AccesoTemporalMapper accesoTemporalMapper;
+
+    @Transactional
+    public AccesoTemporalDTO generarAccesoTemporal(Long usuarioId, Long mascotaId) {
+       // Recuperar la entidad Usuario gestionada por JPA
+        Usuario usuario = usuarioService.getEntityById(usuarioId);
+
+        // Recuperar la entidad Mascota gestionada por JPA
+        Mascota mascota = mascotaService.getEntityById(mascotaId);
+
+        // Crear y guardar acceso temporal
+        AccesoTemporal accesoTemporal = new AccesoTemporal();
+        accesoTemporal.setToken(generarCodigoNumerico());
+        accesoTemporal.setUsuario(usuario);
+        accesoTemporal.setMascota(mascota);
+
+        accesoTemporalRepository.save(accesoTemporal);
+
+        return accesoTemporalMapper.toDTO(accesoTemporal);
     }
 
-    public Optional<AccesoTemporal> validarToken(String token) {
+    public String generarTokenTemporal(String tokenAccesoTemporal, Long idMascota) {
+        return jwtService.generateTemporalToken(tokenAccesoTemporal, idMascota);
+    }
+
+    private String generarCodigoNumerico() {
+        Random random = new Random();
+        int code = random.nextInt(999999);
+        return String.format("%06d", code);
+    }
+
+    public Optional<AccesoTemporalDTO> findByToken(String token) {
         return accesoTemporalRepository.findByToken(token)
-            .filter(acceso -> acceso.getFechaExpiracion().isAfter(LocalDateTime.now()));
+                .map(accesoTemporalMapper::toDTO);
+    }
+
+    public Optional<AccesoTemporalDTO> findByTokenAndFechaExpiracionIsNull(String token) {
+        return accesoTemporalRepository.findByTokenAndFechaExpiracionIsNull(token)
+                .map(accesoTemporalMapper::toDTO);
+    }
+
+    public void save(AccesoTemporalDTO accesoDTO, Usuario usuario, Mascota mascota) {
+        AccesoTemporal acceso = accesoTemporalMapper.toEntity(accesoDTO, usuario, mascota);
+        accesoTemporalRepository.save(acceso);
     }
 }
+
