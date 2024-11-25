@@ -11,10 +11,8 @@ import com.uoc.tfm.vds_backend.acceso_temporal.mapper.AccesoTemporalMapper;
 import com.uoc.tfm.vds_backend.acceso_temporal.model.AccesoTemporal;
 import com.uoc.tfm.vds_backend.acceso_temporal.repository.AccesoTemporalRepository;
 import com.uoc.tfm.vds_backend.jwt.JwtService;
-import com.uoc.tfm.vds_backend.mascota.mapper.MascotaMapper;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
 import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
-import com.uoc.tfm.vds_backend.usuario.mapper.UsuarioMapper;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
 
@@ -31,12 +29,6 @@ public class AccesoTemporalService {
 
     @Autowired
     private UsuarioService usuarioService;
-
-    @Autowired
-    private MascotaMapper mascotaMapper;
-
-    @Autowired
-    private UsuarioMapper usuarioMapper;
 
     @Autowired
     private JwtService jwtService;

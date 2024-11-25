@@ -6,6 +6,7 @@ import { ClienteMascotasListComponent } from '../../mascota/Components/cliente-m
 import { AuthGuard } from 'src/app/auth/Guards/auth.guard';
 import { GestionClientesComponent } from './Components/gestion-clientes/gestion-clientes.component';
 import { AltaClienteComponent } from './Components/alta-cliente/alta-cliente.component';
+import { TransferirMascotasComponent } from './Components/transferir-mascotas/transferir-mascotas.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,8 @@ const routes: Routes = [
   { path: 'perfil/:idUsuario', component: ClientePerfilComponent },        // Perfil del cliente
   { path: 'gestion-clientes', component: GestionClientesComponent }, // Gestión del cliente GUARD PARA ESTA RUTA
   { path: 'alta-cliente', component: AltaClienteComponent },
+  { path: 'transferir-mascotas/:numIdent', component: TransferirMascotasComponent },
+  { path: 'transferir-mascota/:idMascota', component: TransferirMascotasComponent },
 ];
 
 @NgModule({

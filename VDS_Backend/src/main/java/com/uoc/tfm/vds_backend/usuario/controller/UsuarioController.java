@@ -1,6 +1,7 @@
 package com.uoc.tfm.vds_backend.usuario.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.uoc.tfm.vds_backend.error.ApiError;
 import com.uoc.tfm.vds_backend.jwt.CustomUserDetails;
+import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
 import com.uoc.tfm.vds_backend.usuario.dto.UsuarioDTO;
 import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
 
@@ -20,6 +22,9 @@ import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
 public class UsuarioController {
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    MascotaService mascotaService;
 
     @GetMapping("getUsuarioPorId/{id}")
     public ResponseEntity<Object> getUsuarioPorId(@PathVariable Long id) {
@@ -43,6 +48,18 @@ public class UsuarioController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiError("Usuario no encontrado con ID: " + id));
+        }
+    }
+
+    @GetMapping("/getUsuarioPorNumIdent/{numIdent}")
+    public ResponseEntity<Object> getUsuarioPorNumIdent(@PathVariable String numIdent) {
+        Optional<UsuarioDTO> usuario = usuarioService.getUsuarioPorNumIdent(numIdent);
+
+        if (usuario.isPresent()) {
+            return ResponseEntity.ok(usuario.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("Usuario no encontrado con el número de identificación: " + numIdent));
         }
     }
 
@@ -84,6 +101,35 @@ public class UsuarioController {
         List<UsuarioDTO> empleados = usuarioService.buscarEmpleados(idClinica, nombre, apellido1, apellido2, rol);
         return ResponseEntity.ok(empleados);
     }
+
+    /* @PostMapping("/mascotas/transferir")
+    public ResponseEntity<String> transferirMascotas(@RequestBody Map<String, String> transferData) {
+        String numIdentOrigen = transferData.get("idOrigen");
+        String numIdentDestino = transferData.get("idDestino");
+
+        try {
+            usuarioService.transferirMascotas(numIdentOrigen, numIdentDestino);
+            return ResponseEntity.ok("Transferencia de mascotas completada con éxito.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    } */
+
+    @PostMapping("/mascotas/transferir")
+    public ResponseEntity<String> transferirMascotas(@RequestBody Map<String, String> transferData) {
+        String numIdentOrigen = transferData.get("idOrigen");
+        String numIdentDestino = transferData.get("idDestino");
+        String idMascota = transferData.get("idMascota");
+
+        try {
+            usuarioService.transferirMascotas(numIdentOrigen, numIdentDestino,
+                idMascota != null ? Optional.of(Long.parseLong(idMascota)) : Optional.empty());
+            return ResponseEntity.ok("Transferencia de mascota(s) completada con éxito.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 
     @PostMapping("/create")
     public ResponseEntity<Object> createUsuario(@RequestBody UsuarioDTO usuarioDTO) {

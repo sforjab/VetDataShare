@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -13,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.uoc.tfm.vds_backend.clinica.model.Clinica;
+import com.uoc.tfm.vds_backend.mascota.model.Mascota;
+import com.uoc.tfm.vds_backend.mascota.repository.MascotaRepository;
 import com.uoc.tfm.vds_backend.usuario.dto.UsuarioDTO;
 import com.uoc.tfm.vds_backend.usuario.mapper.UsuarioMapper;
 import com.uoc.tfm.vds_backend.usuario.model.Rol;
@@ -31,6 +32,9 @@ public class UsuarioService {
 
     @Autowired
     UsuarioMapper usuarioMapper;
+
+    @Autowired
+    MascotaRepository mascotaRepository;
 
     public Optional<UsuarioDTO> getUsuarioPorId(Long id) {
         return usuarioRepository.findById(id).map(usuarioMapper::toDTO);
@@ -109,6 +113,70 @@ public class UsuarioService {
     public Optional<Usuario> getUsuarioEntityPorUsername(String username) {
         return usuarioRepository.findByUsername(username);
     }
+
+    /* @Transactional
+    public boolean transferirMascotas(String numIdentOrigen, String numIdentDestino) {
+        // Obtenemos los usuarios de origen y destino por 'numIdent'
+        Usuario usuarioOrigen = usuarioRepository.findByNumIdent(numIdentOrigen)
+            .orElseThrow(() -> new RuntimeException("Usuario origen no encontrado: " + numIdentOrigen));
+        Usuario usuarioDestino = usuarioRepository.findByNumIdent(numIdentDestino)
+            .orElseThrow(() -> new RuntimeException("Usuario destino no encontrado: " + numIdentDestino));
+
+        // Obtenemos todas las mascotas del usuario origen
+        List<Mascota> mascotas = mascotaRepository.findByUsuarioId(usuarioOrigen.getId());
+
+        if (mascotas.isEmpty()) {
+            throw new RuntimeException("No se encontraron mascotas asociadas al usuario origen.");
+        }
+
+         // Se transfiere cada mascota al usuario destino
+        for (Mascota mascota : mascotas) {
+            mascota.setUsuario(usuarioDestino); // Asociar la mascota al usuario destino
+        }
+
+        // Guardamos los cambios en las mascotas
+        mascotaRepository.saveAll(mascotas);
+
+        if (!mascotaRepository.findByUsuarioId(usuarioOrigen.getId()).isEmpty()) {
+            throw new RuntimeException("Error al vaciar las mascotas del usuario origen.");
+        }
+
+        return true;
+    } */
+
+    @Transactional
+    public void transferirMascotas(String numIdentOrigen, String numIdentDestino, Optional<Long> idMascota) {
+        Usuario usuarioOrigen = usuarioRepository.findByNumIdent(numIdentOrigen)
+            .orElseThrow(() -> new RuntimeException("Usuario origen no encontrado: " + numIdentOrigen));
+        Usuario usuarioDestino = usuarioRepository.findByNumIdent(numIdentDestino)
+            .orElseThrow(() -> new RuntimeException("Usuario destino no encontrado: " + numIdentDestino));
+
+        List<Mascota> mascotas;
+
+        if (idMascota.isPresent()) {
+            // Transferencia individual
+            Mascota mascota = mascotaRepository.findById(idMascota.get())
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada con ID: " + idMascota.get()));
+            if (!mascota.getUsuario().equals(usuarioOrigen)) {
+                throw new RuntimeException("La mascota no pertenece al usuario origen.");
+            }
+            mascota.setUsuario(usuarioDestino);
+            mascotas = List.of(mascota);
+        } else {
+            // Transferencia masiva
+            mascotas = mascotaRepository.findByUsuarioId(usuarioOrigen.getId());
+            if (mascotas.isEmpty()) {
+                throw new RuntimeException("No se encontraron mascotas asociadas al usuario origen.");
+            }
+            // Se transfiere cada mascota al usuario destino
+            for (Mascota mascota : mascotas) {
+                mascota.setUsuario(usuarioDestino);
+            }
+        }
+        // Guardamos los cambios en las mascotas
+        mascotaRepository.saveAll(mascotas);
+    }
+
 
     @Transactional
     public Optional<UsuarioDTO> createUsuario(UsuarioDTO usuarioDTO) {

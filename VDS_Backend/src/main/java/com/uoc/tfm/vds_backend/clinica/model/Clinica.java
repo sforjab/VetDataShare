@@ -2,8 +2,6 @@ package com.uoc.tfm.vds_backend.clinica.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 
@@ -18,34 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-/* @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-public class Clinica {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
-    private String nombre;
-
-    @Column(nullable = false)
-    private String direccion;
-
-    @Column(nullable = false)
-    private String telefono;
-
-    @Column(nullable = false)
-    private String email;
-
-    // Relación con veterinarios y administradores de clínica
-    @OneToMany(mappedBy = "clinica", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "clinica"})
-    @ToString.Exclude
-    private List<Usuario> veterinarios;
-} */
 
 @Data
 @AllArgsConstructor

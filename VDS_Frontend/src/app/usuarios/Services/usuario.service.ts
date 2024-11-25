@@ -21,13 +21,13 @@ export class UsuarioService {
     );
   }
 
-  // Obtener usuario por número de identificación
-  /* getUsuarioPorNumIdent(numIdent: string): Observable<Usuario> {
+  // Obtenemos usuario por número de identificación
+  getUsuarioPorNumIdent(numIdent: string): Observable<Usuario> {
     return this.http.get<Usuario>(`${this.usuarioUrl}/getUsuarioPorNumIdent/${numIdent}`).pipe(
       tap(usuario => console.log('Usuario obtenido por número de identificación: ', usuario)),
       catchError(this.handleError)
     );
-  } */
+  }
 
   // Obtener usuario por nombre de usuario
   /* getUsuarioPorUsername(username: string): Observable<Usuario> {
@@ -144,6 +144,20 @@ export class UsuarioService {
       catchError(this.handleError)
     );
   }
+
+  // Transferir las mascotas de un cliente origen a un cliente destino
+  /* transferirMascotas(idOrigen: string, idDestino: string): Observable<any> {
+    return this.http.post(`${this.usuarioUrl}/mascotas/transferir`, { idOrigen, idDestino }, { responseType: 'text' });
+  } */
+
+    transferirMascotas(idOrigen: string, idDestino: string, idMascota: number | null = null): Observable<any> {
+      const payload: any = { idOrigen, idDestino };
+      if (idMascota !== null) {
+        payload.idMascota = idMascota;
+      }
+      return this.http.post(`${this.usuarioUrl}/mascotas/transferir`, payload, { responseType: 'text' });
+    }
+    
 
   // Manejo de errores
   private handleError(error: HttpErrorResponse): Observable<never> {

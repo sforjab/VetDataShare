@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Confirmar transferencia</h2>
+<mat-dialog-content>
+  <p>
+    ¿Desea confirmar la transferencia de mascotas del cliente
+    <strong>{{ data.idOrigen }}</strong> al cliente
+    <strong>{{ data.idDestino }}</strong>?
+  </p>
+  <p>Se incluirán las mascotas del cliente origen en la lista de mascotas del cliente destino.</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="confirmarTransferencia()">Confirmar</button>
+</mat-dialog-actions>

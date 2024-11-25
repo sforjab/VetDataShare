@@ -1,0 +1,47 @@
+<div class="transferir-container">
+    <h2 *ngIf="idMascota">Transferir mascota</h2>
+    <h2 *ngIf="!idMascota">Transferir mascotas</h2>
+    
+    <p><strong>Propietario origen:</strong> {{ propietarioOrigen }}</p>
+  
+    <!-- Mostrar mensaje si no tiene mascotas -->
+    <p *ngIf="!tieneMascotas" class="error">{{ mensajeSinMascotas }}</p>
+  
+    <!-- Mostrar opciones de transferencia solo si tiene mascotas -->
+    <div *ngIf="tieneMascotas">
+        <mat-form-field appearance="fill">
+            <mat-label>Identificador del propietario destino</mat-label>
+            <input matInput [(ngModel)]="propietarioDestino" />
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" (click)="buscarPropietarioDestino()">Buscar</button>
+  
+        <!-- Mostrar mensaje de error si no se encuentra el cliente -->
+        <p *ngIf="errorBusqueda" class="error">{{ errorBusqueda }}</p>
+  
+        <!-- Mostrar card con información del cliente destino solo si hay datos -->
+        <div *ngIf="datosDestino">
+            <mat-card class="cliente-destino-card">
+                <mat-card-title>Cliente destino</mat-card-title>
+                <mat-card-content>
+                    <p><strong>Número de identificación:</strong> {{ datosDestino.numIdent }}</p>
+                    <p><strong>Nombre:</strong> {{ datosDestino.nombre }}</p>
+                    <p><strong>Apellido 1:</strong> {{ datosDestino.apellido1 }}</p>
+                    <p><strong>Apellido 2:</strong> {{ datosDestino.apellido2 }}</p>
+                    <p><strong>Teléfono:</strong> {{ datosDestino.telefono }}</p>
+                    <p><strong>Email:</strong> {{ datosDestino.email }}</p>
+                </mat-card-content>
+            </mat-card>
+  
+            <!-- Botón Transferir -->
+            <div class="botones">
+                <button mat-raised-button color="primary" (click)="transferirMascotas()">Transferir</button>
+            </div>
+        </div>
+    </div>
+  
+    <!-- Botón Volver (siempre visible) -->
+    <div class="botones">
+        <button mat-raised-button color="accent" (click)="volver()">Volver</button>
+    </div>
+</div>

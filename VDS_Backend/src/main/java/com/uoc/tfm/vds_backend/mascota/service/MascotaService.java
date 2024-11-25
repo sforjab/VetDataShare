@@ -14,6 +14,7 @@ import com.uoc.tfm.vds_backend.mascota.dto.MascotaDTO;
 import com.uoc.tfm.vds_backend.mascota.mapper.MascotaMapper;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
 import com.uoc.tfm.vds_backend.mascota.repository.MascotaRepository;
+import com.uoc.tfm.vds_backend.usuario.repository.UsuarioRepository;
 import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
 
 @Service
@@ -24,6 +25,9 @@ public class MascotaService {
 
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     @Autowired
     MascotaMapper mascotaMapper;
@@ -108,16 +112,16 @@ public class MascotaService {
     }
 
     @Transactional
-public Optional<MascotaDTO> createMascota(MascotaDTO mascotaDTO) {
-    if (mascotaRepository.findByNumChip(mascotaDTO.getNumChip()).isPresent()) {
-        return Optional.empty();
-    }
+    public Optional<MascotaDTO> createMascota(MascotaDTO mascotaDTO) {
+        if (mascotaRepository.findByNumChip(mascotaDTO.getNumChip()).isPresent()) {
+            return Optional.empty();
+        }
 
-    Mascota mascota = mascotaMapper.toEntity(mascotaDTO);
-    mascota.setUsuario(usuarioService.getEntityById(mascotaDTO.getPropietarioId())); // Asignar propietario
-    Mascota mascotaCreada = mascotaRepository.save(mascota);
-    return Optional.of(mascotaMapper.toDTO(mascotaCreada));
-}
+        Mascota mascota = mascotaMapper.toEntity(mascotaDTO);
+        mascota.setUsuario(usuarioService.getEntityById(mascotaDTO.getPropietarioId())); // Asignar propietario
+        Mascota mascotaCreada = mascotaRepository.save(mascota);
+        return Optional.of(mascotaMapper.toDTO(mascotaCreada));
+    }
 
     @Transactional
     public Optional<MascotaDTO> updateMascota(Long id, MascotaDTO mascotaDTO) {

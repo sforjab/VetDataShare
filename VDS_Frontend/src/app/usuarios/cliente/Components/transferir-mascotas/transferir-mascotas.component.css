@@ -1,0 +1,15 @@
+.transferir-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .destino-card {
+    margin-top: 20px;
+  }
+  

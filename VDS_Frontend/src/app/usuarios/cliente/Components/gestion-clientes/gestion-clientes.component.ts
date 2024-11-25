@@ -96,6 +96,10 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
     });
   }
 
+  transferirMascotas(numIdent: String): void {
+    this.router.navigate([`/cliente/transferir-mascotas/${numIdent}`]);
+  }
+
   volver(): void {
     const idVeterinario = sessionStorage.getItem('idUsuario');
     if (idVeterinario) {

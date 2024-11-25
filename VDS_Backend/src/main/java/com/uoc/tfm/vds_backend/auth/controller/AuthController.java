@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uoc.tfm.vds_backend.auth.model.AuthResponse;
 import com.uoc.tfm.vds_backend.auth.model.LoginRequest;
 import com.uoc.tfm.vds_backend.jwt.JwtService;
-import com.uoc.tfm.vds_backend.usuario.dto.UsuarioDTO;
-import com.uoc.tfm.vds_backend.usuario.mapper.UsuarioMapper;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
 
