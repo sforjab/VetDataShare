@@ -4,6 +4,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Mascota } from '../../Models/mascota.dto';
 import { MascotaService } from '../../Services/mascota.service';
+import { MatDialog } from '@angular/material/dialog';
+import { BajaMascotaComponent } from '../baja-mascota/baja-mascota.component';
 
 @Component({
   selector: 'app-gestion-mascotas',
@@ -24,7 +26,7 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor(private mascotaService: MascotaService, private router: Router) {}
+  constructor(private mascotaService: MascotaService, private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {}
 
@@ -70,6 +72,19 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
 
   navegarDashboardMascota(idMascota: number): void {
     this.router.navigate([`/mascota/dashboard/${idMascota}`]);
+  }
+
+  eliminarMascota(mascota: Mascota): void {
+    const dialogRef = this.dialog.open(BajaMascotaComponent, {
+      width: '400px',
+      data: mascota,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.buscarMascotas(); // Actualiza la tabla después de la eliminación
+      }
+    });
   }
 
   volver(): void {
