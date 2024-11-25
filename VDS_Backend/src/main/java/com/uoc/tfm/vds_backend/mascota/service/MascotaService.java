@@ -57,8 +57,8 @@ public class MascotaService {
     @Transactional
     public List<MascotaDTO> getMascotasPorIdUsuario(Long idUsuario) {
         return mascotaRepository.findByUsuarioId(idUsuario).stream()
-                .map(mascotaMapper::toDTO)
-                .collect(Collectors.toList());
+            .map(mascotaMapper::toDTO)
+            .collect(Collectors.toList());
     }
 
     public boolean verificarPropietario(Long idMascota, Long idUsuario) {
@@ -108,14 +108,16 @@ public class MascotaService {
     }
 
     @Transactional
-    public Optional<MascotaDTO> createMascota(MascotaDTO mascotaDTO) {
-        if (mascotaRepository.findByNumChip(mascotaDTO.getNumChip()).isPresent()) {
-            return Optional.empty();
-        }
-        Mascota mascota = mascotaMapper.toEntity(mascotaDTO);
-        Mascota mascotaCreada = mascotaRepository.save(mascota);
-        return Optional.of(mascotaMapper.toDTO(mascotaCreada));
+public Optional<MascotaDTO> createMascota(MascotaDTO mascotaDTO) {
+    if (mascotaRepository.findByNumChip(mascotaDTO.getNumChip()).isPresent()) {
+        return Optional.empty();
     }
+
+    Mascota mascota = mascotaMapper.toEntity(mascotaDTO);
+    mascota.setUsuario(usuarioService.getEntityById(mascotaDTO.getPropietarioId())); // Asignar propietario
+    Mascota mascotaCreada = mascotaRepository.save(mascota);
+    return Optional.of(mascotaMapper.toDTO(mascotaCreada));
+}
 
     @Transactional
     public Optional<MascotaDTO> updateMascota(Long id, MascotaDTO mascotaDTO) {

@@ -13,6 +13,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
+import { AltaMascotaComponent } from './Components/alta-mascota/alta-mascota.component';
+import { MAT_DATE_LOCALE, MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatDialogModule} from '@angular/material/dialog';
+import { BajaMascotaComponent } from './Components/baja-mascota/baja-mascota.component';
 
 
 
@@ -20,7 +26,10 @@ import { FormsModule } from '@angular/forms';
   declarations: [
     MascotaDashboardComponent, // Pantalla de opciones para una mascota
     MascotaDetalleComponent, // Detalle de la mascota
-    CalcularEdadPipe, GestionMascotasComponent,
+    GestionMascotasComponent,
+    AltaMascotaComponent,
+    BajaMascotaComponent,
+    CalcularEdadPipe
 
   ],
   imports: [
@@ -33,7 +42,16 @@ import { FormsModule } from '@angular/forms';
     MatPaginatorModule,
     MatButtonModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatDialogModule
+    
+  ],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }
   ]
 })
 export class MascotaModule { }

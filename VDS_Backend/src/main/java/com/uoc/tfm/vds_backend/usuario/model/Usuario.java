@@ -1,5 +1,6 @@
 package com.uoc.tfm.vds_backend.usuario.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -157,7 +158,7 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "usuario"})
     @ToString.Exclude
-    private List<Mascota> mascotas;
+    private List<Mascota> mascotas = new ArrayList<>();
 
     @Override
     @JsonIgnore

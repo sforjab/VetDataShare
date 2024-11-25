@@ -6,6 +6,7 @@ import com.uoc.tfm.vds_backend.usuario.model.Rol;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,11 +35,13 @@ public class UsuarioMapper {
 
         // Mapeo de las mascotas
         dto.setMascotaIds(
-            entity.getMascotas().stream()
-                .map(Mascota::getId)
-                .collect(Collectors.toList())
+            entity.getMascotas() != null
+                ? entity.getMascotas().stream()
+                    .map(Mascota::getId)
+                    .collect(Collectors.toList())
+                : new ArrayList<>()
         );
-        
+
         return dto;
     }
 

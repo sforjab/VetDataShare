@@ -5,6 +5,7 @@ import { ClienteRoutingModule } from './cliente-routing.module';
 import { ClienteDashboardComponent } from './Components/cliente-dashboard/cliente-dashboard.component';
 import { ClientePerfilComponent } from './Components/cliente-perfil/cliente-perfil.component';
 import { ClienteMascotasListComponent } from '../../mascota/Components/cliente-mascotas-list/cliente-mascotas-list.component';
+import { AltaClienteComponent } from './Components/alta-cliente/alta-cliente.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +16,8 @@ import { GestionClientesComponent } from './Components/gestion-clientes/gestion-
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BajaClienteComponent } from './Components/baja-cliente/baja-cliente.component';
 
 
 @NgModule({
@@ -22,7 +25,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ClienteDashboardComponent,
     ClientePerfilComponent,
     ClienteMascotasListComponent,
-    GestionClientesComponent
+    GestionClientesComponent,
+    AltaClienteComponent,
+    BajaClienteComponent
   ],
   imports: [
     CommonModule,
@@ -36,6 +41,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatCardModule,
     MatDividerModule,
     MatPaginatorModule,
+    MatDialogModule,
     RouterModule
   ]
 })

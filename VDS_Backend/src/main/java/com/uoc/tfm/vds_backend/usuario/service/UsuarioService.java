@@ -1,5 +1,6 @@
 package com.uoc.tfm.vds_backend.usuario.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -112,17 +113,32 @@ public class UsuarioService {
     @Transactional
     public Optional<UsuarioDTO> createUsuario(UsuarioDTO usuarioDTO) {
         try {
+            String cleanedNumIdent = usuarioDTO.getNumIdent().trim();
+
             // Validación de 'numIdent' único
-            if (usuarioRepository.findByNumIdent(usuarioDTO.getNumIdent()).isPresent()) {
+            if (usuarioRepository.findByNumIdent(cleanedNumIdent).isPresent()) {
                 return Optional.empty();
             }
 
             // Validación de 'username' único
+            if (usuarioDTO.getUsername() == null || usuarioDTO.getUsername().isEmpty()) {
+                usuarioDTO.setUsername(cleanedNumIdent); // Asignar numIdent como username por defecto
+            }
             if (usuarioRepository.findByUsername(usuarioDTO.getUsername()).isPresent()) {
-                return Optional.empty();
+                return Optional.empty(); // Username duplicado
+            }
+
+            // Se genera un password por defecto si no está presente
+            if (usuarioDTO.getPassword() == null || usuarioDTO.getPassword().isEmpty()) {
+                usuarioDTO.setPassword("password"); // Asignar un password por defecto
             }
 
             Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
+
+            // Se inicializan colecciones vacías si son nulas
+            if (usuario.getMascotas() == null) {
+                usuario.setMascotas(new ArrayList<>());
+            }
 
             // Solo permite asociar una clínica y un número de colegiado si el rol es VETERINARIO o ADMIN_CLINICA
             if ((usuario.getRol() == Rol.VETERINARIO || usuario.getRol() == Rol.ADMIN_CLINICA)) {

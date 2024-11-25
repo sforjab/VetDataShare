@@ -1,6 +1,7 @@
 package com.uoc.tfm.vds_backend.mascota.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -107,15 +108,15 @@ public class Mascota {
     @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "mascota"})
     @ToString.Exclude
-    private List<Consulta> consultas;
+    private List<Consulta> consultas = new ArrayList<>();
 
     @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "mascota"})
     @ToString.Exclude
-    private List<Prueba> pruebas;
+    private List<Prueba> pruebas = new ArrayList<>();
 
     @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "mascota"})
     @ToString.Exclude
-    private List<Vacuna> vacunas;
+    private List<Vacuna> vacunas = new ArrayList<>();
 }

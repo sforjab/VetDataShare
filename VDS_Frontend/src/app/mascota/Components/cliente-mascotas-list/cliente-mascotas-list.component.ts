@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Mascota } from 'src/app/mascota/Models/mascota.dto';
 import { MascotaService } from 'src/app/mascota/Services/mascota.service';
+import { BajaMascotaComponent } from '../baja-mascota/baja-mascota.component';
 
 @Component({
   selector: 'app-cliente-mascotas-list',
@@ -14,7 +16,7 @@ export class ClienteMascotasListComponent implements OnInit {
 
   columnasTabla: string[] = ['nombre', 'numChip', 'acciones'];
 
-  constructor(private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -56,6 +58,27 @@ export class ClienteMascotasListComponent implements OnInit {
   navegarMascotaDashboard(idMascota: number): void {
     console.log('Navegando a Mascota Dashboard con ID:', idMascota);
     this.router.navigate([`/mascota/dashboard/${idMascota}`]);
+  }
+
+  crearMascota(): void {
+    if (this.idCliente) {
+      this.router.navigate([`/mascota/alta-mascota/${this.idCliente}`]); // Redirige al componente de alta
+    } else {
+      console.error('ID del cliente no disponible.');
+    }
+  }
+
+  eliminarMascota(mascota: Mascota): void {
+    const dialogRef = this.dialog.open(BajaMascotaComponent, {
+      width: '400px',
+      data: mascota
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.cargarMascotas(this.idCliente!); // Refrescar la lista de mascotas después de eliminar
+      }
+    });
   }
 
   volver(): void {

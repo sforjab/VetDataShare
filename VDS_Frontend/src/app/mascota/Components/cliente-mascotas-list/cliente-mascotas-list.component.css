@@ -33,3 +33,10 @@ mat-header-cell {
   width: auto; /* Botón "Volver" de tamaño normal */
   padding: 10px 20px;
 }
+
+.no-mascotas {
+  text-align: center;
+  font-size: 16px;
+  color: #757575;
+  margin-top: 20px;
+}

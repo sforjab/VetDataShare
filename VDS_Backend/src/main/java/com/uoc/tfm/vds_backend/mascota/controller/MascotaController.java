@@ -46,15 +46,12 @@ public class MascotaController {
         }
     }
 
-     @GetMapping("/getMascotasPorIdUsuario/{id}")
+    @GetMapping("/getMascotasPorIdUsuario/{id}")
     public ResponseEntity<List<MascotaDTO>> getMascotasPorIdUsuario(@PathVariable Long id) {
         List<MascotaDTO> mascotas = mascotaService.getMascotasPorIdUsuario(id);
-        if (mascotas.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(mascotas); // Devolver una lista vacía
-        }
-        return ResponseEntity.ok(mascotas);
+        return ResponseEntity.ok(mascotas); // Siempre responde con 200 OK
     }
+
 
     @GetMapping("/verificarPropietario/{idMascota}")
     public ResponseEntity<Object> verificarPropietario(@PathVariable Long idMascota) {
@@ -114,6 +111,7 @@ public class MascotaController {
                     .body(new ApiError("Ya existe una mascota con el número de chip: " + mascotaDTO.getNumChip()));
         }
     }
+
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateMascota(@PathVariable Long id, @RequestBody MascotaDTO mascotaDTO) {

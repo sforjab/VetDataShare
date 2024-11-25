@@ -4,6 +4,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { BajaClienteComponent } from '../baja-cliente/baja-cliente.component';
 
 @Component({
   selector: 'app-gestion-clientes',
@@ -27,7 +29,7 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor(private usuarioService: UsuarioService, private router: Router) {}
+  constructor(private usuarioService: UsuarioService, private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {}
 
@@ -75,6 +77,23 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
 
   navegarDashboardCliente(idUsuario: number): void {
     this.router.navigate([`/cliente/dashboard/${idUsuario}`]);
+  }
+
+  altaCliente(): void {
+    this.router.navigate(['/cliente/alta-cliente']);
+  }
+
+  eliminarCliente(cliente: Usuario): void {
+    const dialogRef = this.dialog.open(BajaClienteComponent, {
+      width: '400px',
+      data: cliente
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.buscarClientes(); // Actualizar lista después de eliminar
+      }
+    });
   }
 
   volver(): void {

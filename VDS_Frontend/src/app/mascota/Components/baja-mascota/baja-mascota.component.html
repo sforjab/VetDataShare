@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Confirmar Baja</h2>
+<mat-dialog-content>
+  <p>¿Desea confirmar la baja de la mascota con chip <strong>{{ data.numChip }}</strong>?</p>
+  <p>Se eliminarán tanto la mascota como sus datos almacenados.</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="confirmarEliminacion()">Confirmar</button>
+  <button mat-raised-button color="warn" (click)="cancelar()">Cancelar</button>
+</mat-dialog-actions>

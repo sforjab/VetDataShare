@@ -5,6 +5,7 @@ import { ClientePerfilComponent } from './Components/cliente-perfil/cliente-perf
 import { ClienteMascotasListComponent } from '../../mascota/Components/cliente-mascotas-list/cliente-mascotas-list.component';
 import { AuthGuard } from 'src/app/auth/Guards/auth.guard';
 import { GestionClientesComponent } from './Components/gestion-clientes/gestion-clientes.component';
+import { AltaClienteComponent } from './Components/alta-cliente/alta-cliente.component';
 
 const routes: Routes = [
   {
@@ -27,7 +28,8 @@ const routes: Routes = [
   }, */
   // MIRAR QUÉ RUTAS LLEVAN GUARD O NO
   { path: 'perfil/:idUsuario', component: ClientePerfilComponent },        // Perfil del cliente
-  { path: 'gestion-clientes', component: GestionClientesComponent } // Gestión del cliente GUARD PARA ESTA RUTA
+  { path: 'gestion-clientes', component: GestionClientesComponent }, // Gestión del cliente GUARD PARA ESTA RUTA
+  { path: 'alta-cliente', component: AltaClienteComponent },
 ];
 
 @NgModule({

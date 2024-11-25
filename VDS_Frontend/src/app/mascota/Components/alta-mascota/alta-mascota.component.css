@@ -1,0 +1,24 @@
+.alta-mascota-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .alta-form {
+    display: grid;
+    gap: 20px;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .botones-accion {
+    display: flex;
+    justify-content: center;
+    gap: 20px; 
+    margin-top: 20px;
+  }
+  

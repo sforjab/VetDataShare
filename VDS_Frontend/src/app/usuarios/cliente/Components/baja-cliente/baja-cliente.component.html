@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Confirmar eliminación</h2>
+<mat-dialog-content>
+  <p>¿Desea confirmar la eliminación del cliente <strong>{{ data.nombre }}</strong>?</p>
+  <p>Se eliminarán todas sus mascotas y datos asociados.</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-raised-button color="warn" (click)="confirmarEliminacion()">Eliminar</button>
+</mat-dialog-actions>

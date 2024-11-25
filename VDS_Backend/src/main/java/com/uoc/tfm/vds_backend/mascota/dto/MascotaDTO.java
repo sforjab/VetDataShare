@@ -14,7 +14,7 @@ public class MascotaDTO {
     private String raza;
     private String sexo;
     private LocalDate fechaNacimiento;
-    private Long usuarioId;
+    private Long propietarioId;
     private List<Long> consultaIds;
     private List<Long> pruebaIds;
     private List<Long> vacunaIds;

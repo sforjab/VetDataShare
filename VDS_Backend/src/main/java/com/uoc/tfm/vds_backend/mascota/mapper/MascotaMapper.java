@@ -17,7 +17,7 @@ public class MascotaMapper {
         dto.setRaza(entity.getRaza());
         dto.setSexo(entity.getSexo());
         dto.setFechaNacimiento(entity.getFechaNacimiento());
-        dto.setUsuarioId(entity.getUsuario().getId());
+        dto.setPropietarioId(entity.getUsuario().getId());
         dto.setConsultaIds(entity.getConsultas().stream().map(c -> c.getId()).collect(Collectors.toList()));
         dto.setPruebaIds(entity.getPruebas().stream().map(p -> p.getId()).collect(Collectors.toList()));
         dto.setVacunaIds(entity.getVacunas().stream().map(v -> v.getId()).collect(Collectors.toList()));

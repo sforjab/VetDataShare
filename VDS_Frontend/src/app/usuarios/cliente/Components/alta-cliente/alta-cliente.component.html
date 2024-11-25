@@ -1,0 +1,52 @@
+<div class="perfil-container">
+    <div class="titulo-container">
+      <h1 class="titulo-perfil">Nuevo Cliente</h1>
+    </div>
+    <form class="perfil-form" #nuevoClienteForm="ngForm">
+      <mat-form-field appearance="fill">
+        <mat-label>Número de identificación</mat-label>
+        <input matInput [(ngModel)]="cliente.numIdent" name="numIdent" required>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="cliente.nombre" name="nombre" required>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Primer apellido</mat-label>
+        <input matInput [(ngModel)]="cliente.apellido1" name="apellido1" required>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Segundo apellido</mat-label>
+        <input matInput [(ngModel)]="cliente.apellido2" name="apellido2">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Dirección</mat-label>
+        <input matInput [(ngModel)]="cliente.direccion" name="direccion">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Teléfono</mat-label>
+        <input matInput [(ngModel)]="cliente.telefono" name="telefono">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="cliente.email" name="email">
+      </mat-form-field>
+  
+      <!-- Contenedor para los botones -->
+      <div class="botones-accion">
+        <button mat-raised-button color="primary" (click)="crearCliente()" [disabled]="!nuevoClienteForm.form.valid">
+          Crear
+        </button>
+        <button mat-raised-button color="warn" (click)="volver()">
+          Volver
+        </button>
+      </div>
+    </form>
+  </div>
+  
