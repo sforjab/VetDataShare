@@ -13,13 +13,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AltaConsultaComponent } from './Components/alta-consulta/alta-consulta.component';
 import { FormsModule } from '@angular/forms';
+import { BajaConsultaComponent } from './Components/baja-consulta/baja-consulta.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
   declarations: [
     ConsultaDetalleComponent,
     MascotaConsultasListComponent,
-    AltaConsultaComponent
+    AltaConsultaComponent,
+    BajaConsultaComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +33,8 @@ import { FormsModule } from '@angular/forms';
     MatDividerModule,
     MatListModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ]
 })
 export class ConsultaModule { }

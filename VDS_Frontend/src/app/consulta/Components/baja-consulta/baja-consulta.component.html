@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Confirmar Baja</h2>
+<mat-dialog-content>
+  <p>¿Desea confirmar la eliminación de la consulta con fecha 
+    <strong>{{ data.fechaConsulta | date: 'dd/MM/yyyy HH:mm' }}</strong>?</p>
+  <p>Se eliminarán la consulta y todos sus datos asociados.</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="confirmarEliminacion()">Confirmar</button>
+  <button mat-raised-button color="warn" (click)="cancelar()">Cancelar</button>
+</mat-dialog-actions>

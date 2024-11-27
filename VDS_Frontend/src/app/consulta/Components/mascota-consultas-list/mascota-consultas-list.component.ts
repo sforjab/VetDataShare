@@ -3,6 +3,8 @@ import { Consulta } from '../../Models/consulta.dto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaService } from '../../Services/consulta.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { BajaConsultaComponent } from '../baja-consulta/baja-consulta.component';
 
 @Component({
   selector: 'app-mascota-consultas-list',
@@ -13,12 +15,15 @@ export class MascotaConsultasListComponent {
 
   consultas: Consulta[] = [];
   idMascota: number | undefined;
+  rol: string | null = null;
 
-  displayedColumns: string[] = ['fecha', 'acciones'];
+  columnasTabla: string[] = ['fecha', 'acciones'];
 
-  constructor(private consultaService: ConsultaService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private consultaService: ConsultaService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.rol = sessionStorage.getItem('rol');
+
     this.route.paramMap.subscribe(params => {
       const id = params.get('idMascota');
       if (id) {
@@ -36,10 +41,7 @@ export class MascotaConsultasListComponent {
         this.consultas = consultas;
       },
       error: (err: HttpErrorResponse) => {
-        /* console.error('Error al cargar las consultas:', err);
-        if (err.status === 403) {
-          this.router.navigate(['/acceso-no-autorizado']);
-        } */
+        console.error('Error al cargar las consultas:', err);
       }
     });
   }
@@ -54,6 +56,21 @@ export class MascotaConsultasListComponent {
 
   verDetalleConsulta(idConsulta: number): void {
     this.router.navigate([`/consulta/detalle/${idConsulta}`]);
+  }
+
+  eliminarConsulta(consulta: Consulta): void {
+    const dialogRef = this.dialog.open(BajaConsultaComponent, {
+      width: '400px',
+      data: consulta,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        if (this.idMascota) {
+          this.cargarConsultas(this.idMascota);
+        }
+      }
+    });
   }
 
   volver(): void {
