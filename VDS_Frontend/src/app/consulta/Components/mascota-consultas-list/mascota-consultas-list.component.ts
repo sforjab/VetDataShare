@@ -44,6 +44,14 @@ export class MascotaConsultasListComponent {
     });
   }
 
+  nuevaConsulta(): void {
+    if (this.idMascota) {
+      this.router.navigate([`/consulta/alta-consulta/${this.idMascota}`]);
+    } else {
+      console.error('ID de mascota no encontrado.');
+    }
+  }
+
   verDetalleConsulta(idConsulta: number): void {
     this.router.navigate([`/consulta/detalle/${idConsulta}`]);
   }

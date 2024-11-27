@@ -1,5 +1,7 @@
 package com.uoc.tfm.vds_backend.mascota.service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.uoc.tfm.vds_backend.clinica.repository.ClinicaRepository;
 import com.uoc.tfm.vds_backend.mascota.dto.MascotaDTO;
 import com.uoc.tfm.vds_backend.mascota.mapper.MascotaMapper;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
@@ -31,6 +34,9 @@ public class MascotaService {
 
     @Autowired
     MascotaMapper mascotaMapper;
+
+    @Autowired
+    ClinicaRepository clinicaRepository;
 
     @Transactional
     public Optional<MascotaDTO> getMascotaPorId(Long id) {
@@ -119,6 +125,9 @@ public class MascotaService {
 
         Mascota mascota = mascotaMapper.toEntity(mascotaDTO);
         mascota.setUsuario(usuarioService.getEntityById(mascotaDTO.getPropietarioId())); // Asignar propietario
+        mascota.setClinica(clinicaRepository.findById(mascotaDTO.getClinicaId())
+            .orElseThrow(() -> new RuntimeException("Clínica no encontrada con ID: " + mascotaDTO.getClinicaId())));
+        mascota.setFechaAlta(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         Mascota mascotaCreada = mascotaRepository.save(mascota);
         return Optional.of(mascotaMapper.toDTO(mascotaCreada));
     }

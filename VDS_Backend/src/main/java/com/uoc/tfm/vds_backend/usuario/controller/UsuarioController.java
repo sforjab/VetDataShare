@@ -102,19 +102,6 @@ public class UsuarioController {
         return ResponseEntity.ok(empleados);
     }
 
-    /* @PostMapping("/mascotas/transferir")
-    public ResponseEntity<String> transferirMascotas(@RequestBody Map<String, String> transferData) {
-        String numIdentOrigen = transferData.get("idOrigen");
-        String numIdentDestino = transferData.get("idDestino");
-
-        try {
-            usuarioService.transferirMascotas(numIdentOrigen, numIdentDestino);
-            return ResponseEntity.ok("Transferencia de mascotas completada con éxito.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    } */
-
     @PostMapping("/mascotas/transferir")
     public ResponseEntity<String> transferirMascotas(@RequestBody Map<String, String> transferData) {
         String numIdentOrigen = transferData.get("idOrigen");
@@ -129,7 +116,6 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
 
     @PostMapping("/create")
     public ResponseEntity<Object> createUsuario(@RequestBody UsuarioDTO usuarioDTO) {
@@ -202,4 +188,17 @@ public class UsuarioController {
                     .body(new ApiError("Usuario no encontrado con ID: " + id));
         }
     }
+
+    @PutMapping("/desvincularEmpleado/{idEmpleado}")
+    public ResponseEntity<Map<String, String>> desvincularEmpleado(@PathVariable Long idEmpleado) {
+        try {
+            usuarioService.desvincularEmpleado(idEmpleado);
+            Map<String, String> response = Map.of("message", "Empleado desvinculado con éxito");
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
 }

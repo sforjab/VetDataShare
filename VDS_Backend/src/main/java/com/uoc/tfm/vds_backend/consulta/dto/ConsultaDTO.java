@@ -16,4 +16,5 @@ public class ConsultaDTO {
     private Long veterinarioId;
     private List<Long> pruebaIds;
     private List<Long> vacunaIds;
+    private Long clinicaId;
 }

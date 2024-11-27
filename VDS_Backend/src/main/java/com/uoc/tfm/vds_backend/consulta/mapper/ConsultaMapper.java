@@ -1,5 +1,6 @@
 package com.uoc.tfm.vds_backend.consulta.mapper;
 
+import com.uoc.tfm.vds_backend.clinica.model.Clinica;
 import com.uoc.tfm.vds_backend.consulta.dto.ConsultaDTO;
 import com.uoc.tfm.vds_backend.consulta.model.Consulta;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ public class ConsultaMapper {
         dto.setVeterinarioId(entity.getVeterinario().getId());
         dto.setPruebaIds(entity.getPruebas().stream().map(p -> p.getId()).collect(Collectors.toList()));
         dto.setVacunaIds(entity.getVacunas().stream().map(v -> v.getId()).collect(Collectors.toList()));
+        dto.setClinicaId(entity.getClinica() != null ? entity.getClinica().getId() : null);
         return dto;
     }
 
@@ -28,7 +30,11 @@ public class ConsultaMapper {
         entity.setMotivo(dto.getMotivo());
         entity.setNotas(dto.getNotas());
         entity.setMedicacion(dto.getMedicacion());
-        // Mascota y Veterinario deben configurarse fuera del mapper.
+        if (dto.getClinicaId() != null) {
+            Clinica clinica = new Clinica();
+            clinica.setId(dto.getClinicaId());
+            entity.setClinica(clinica);
+        }
         return entity;
     }
 }

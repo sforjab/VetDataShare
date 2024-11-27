@@ -1,9 +1,11 @@
 package com.uoc.tfm.vds_backend.consulta.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.uoc.tfm.vds_backend.clinica.model.Clinica;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
 import com.uoc.tfm.vds_backend.prueba.model.Prueba;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
@@ -59,10 +61,15 @@ public class Consulta {
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "consulta"})
     @ToString.Exclude
-    private List<Prueba> pruebas;
+    private List<Prueba> pruebas  = new ArrayList<>();;
 
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "consulta"})
     @ToString.Exclude
-    private List<Vacuna> vacunas;
+    private List<Vacuna> vacunas  = new ArrayList<>();;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clinica_id", nullable = true)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Clinica clinica;
 }

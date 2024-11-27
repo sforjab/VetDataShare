@@ -1,5 +1,6 @@
 package com.uoc.tfm.vds_backend.usuario.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,6 +39,9 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, columnDefinition = "DATETIME(0)")
+    private LocalDateTime fechaAlta;
 
     @Column(nullable = false, unique = true)
     private String numIdent;

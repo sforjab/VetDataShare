@@ -29,23 +29,6 @@ export class UsuarioService {
     );
   }
 
-  // Obtener usuario por nombre de usuario
-  /* getUsuarioPorUsername(username: string): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.usuarioUrl}/getUsuarioPorUsername/${username}`).pipe(
-      tap(usuario => console.log('Usuario obtenido por nombre de usuario: ', usuario)),
-      catchError(this.handleError)
-    );
-  } */
-
-  // Obtener el usuario logueado
-  /* getUsuarioLogueado(): Observable<Usuario> {
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        throw new Error('Token no encontrado');
-    }
-    return this.http.get<Usuario>(`${this.usuarioUrl}/getUsuarioLogueado`);
-  } */
-
   verificarIdentidadCliente(idCliente: number): Observable<void> {
     return this.http.get<void>(`${this.usuarioUrl}/verificarIdentidadCliente/${idCliente}`).pipe(
       tap(() => console.log(`Verificación de identidad exitosa para cliente con ID: ${idCliente}`)),
@@ -145,18 +128,22 @@ export class UsuarioService {
     );
   }
 
-  // Transferir las mascotas de un cliente origen a un cliente destino
-  /* transferirMascotas(idOrigen: string, idDestino: string): Observable<any> {
-    return this.http.post(`${this.usuarioUrl}/mascotas/transferir`, { idOrigen, idDestino }, { responseType: 'text' });
-  } */
-
-    transferirMascotas(idOrigen: string, idDestino: string, idMascota: number | null = null): Observable<any> {
-      const payload: any = { idOrigen, idDestino };
-      if (idMascota !== null) {
-        payload.idMascota = idMascota;
-      }
-      return this.http.post(`${this.usuarioUrl}/mascotas/transferir`, payload, { responseType: 'text' });
+  transferirMascotas(idOrigen: string, idDestino: string, idMascota: number | null = null): Observable<any> {
+    const payload: any = { idOrigen, idDestino };
+    if (idMascota !== null) {
+      payload.idMascota = idMascota;
     }
+    return this.http.post(`${this.usuarioUrl}/mascotas/transferir`, payload, { responseType: 'text' });
+  }
+
+  desvincularEmpleado(idEmpleado: number): Observable<string> {
+    return this.http.put(`${this.usuarioUrl}/desvincularEmpleado/${idEmpleado}`, null, {
+      responseType: 'text', // Especificar que la respuesta es texto
+    }).pipe(
+      tap((response) => console.log('Respuesta del backend:', response)),
+      catchError(this.handleError)
+    );
+  }
     
 
   // Manejo de errores

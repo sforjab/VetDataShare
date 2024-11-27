@@ -126,11 +126,41 @@ public class ConsultaController {
         }
     }
 
+    /* @PutMapping("/update/{id}")
+    public ResponseEntity<Object> updateConsulta(@PathVariable Long id, @RequestBody ConsultaDTO consultaDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    // Actualizar consulta
+        // Validamos que authentication no sea null y que el principal sea del tipo esperado
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            // Validar acceso del veterinario
+            boolean tieneAcceso = consultaService.validarAccesoVeterinario(userDetails.getIdUsuario(), id);
+            if (!tieneAcceso) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ApiError("No tiene permisos para actualizar esta consulta."));
+            }
+
+            // Actualizar la consulta
+            Optional<ConsultaDTO> consultaActualizada = consultaService.updateConsulta(id, consultaDTO);
+            if (consultaActualizada.isPresent()) {
+                return ResponseEntity.ok(consultaActualizada.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ApiError("No se pudo actualizar. Consulta no encontrada."));
+            }
+        }
+
+        // Si no se cumple la validación
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiError("Usuario no autenticado o tipo incorrecto."));
+    } */
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateConsulta(@PathVariable Long id, @RequestBody ConsultaDTO consultaDTO) {
+        // Actualizar la consulta
         Optional<ConsultaDTO> consultaActualizada = consultaService.updateConsulta(id, consultaDTO);
+
         if (consultaActualizada.isPresent()) {
             return ResponseEntity.ok(consultaActualizada.get());
         } else {

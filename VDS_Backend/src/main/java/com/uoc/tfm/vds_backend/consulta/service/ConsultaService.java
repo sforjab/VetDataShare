@@ -8,14 +8,16 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.uoc.tfm.vds_backend.clinica.repository.ClinicaRepository;
 import com.uoc.tfm.vds_backend.consulta.dto.ConsultaDTO;
 import com.uoc.tfm.vds_backend.consulta.mapper.ConsultaMapper;
 import com.uoc.tfm.vds_backend.consulta.model.Consulta;
 import com.uoc.tfm.vds_backend.consulta.repository.ConsultaRepository;
-import com.uoc.tfm.vds_backend.mascota.dto.MascotaDTO;
-import com.uoc.tfm.vds_backend.mascota.mapper.MascotaMapper;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
+import com.uoc.tfm.vds_backend.mascota.repository.MascotaRepository;
 import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
+import com.uoc.tfm.vds_backend.usuario.model.Usuario;
+import com.uoc.tfm.vds_backend.usuario.repository.UsuarioRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -32,7 +34,13 @@ public class ConsultaService {
     private ConsultaMapper consultaMapper;
 
     @Autowired
-    private MascotaMapper mascotaMapper;
+    private ClinicaRepository clinicaRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private MascotaRepository mascotaRepository;
 
     @Transactional
     public Optional<ConsultaDTO> getConsultaPorId(Long id) {
@@ -64,14 +72,26 @@ public class ConsultaService {
     @Transactional
     public Optional<ConsultaDTO> createConsulta(ConsultaDTO consultaDTO) {
         try {
-            MascotaDTO mascotaDTO = mascotaService.getMascotaPorId(consultaDTO.getMascotaId())
-                    .orElseThrow(() -> new IllegalArgumentException("Mascota no encontrada"));
-            Mascota mascota = mascotaMapper.toEntity(mascotaDTO);
+            // Obtener la mascota asociada desde la base de datos
+            Mascota mascota = mascotaRepository.findById(consultaDTO.getMascotaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Mascota no encontrada con ID: " + consultaDTO.getMascotaId()));
+
+            // Obtener el veterinario asociado
+            Usuario veterinario = usuarioRepository.findById(consultaDTO.getVeterinarioId())
+                    .orElseThrow(() -> new RuntimeException("Veterinario no encontrado con ID: " + consultaDTO.getVeterinarioId()));
+
+            // Mapear el DTO a la entidad Consulta
             Consulta consulta = consultaMapper.toEntity(consultaDTO);
-            consulta.setMascota(mascota);
+            consulta.setMascota(mascota); // Asociar la mascota gestionada por Hibernate
+            consulta.setClinica(clinicaRepository.findById(consultaDTO.getClinicaId())
+                    .orElseThrow(() -> new RuntimeException("Clínica no encontrada con ID: " + consultaDTO.getClinicaId())));
+            consulta.setVeterinario(veterinario); // Asociar el veterinario
+
+            // Guardar la consulta
             Consulta consultaCreada = consultaRepository.save(consulta);
             return Optional.of(consultaMapper.toDTO(consultaCreada));
         } catch (Exception e) {
+            e.printStackTrace(); // Log para depuración
             return Optional.empty();
         }
     }
@@ -79,21 +99,38 @@ public class ConsultaService {
     @Transactional
     public Optional<ConsultaDTO> updateConsulta(Long id, ConsultaDTO consultaDTO) {
         return consultaRepository.findById(id).map(consultaExistente -> {
-            MascotaDTO mascotaDTO = mascotaService.getMascotaPorId(consultaDTO.getMascotaId())
+            // Recuperar la entidad Mascota gestionada por Hibernate
+            Mascota mascota = mascotaRepository.findById(consultaDTO.getMascotaId())
                     .orElseThrow(() -> new IllegalArgumentException("Mascota no encontrada"));
 
-            Mascota mascota = mascotaMapper.toEntity(mascotaDTO);
-
+            // Actualizar los campos de la consulta existente
             consultaExistente.setFechaConsulta(consultaDTO.getFechaConsulta());
             consultaExistente.setMotivo(consultaDTO.getMotivo());
             consultaExistente.setNotas(consultaDTO.getNotas());
             consultaExistente.setMedicacion(consultaDTO.getMedicacion());
-            consultaExistente.setMascota(mascota);
+            consultaExistente.setMascota(mascota); // Asignar la mascota gestionada
 
+            // Guardar y devolver
             Consulta consultaActualizada = consultaRepository.save(consultaExistente);
             return consultaMapper.toDTO(consultaActualizada);
         });
     }
+
+    @Transactional
+    public boolean validarAccesoVeterinario(Long veterinarioId, Long consultaId) {
+        Usuario veterinario = usuarioRepository.findById(veterinarioId)
+                .orElseThrow(() -> new IllegalArgumentException("Veterinario no encontrado"));
+
+        Consulta consulta = consultaRepository.findById(consultaId)
+                .orElseThrow(() -> new IllegalArgumentException("Consulta no encontrada"));
+
+        if (veterinario.getClinica() == null || !veterinario.getClinica().getId().equals(consulta.getClinica().getId())) {
+            return false; // El veterinario no pertenece a la clínica de la consulta
+        }
+
+        return true;
+    }
+
 
     @Transactional
     public boolean deleteConsulta(Long id) {

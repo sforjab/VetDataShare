@@ -11,16 +11,20 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { AltaConsultaComponent } from './Components/alta-consulta/alta-consulta.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
     ConsultaDetalleComponent,
     MascotaConsultasListComponent,
+    AltaConsultaComponent
   ],
   imports: [
     CommonModule,
     ConsultaRoutingModule,
+    FormsModule,
     MatTableModule,
     MatCardModule,
     MatDividerModule,

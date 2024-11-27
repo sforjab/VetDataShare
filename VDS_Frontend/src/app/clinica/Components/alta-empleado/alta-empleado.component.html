@@ -1,0 +1,49 @@
+<div class="perfil-container">
+  <div class="titulo-container">
+    <h1 class="titulo-perfil">Nuevo Empleado</h1>
+  </div>
+  <form class="perfil-form" #nuevoEmpleadoForm="ngForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Número de Identificación</mat-label>
+      <input matInput [(ngModel)]="empleado.numIdent" name="numIdent" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Número de Colegiado</mat-label>
+      <input matInput [(ngModel)]="empleado.numColegiado" name="numColegiado" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="empleado.nombre" name="nombre" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Primer Apellido</mat-label>
+      <input matInput [(ngModel)]="empleado.apellido1" name="apellido1" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Segundo Apellido</mat-label>
+      <input matInput [(ngModel)]="empleado.apellido2" name="apellido2">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="empleado.rol" name="rol" required>
+        <mat-option *ngFor="let rol of roles" [value]="rol">
+          {{ rol }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="botones-accion">
+      <button mat-raised-button color="primary" (click)="crearEmpleado()" [disabled]="!nuevoEmpleadoForm.form.valid">
+        Crear
+      </button>
+      <button mat-raised-button color="warn" (click)="volver()">
+        Volver
+      </button>
+    </div>
+  </form>
+</div>

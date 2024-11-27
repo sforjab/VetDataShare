@@ -15,13 +15,18 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
+import { AltaEmpleadoComponent } from './Components/alta-empleado/alta-empleado.component';
+import { BajaEmpleadoComponent } from './Components/baja-empleado/baja-empleado.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
   declarations: [
     ClinicaDashboardComponent,
     DatosClinicaComponent,
-    GestionEmpleadosComponent
+    GestionEmpleadosComponent,
+    AltaEmpleadoComponent,
+    BajaEmpleadoComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +40,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatTableModule,
     MatPaginatorModule,
     MatDividerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDialogModule
   ]
 })
 export class ClinicaModule { }

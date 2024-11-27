@@ -2,6 +2,7 @@ import { Clinica } from "src/app/clinica/Models/clinica.dto";
 
 export interface Usuario {
     id?: number;
+    fechaAlta?: string;
     numIdent: string;
     numColegiado?: string;
     nombre: string;

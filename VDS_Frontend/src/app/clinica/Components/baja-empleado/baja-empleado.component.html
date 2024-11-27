@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Desvincular Empleado</h2>
+<mat-dialog-content>
+  <p>¿Estás seguro de que deseas desvincular al empleado <strong>{{ data.numColegiado }}</strong>?</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="warn" (click)="confirmarBaja()">Desvincular</button>
+  <button mat-raised-button (click)="cancelar()">Cancelar</button>
+</mat-dialog-actions>

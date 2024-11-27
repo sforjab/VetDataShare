@@ -14,6 +14,7 @@ public class UsuarioMapper {
     public UsuarioDTO toDTO(Usuario entity) {
         UsuarioDTO dto = new UsuarioDTO();
         dto.setId(entity.getId());
+        dto.setFechaAlta(entity.getFechaAlta());
         dto.setNumIdent(entity.getNumIdent());
         dto.setNumColegiado(entity.getNumColegiado());
         dto.setNombre(entity.getNombre());
@@ -47,6 +48,7 @@ public class UsuarioMapper {
 
     public Usuario toEntity(UsuarioDTO dto) {
         Usuario entity = new Usuario();
+        entity.setFechaAlta(dto.getFechaAlta());
         entity.setNumIdent(dto.getNumIdent());
         entity.setNumColegiado(dto.getNumColegiado());
         entity.setNombre(dto.getNombre());

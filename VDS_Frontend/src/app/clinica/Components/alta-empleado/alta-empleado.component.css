@@ -1,0 +1,42 @@
+.perfil-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ocupa toda la pantalla */
+  }
+  
+  .titulo-container {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px; /* Espacio debajo del título */
+  }
+  
+  .titulo-perfil {
+    color: #333; /* Color opcional */
+  }
+  
+  .perfil-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 80%;
+    max-width: 800px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  .botones-accion {
+    grid-column: span 2; /* Hace que los botones ocupen el ancho de ambas columnas */
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Espacio entre los botones */
+  }
+  
+  .snackbar-exito {
+    background-color: #4caf50 !important; /* Verde */
+    color: white !important;
+  }
+  

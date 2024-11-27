@@ -1,5 +1,6 @@
 package com.uoc.tfm.vds_backend.usuario.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.Data;
 @Data
 public class UsuarioDTO {
     private Long id;
+    private LocalDateTime fechaAlta;
     private String numIdent;
     private String numColegiado;
     private String nombre;

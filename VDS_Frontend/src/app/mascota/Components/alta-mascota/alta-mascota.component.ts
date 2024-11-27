@@ -20,8 +20,7 @@ export class AltaMascotaComponent implements OnInit {
     propietarioId: 0 
   };
 
-  constructor(
-    private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
+  constructor(private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     const idCliente = this.route.snapshot.paramMap.get('idCliente');

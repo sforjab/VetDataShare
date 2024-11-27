@@ -1,5 +1,7 @@
 package com.uoc.tfm.vds_backend.usuario.service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.uoc.tfm.vds_backend.clinica.model.Clinica;
+import com.uoc.tfm.vds_backend.clinica.repository.ClinicaRepository;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
 import com.uoc.tfm.vds_backend.mascota.repository.MascotaRepository;
 import com.uoc.tfm.vds_backend.usuario.dto.UsuarioDTO;
@@ -35,6 +38,9 @@ public class UsuarioService {
 
     @Autowired
     MascotaRepository mascotaRepository;
+
+    @Autowired
+    ClinicaRepository clinicaRepository;
 
     public Optional<UsuarioDTO> getUsuarioPorId(Long id) {
         return usuarioRepository.findById(id).map(usuarioMapper::toDTO);
@@ -102,8 +108,14 @@ public class UsuarioService {
                 .withIgnoreCase();
 
         Example<Usuario> example = Example.of(empleado, matcher);
+        /* return usuarioRepository.findAll(example)
+                .stream()
+                .filter(usuario -> rol != null || usuario.getRol() == Rol.VETERINARIO || usuario.getRol() == Rol.ADMIN_CLINICA)
+                .map(usuarioMapper::toDTO)
+                .collect(Collectors.toList()); */
         return usuarioRepository.findAll(example)
                 .stream()
+                .filter(usuario -> usuario.getClinica() != null && usuario.getClinica().getId().equals(idClinica))
                 .filter(usuario -> rol != null || usuario.getRol() == Rol.VETERINARIO || usuario.getRol() == Rol.ADMIN_CLINICA)
                 .map(usuarioMapper::toDTO)
                 .collect(Collectors.toList());
@@ -113,36 +125,6 @@ public class UsuarioService {
     public Optional<Usuario> getUsuarioEntityPorUsername(String username) {
         return usuarioRepository.findByUsername(username);
     }
-
-    /* @Transactional
-    public boolean transferirMascotas(String numIdentOrigen, String numIdentDestino) {
-        // Obtenemos los usuarios de origen y destino por 'numIdent'
-        Usuario usuarioOrigen = usuarioRepository.findByNumIdent(numIdentOrigen)
-            .orElseThrow(() -> new RuntimeException("Usuario origen no encontrado: " + numIdentOrigen));
-        Usuario usuarioDestino = usuarioRepository.findByNumIdent(numIdentDestino)
-            .orElseThrow(() -> new RuntimeException("Usuario destino no encontrado: " + numIdentDestino));
-
-        // Obtenemos todas las mascotas del usuario origen
-        List<Mascota> mascotas = mascotaRepository.findByUsuarioId(usuarioOrigen.getId());
-
-        if (mascotas.isEmpty()) {
-            throw new RuntimeException("No se encontraron mascotas asociadas al usuario origen.");
-        }
-
-         // Se transfiere cada mascota al usuario destino
-        for (Mascota mascota : mascotas) {
-            mascota.setUsuario(usuarioDestino); // Asociar la mascota al usuario destino
-        }
-
-        // Guardamos los cambios en las mascotas
-        mascotaRepository.saveAll(mascotas);
-
-        if (!mascotaRepository.findByUsuarioId(usuarioOrigen.getId()).isEmpty()) {
-            throw new RuntimeException("Error al vaciar las mascotas del usuario origen.");
-        }
-
-        return true;
-    } */
 
     @Transactional
     public void transferirMascotas(String numIdentOrigen, String numIdentDestino, Optional<Long> idMascota) {
@@ -177,7 +159,6 @@ public class UsuarioService {
         mascotaRepository.saveAll(mascotas);
     }
 
-
     @Transactional
     public Optional<UsuarioDTO> createUsuario(UsuarioDTO usuarioDTO) {
         try {
@@ -210,11 +191,14 @@ public class UsuarioService {
 
             // Solo permite asociar una clínica y un número de colegiado si el rol es VETERINARIO o ADMIN_CLINICA
             if ((usuario.getRol() == Rol.VETERINARIO || usuario.getRol() == Rol.ADMIN_CLINICA)) {
-                // Validación de clínica
-                if (usuario.getClinica() == null) {
+                if (usuarioDTO.getClinicaId() != null) {
+                    Clinica clinica = clinicaRepository.findById(usuarioDTO.getClinicaId())
+                        .orElseThrow(() -> new RuntimeException("Clínica no encontrada con ID: " + usuarioDTO.getClinicaId()));
+                    usuario.setClinica(clinica);
+                } else {
                     return Optional.empty(); // No se puede crear sin clínica
                 }
-
+    
                 // Validación de numColegiado
                 if (usuario.getNumColegiado() == null || usuario.getNumColegiado().isEmpty()) {
                     return Optional.empty(); // No se puede crear sin numColegiado
@@ -225,6 +209,7 @@ public class UsuarioService {
             String passwordCodificado = passwordEncoder.encode(usuarioDTO.getPassword());
             usuario.setPassword(passwordCodificado);
 
+            usuario.setFechaAlta(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
             Usuario usuarioCreado = usuarioRepository.save(usuario);
             return Optional.of(usuarioMapper.toDTO(usuarioCreado));
         } catch (Exception e) {
@@ -308,4 +293,23 @@ public class UsuarioService {
         }
         return false;
     }
+
+    @Transactional
+    public Optional<UsuarioDTO> desvincularEmpleado(Long idEmpleado) {
+        try {
+            Usuario empleado = usuarioRepository.findById(idEmpleado)
+                .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+
+            if (empleado.getClinica() == null) {
+                throw new RuntimeException("El empleado ya no está asociado a una clínica");
+            }
+
+            empleado.setClinica(null); // Desvincular clínica
+            Usuario empleadoActualizado  = usuarioRepository.save(empleado);
+            return Optional.of(usuarioMapper.toDTO(empleadoActualizado ));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
 }

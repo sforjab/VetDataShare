@@ -1,10 +1,10 @@
-.boton-volver {
+.boton-acciones {
     display: flex;
-    justify-content: center; /* Centra horizontalmente el botón */
-    align-items: center; /* Asegura que esté verticalmente centrado en su contenedor */
-    margin-top: 40px; /* Margen superior para separarlo visualmente */
-    width: 100%; /* Asegura que tome el ancho completo del contenedor */
-}
+    justify-content: flex-start; /* Alinear hacia la izquierda */
+    gap: 10px; /* Espacio entre los botones */
+    margin-top: 20px; /* Espaciado superior */
+  }
+  
   
 body, html {
     height: 100%; /* Garantiza que la altura se tome como referencia total */

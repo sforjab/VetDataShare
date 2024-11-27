@@ -4,6 +4,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { BajaEmpleadoComponent } from '../baja-empleado/baja-empleado.component';
 
 @Component({
   selector: 'app-gestion-empleados',
@@ -27,12 +29,11 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Usuario>();
   busquedaRealizada: boolean = false;
   columnasTabla: string[] = ['numIdent', 'nombre', 'apellido1', 'apellido2', 'rol', 'acciones'];
-
   idClinica: number | null = null;
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor(private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -60,6 +61,7 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
 
     this.usuarioService.buscarEmpleados(this.idClinica, filtrosAplicados).subscribe((result: Usuario[]) => {
       this.dataSource.data = result || [];
+      console.log('Empleados encontrados:', this.dataSource.data);
       setTimeout(() => {
         if (this.paginator) {
           this.dataSource.paginator = this.paginator;
@@ -80,21 +82,31 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
     };
   }
 
-  /* limpiarFiltros(): void {
-    this.filtros = {
-      nombre: '',
-      apellido1: '',
-      apellido2: '',
-      rol: ''
-    };
-    this.busquedaRealizada = false;
-    this.dataSource.data = [];
-  } */
-
   navegarPerfilEmpleado(idUsuario: number): void {
     this.router.navigate([`/veterinario/perfil/${idUsuario}`]);
   }
 
+  nuevoEmpleado(): void {
+    if (this.idClinica) {
+      this.router.navigate([`/clinica/alta-empleado/${this.idClinica}`]);
+    } else {
+      console.error('No se encontró el ID de la clínica.');
+    }
+  }
+
+  bajaEmpleado(empleado: Usuario): void {
+    const dialogRef = this.dialog.open(BajaEmpleadoComponent, {
+      width: '400px',
+      data: { id: empleado.id, numColegiado: empleado.numColegiado }
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.buscarEmpleados(); // Actualiza la lista después de la baja
+      }
+    });
+  }
+  
   volver(): void {
     this.router.navigate([`/clinica/dashboard/${this.idClinica}`]);
   }
