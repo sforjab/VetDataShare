@@ -56,6 +56,23 @@ export class ConsultaService {
     );
   }
 
+    // Obtener una prueba por su ID
+  getPruebaPorId(idPrueba: number): Observable<Prueba> {
+    return this.http.get<Prueba>(`${this.consultaUrl}/getPruebaPorId/${idPrueba}`).pipe(
+      tap((prueba) => console.log(`Prueba obtenida: ${prueba}`)),
+      catchError(this.handleError)
+    );
+  }
+
+  // Obtener una vacuna por su ID
+  getVacunaPorId(idVacuna: number): Observable<Vacuna> {
+    return this.http.get<Vacuna>(`${this.consultaUrl}/getVacunaPorId/${idVacuna}`).pipe(
+      tap((vacuna) => console.log(`Vacuna obtenida: ${vacuna}`)),
+      catchError(this.handleError)
+    );
+  }
+
+
   // Crear una nueva consulta
   createConsulta(consulta: Consulta): Observable<Consulta> {
     return this.http.post<Consulta>(`${this.consultaUrl}/create`, consulta).pipe(

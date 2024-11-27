@@ -1,45 +1,49 @@
-<h2>Detalle de prueba</h2>
+<div class="detalle-prueba-container">
+  <h2>Detalle de prueba</h2>
 
-<mat-card>
-  <mat-card-content>
-    <div class="detalle-prueba-header">
-      <div>
-        <label>Fecha:</label>
-        <span>{{ prueba.fecha | date: 'dd/MM/yyyy' }}</span>
+  <!-- Tarjeta de información general -->
+  <mat-card class="info-card">
+    <mat-card-content>
+      <div class="info-row">
+        <p><strong>Fecha:</strong> {{ prueba.fecha | date: 'dd/MM/yyyy' }}</p>
+        <p><strong>Número de chip:</strong> {{ numeroChip }}</p>
       </div>
-      <div>
-        <label>Número de chip:</label>
-        <span>{{ mascota?.numChip }}</span>
+      <div class="info-row">
+        <p><strong>Veterinario:</strong> {{ numColegiado }}</p>
+        <p><strong>Nombre de mascota:</strong> {{ nombreMascota }}</p>
       </div>
-      <div>
-        <label>Veterinario:</label>
-        <span>{{ veterinario?.numColegiado }}</span>
-      </div>
-      <div>
-        <label>Nombre de mascota:</label>
-        <span>{{ mascota?.nombre }}</span>
-      </div>
-    </div>
+    </mat-card-content>
+  </mat-card>
 
-    <div>
-      <label for="tipo">Tipo:</label>
-      <mat-select [(value)]="prueba.tipo" placeholder="Selecciona un tipo">
-        <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
-      </mat-select>
-    </div>
+  <!-- Formulario editable -->
+  <mat-card class="form-card">
+    <mat-card-content>
+      <form class="detalle-form" #detallePruebaForm="ngForm">
+        <mat-form-field appearance="fill">
+          <mat-label>Tipo de Prueba</mat-label>
+          <mat-select [(ngModel)]="prueba.tipo" name="tipo" required>
+            <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <div>
-      <label>Descripción:</label>
-      <textarea matInput placeholder="Descripción" [(ngModel)]="prueba.descripcion"></textarea>
-    </div>
+        <mat-form-field appearance="fill">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput [(ngModel)]="prueba.descripcion" name="descripcion"></textarea>
+        </mat-form-field>
 
-    <div>
-      <h3>Documentos:</h3>
-    </div>
-  </mat-card-content>
-</mat-card>
-
-<div class="botones">
-  <button mat-raised-button color="primary" (click)="guardar()">Guardar</button>
-  <button mat-raised-button color="warn" (click)="volver()">Volver</button>
+        <!-- Botones -->
+        <div class="botones-accion">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="guardarPrueba()"
+            [disabled]="!detallePruebaForm.form.valid"
+          >
+            Guardar
+          </button>
+          <button mat-raised-button color="warn" (click)="volver()">Volver</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>

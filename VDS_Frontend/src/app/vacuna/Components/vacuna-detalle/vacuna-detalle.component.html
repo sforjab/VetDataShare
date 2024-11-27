@@ -1,0 +1,23 @@
+<div class="detalle-vacuna-container">
+    <h2>Editar Vacuna</h2>
+    <form class="detalle-form" #detalleVacunaForm="ngForm">
+        <div class="form-column">
+            <mat-form-field appearance="fill">
+                <mat-label>Nombre</mat-label>
+                <input matInput [(ngModel)]="vacuna.nombre" name="nombre" required />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Laboratorio</mat-label>
+                <input matInput [(ngModel)]="vacuna.laboratorio" name="laboratorio" required />
+            </mat-form-field>
+        </div>
+
+        <div class="botones-accion">
+            <button mat-raised-button color="primary" (click)="guardarVacuna()" [disabled]="!detalleVacunaForm.form.valid">
+                Guardar
+            </button>
+            <button mat-raised-button color="warn" (click)="volver()">Volver</button>
+        </div>
+    </form>
+</div>

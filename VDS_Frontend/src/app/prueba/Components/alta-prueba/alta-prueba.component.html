@@ -1,0 +1,28 @@
+<div class="alta-prueba-container">
+    <h2>Nueva Prueba</h2>
+    <form class="alta-form" #altaPruebaForm="ngForm">
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Tipo de Prueba</mat-label>
+          <mat-select [(ngModel)]="prueba.tipo" name="tipo" required>
+            <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+  
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput [(ngModel)]="prueba.descripcion" name="descripcion"></textarea>
+        </mat-form-field>
+      </div>
+  
+      <div class="botones-accion">
+        <button mat-raised-button color="primary" (click)="crearPrueba()" [disabled]="!altaPruebaForm.form.valid">
+          Crear
+        </button>
+        <button mat-raised-button color="warn" (click)="volver()">Volver</button>
+      </div>
+    </form>
+</div>
+  

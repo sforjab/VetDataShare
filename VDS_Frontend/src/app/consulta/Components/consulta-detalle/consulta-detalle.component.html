@@ -69,12 +69,18 @@
               <td>{{ prueba.fecha | date: 'dd/MM/yyyy' }}</td>
               <td>{{ prueba.descripcion }}</td>
               <td>
-                <button mat-button>Acceder</button>
-                <button mat-button>Eliminar</button>
+                <div class="action-buttons">
+                  <button mat-raised-button color="primary"  (click)="editarPrueba(prueba)">Editar</button>
+                  <button mat-raised-button color="warn" (click)="eliminarPrueba(prueba)">Eliminar</button>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
+        <!-- Botón Nueva Prueba -->
+        <div class="table-actions">
+          <button mat-raised-button color="accent" (click)="nuevaPrueba()">Nueva Prueba</button>
+        </div>
       </div>
 
       <div class="data-table">
@@ -94,12 +100,18 @@
               <td>{{ vacuna.fecha | date: 'dd/MM/yyyy' }}</td>
               <td>{{ vacuna.laboratorio }}</td>
               <td>
-                <button mat-button>Acceder</button>
-                <button mat-button>Eliminar</button>
+                <div class="action-buttons">
+                  <button mat-raised-button color="primary" (click)="editarVacuna(vacuna)">Editar</button>
+                  <button mat-raised-button color="warn" (click)="eliminarVacuna(vacuna)">Eliminar</button>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
+        <!-- Botón Nueva Vacuna -->
+        <div class="table-actions">
+          <button mat-raised-button color="accent" (click)="nuevaVacuna()">Nueva Vacuna</button>
+        </div>
       </div>
 
       <!-- Botones -->

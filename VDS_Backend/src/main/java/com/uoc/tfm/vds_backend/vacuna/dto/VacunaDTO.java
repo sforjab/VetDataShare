@@ -1,6 +1,6 @@
 package com.uoc.tfm.vds_backend.vacuna.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ public class VacunaDTO {
     private Long id;
     private String nombre;      
     private String laboratorio;
-    private LocalDate fecha;
+    private LocalDateTime fecha;
     private Long mascotaId;
     private Long consultaId;
 }

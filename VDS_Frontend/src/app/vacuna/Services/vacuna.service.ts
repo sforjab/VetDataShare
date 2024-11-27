@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Vacuna } from '../Models/vacuna.dto';  // Importa el modelo de Vacuna
 import { environment } from 'src/environments/environment';  // Asegúrate de tener la URL del backend en el environment
 
@@ -24,7 +24,10 @@ export class VacunaService {
 
   // Crear una nueva vacuna
   createVacuna(vacuna: Vacuna): Observable<Vacuna> {
-    return this.http.post<Vacuna>(`${this.vacunaUrl}/create`, vacuna);
+    return this.http.post<Vacuna>(`${this.vacunaUrl}/create`, vacuna).pipe(
+      tap(() => console.log('Vacuna creada con éxito')),
+      catchError(this.handleError)
+    );
   }
 
   // Actualizar una vacuna existente
@@ -36,4 +39,13 @@ export class VacunaService {
   deleteVacuna(idVacuna: number): Observable<void> {
     return this.http.delete<void>(`${this.vacunaUrl}/delete/${idVacuna}`);
   }
+
+  // Manejo de errores
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    console.error(`Código de error: ${error.status}\nMensaje: ${error.message}`);
+    
+    // Se propaga el error original para que el componente pueda manejar el código de estado
+    return throwError(() => error);
+  }
 }
+

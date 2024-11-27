@@ -18,7 +18,9 @@ export class AltaConsultaComponent implements OnInit {
     fechaConsulta: '',
     mascotaId: 0,
     veterinarioId: 0,
-    clinicaId: 0
+    clinicaId: 0,
+    pruebaIds: [],
+    vacunaIds: [] 
   };
 
   usuarioId: number | null = null;

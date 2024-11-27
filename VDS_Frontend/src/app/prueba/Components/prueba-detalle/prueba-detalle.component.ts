@@ -4,10 +4,12 @@ import { Prueba, TipoPrueba } from '../../Models/prueba.dto';
 import { PruebaService } from '../../Services/prueba.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mascota } from 'src/app/mascota/Models/mascota.dto';
-import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
 import { MascotaService } from 'src/app/mascota/Services/mascota.service';
-import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { ConsultaService } from 'src/app/consulta/Services/consulta.service';
+import { Consulta } from 'src/app/consulta/Models/consulta.dto';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
+import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
 
 @Component({
   selector: 'app-prueba-detalle',
@@ -15,86 +17,104 @@ import { ConsultaService } from 'src/app/consulta/Services/consulta.service';
   styleUrls: ['./prueba-detalle.component.css']
 })
 export class PruebaDetalleComponent implements OnInit {
-  prueba: Partial<Prueba> = {};
-  tiposPrueba: TipoPrueba[] = [TipoPrueba.IMAGEN, TipoPrueba.ANALÍTICA];
-  idPrueba: number | undefined;
-  mascota: Mascota | null = null;
-  veterinario: Usuario | null = null;
+  prueba: Prueba = {
+    tipo: TipoPrueba.IMAGEN,
+    descripcion: '',
+    fecha: '',
+    consultaId: 0,
+    mascotaId: 0
+  };
+  pruebaId: number | null = null;
+  tiposPrueba = Object.values(TipoPrueba); // Tipos disponibles
 
-  constructor(private pruebaService: PruebaService, private consultaService: ConsultaService, private mascotaService: MascotaService, private usuarioService: UsuarioService, 
-              private route: ActivatedRoute, private router: Router) {}
+  // Información adicional para mostrar
+  nombreMascota: string = '';
+  numeroChip: string = '';
+  numColegiado: string = '';
+
+  constructor(private pruebaService: PruebaService, private mascotaService: MascotaService, private consultaService: ConsultaService, private usuarioService: UsuarioService,
+              private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('idPrueba');
-      if (id) {
-        this.idPrueba = +id;
-        this.cargarPrueba(this.idPrueba);
-      } else {
-        this.router.navigate(['/acceso-no-autorizado']);
-      }
-    });
+    this.pruebaId = +this.route.snapshot.paramMap.get('idPrueba')!;
+    if (this.pruebaId) {
+      this.cargarPrueba(this.pruebaId);
+    } else {
+      this.snackBar.open('ID de prueba no encontrado', 'Cerrar', { duration: 3000 });
+      this.router.navigate(['/']);
+    }
   }
 
-  cargarPrueba(idPrueba: number): void {
-    this.pruebaService.getPruebaPorId(idPrueba).subscribe({
-      next: prueba => {
+  cargarPrueba(id: number): void {
+    this.pruebaService.getPruebaPorId(id).subscribe({
+      next: (prueba) => {
         this.prueba = prueba;
 
-        // Cargar detalles adicionales
-        if (prueba.mascotaId) {
-          this.cargarMascota(prueba.mascotaId);
-        }
-        if (prueba.consultaId) {
-          this.cargarVeterinarioDesdeConsulta(prueba.consultaId);
-        }
-
-        // Valores predeterminados
-        this.prueba.tipo = this.prueba.tipo || this.tiposPrueba[0];
-        this.prueba.descripcion = this.prueba.descripcion || '';
+        // Cargar datos adicionales
+        this.cargarMascota(prueba.mascotaId);
+        this.cargarConsulta(prueba.consultaId);
       },
       error: (err: HttpErrorResponse) => {
-        console.error('Error al cargar la prueba:', err);
+        console.error('Error cargando prueba:', err);
+        this.snackBar.open('Error cargando los datos de la prueba', 'Cerrar', { duration: 3000 });
+        this.router.navigate(['/']);
       }
     });
   }
 
-  cargarMascota(idMascota: number): void {
-    this.mascotaService.getMascotaPorId(idMascota).subscribe({
-      next: mascota => {
-        this.mascota = mascota;
+  cargarMascota(mascotaId: number): void {
+    this.mascotaService.getMascotaPorId(mascotaId).subscribe({
+      next: (mascota: Mascota) => {
+        this.nombreMascota = mascota.nombre || 'No disponible';
+        this.numeroChip = mascota.numChip || 'No disponible';
       },
       error: (err: HttpErrorResponse) => {
-        console.error('Error al cargar la mascota:', err);
+        console.error('Error cargando mascota:', err);
+        this.snackBar.open('Error cargando los datos de la mascota', 'Cerrar', { duration: 3000 });
       }
     });
   }
 
-  cargarVeterinarioDesdeConsulta(idConsulta: number): void {
-    this.consultaService.getConsultaPorId(idConsulta).subscribe({
-      next: consulta => {
-        if (consulta.veterinarioId) {
-          this.usuarioService.getUsuarioPorId(consulta.veterinarioId).subscribe({
-            next: veterinario => {
-              this.veterinario = veterinario;
-            },
-            error: (err: HttpErrorResponse) => {
-              console.error('Error al cargar el veterinario:', err);
-            }
-          });
-        }
+  cargarConsulta(consultaId: number): void {
+    this.consultaService.getConsultaPorId(consultaId).subscribe({
+      next: (consulta: Consulta) => {
+        this.cargarVeterinario(consulta.veterinarioId);
       },
       error: (err: HttpErrorResponse) => {
-        console.error('Error al cargar la consulta:', err);
+        console.error('Error cargando consulta:', err);
+        this.snackBar.open('Error cargando los datos de la consulta', 'Cerrar', { duration: 3000 });
       }
     });
   }
 
-  guardar(): void {
-    console.log('Guardar cambios - lógica pendiente');
+  cargarVeterinario(veterinarioId: number): void {
+    this.usuarioService.getUsuarioPorId(veterinarioId).subscribe({
+      next: (veterinario: Usuario) => {
+        this.numColegiado = veterinario.numColegiado || 'No disponible';
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error cargando veterinario:', err);
+        this.snackBar.open('Error cargando los datos del veterinario', 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
+  guardarPrueba(): void {
+    if (!this.prueba) return;
+
+    this.pruebaService.updatePrueba(this.prueba.id!, this.prueba).subscribe({
+      next: () => {
+        this.snackBar.open('Prueba actualizada con éxito', 'Cerrar', { duration: 3000 });
+        this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`]);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al actualizar la prueba:', err);
+        this.snackBar.open('Error al actualizar la prueba', 'Cerrar', { duration: 3000 });
+      }
+    });
   }
 
   volver(): void {
-    this.router.navigate([`/prueba/mascota-pruebas-list/${this.prueba.mascotaId}`]);
+    this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`]);
   }
 }

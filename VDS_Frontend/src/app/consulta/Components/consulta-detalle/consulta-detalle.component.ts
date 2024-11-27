@@ -12,6 +12,9 @@ import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { ClinicaService } from 'src/app/clinica/Services/clinica.service';
 import { Clinica } from 'src/app/clinica/Models/clinica.dto';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { BajaVacunaComponent } from 'src/app/vacuna/Components/baja-vacuna/baja-vacuna.component';
+import { BajaPruebaComponent } from 'src/app/prueba/Components/baja-prueba/baja-prueba.component';
 
 @Component({
   selector: 'app-consulta-detalle',
@@ -32,24 +35,10 @@ export class ConsultaDetalleComponent implements OnInit {
   rol: string | null = null;
   puedeEditar: boolean = false;
   mostrarNotas: boolean = true;
+  idConsulta: number | null = null;
 
   constructor(private consultaService: ConsultaService, private mascotaService: MascotaService, private usuarioService: UsuarioService, private clinicaService: ClinicaService,
-              private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
-
-  /* ngOnInit(): void {
-    const usuarioId = +sessionStorage.getItem('idUsuario')!;
-    this.cargarUsuarioLogueado(usuarioId);
-    this.rol = sessionStorage.getItem('rol');
-
-    this.evaluarPermisos();
-
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('idConsulta');
-      if (id) {
-        this.cargarConsulta(+id);
-      }
-    });
-  } */
+              private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     const usuarioId = +sessionStorage.getItem('idUsuario')!;
@@ -60,17 +49,12 @@ export class ConsultaDetalleComponent implements OnInit {
       this.route.paramMap.subscribe((params) => {
         const id = params.get('idConsulta');
         if (id) {
+          this.idConsulta = +id;
           this.cargarConsulta(+id);
         }
       });
     });
   }
-
-  /* cargarUsuarioLogueado(id: number): void {
-    this.usuarioService.getUsuarioPorId(id).subscribe((usuario) => {
-      this.usuarioLogueado = usuario;
-    });
-  } */
 
   cargarUsuarioLogueado(id: number, callback: () => void): void {
     this.usuarioService.getUsuarioPorId(id).subscribe((usuario) => {
@@ -86,12 +70,39 @@ export class ConsultaDetalleComponent implements OnInit {
       this.motivo = consulta.motivo || '';
       this.notas = consulta.notas || '';
       this.medicacion = consulta.medicacion || '';
+
+       // Cargar pruebas relacionadas con la consulta
+      this.consultaService.getPruebasPorConsultaId(idConsulta).subscribe((pruebas) => {
+        this.pruebas = pruebas;
+      });
+
+      // Cargar vacunas relacionadas con la consulta
+      this.consultaService.getVacunasPorConsultaId(idConsulta).subscribe((vacunas) => {
+        this.vacunas = vacunas;
+      });
+
       this.cargarMascota(consulta.mascotaId);
       this.cargarVeterinario(consulta.veterinarioId);
       if (consulta.clinicaId) {
         this.cargarClinica(consulta.clinicaId);
       }
       this.evaluarPermisosConsulta();
+    });
+  }
+
+  cargarPruebas(pruebaIds: number[]): void {
+    pruebaIds.forEach((id) => {
+      this.consultaService.getPruebaPorId(id).subscribe((prueba) => {
+        this.pruebas.push(prueba);
+      });
+    });
+  }
+  
+  cargarVacunas(vacunaIds: number[]): void {
+    vacunaIds.forEach((id) => {
+      this.consultaService.getVacunaPorId(id).subscribe((vacuna) => {
+        this.vacunas.push(vacuna);
+      });
     });
   }
 
@@ -148,6 +159,76 @@ export class ConsultaDetalleComponent implements OnInit {
         });
       },
     });
+  }
+
+  nuevaPrueba(): void {
+    if (this.idConsulta) {
+      this.router.navigate([`/prueba/alta-prueba/${this.idConsulta}`]);
+    } else {
+      this.snackBar.open('No se puede crear prueba, ID de consulta no disponible', 'Cerrar', {
+        duration: 3000,
+      });
+    }
+  }
+
+  editarPrueba(prueba: Prueba): void {
+    this.router.navigate([`/prueba/detalle/${prueba.id}`]);
+  }
+
+  eliminarPrueba(prueba: Prueba): void {
+    const dialogRef = this.dialog.open(BajaPruebaComponent, {
+      width: '400px',
+      data: prueba
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.cargarPruebasConsulta(); // Para refrescar listado de pruebas
+      }
+    });
+  }
+  
+  private cargarPruebasConsulta(): void {
+    if (this.idConsulta) {
+      this.consultaService.getPruebasPorConsultaId(this.idConsulta).subscribe((pruebas) => {
+        this.pruebas = pruebas;
+      });
+    }
+  }
+
+  nuevaVacuna(): void {
+    if (this.idConsulta) {
+      this.router.navigate([`/vacuna/alta-vacuna/${this.idConsulta}`]);
+    } else {
+      this.snackBar.open('No se puede crear vacuna, ID de consulta no disponible', 'Cerrar', {
+        duration: 3000,
+      });
+    }
+  }
+
+  editarVacuna(vacuna: Vacuna): void {
+    this.router.navigate([`/vacuna/detalle/${vacuna.id}`]);
+  }
+
+  eliminarVacuna(vacuna: Vacuna): void {
+    const dialogRef = this.dialog.open(BajaVacunaComponent, {
+      width: '400px',
+      data: vacuna
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.cargarVacunasConsulta(); // Para refrescar listado de vacunas
+      }
+    });
+  }
+
+  private cargarVacunasConsulta(): void {
+    if (this.idConsulta) {
+      this.consultaService.getVacunasPorConsultaId(this.idConsulta).subscribe((vacunas) => {
+        this.vacunas = vacunas;
+      });
+    }
   }
 
   volver(): void {

@@ -6,24 +6,33 @@ import { MascotaPruebasListComponent } from './Components/mascota-pruebas-list/m
 import { PruebaRoutingModule } from './prueba-routing.module';
 import { MatIconModule } from '@angular/material/icon';
 import { PruebaDetalleComponent } from './Components/prueba-detalle/prueba-detalle.component';
-import { MatSelectModule } from '@angular/material/select';
+import { MatFormField, MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
+import { AltaPruebaComponent } from './Components/alta-prueba/alta-prueba.component';
+import { BajaPruebaComponent } from './Components/baja-prueba/baja-prueba.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
     MascotaPruebasListComponent,
-    PruebaDetalleComponent // Aquí es donde declaras tu componente
+    PruebaDetalleComponent,
+    AltaPruebaComponent,
+    BajaPruebaComponent
   ],
   imports: [
     CommonModule,
     PruebaRoutingModule,
+    FormsModule,
+    MatFormField,
+    MatInputModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
     MatCardModule,
-    FormsModule
+    MatDialogModule
   ]
 })
 export class PruebaModule { }

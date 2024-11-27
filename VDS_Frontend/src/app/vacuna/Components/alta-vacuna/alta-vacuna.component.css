@@ -1,0 +1,29 @@
+.alta-vacuna-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .alta-form {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .mat-form-field {
+    width: 100%;
+  }
+  
+  .botones-accion {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  

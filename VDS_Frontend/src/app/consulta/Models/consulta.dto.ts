@@ -10,5 +10,7 @@ export interface Consulta {
   mascotaId: number;
   veterinarioId: number;
   clinicaId?: number;
+  pruebaIds: number[];
+  vacunaIds: number[];
 }
   

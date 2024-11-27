@@ -16,8 +16,12 @@ import com.uoc.tfm.vds_backend.consulta.repository.ConsultaRepository;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
 import com.uoc.tfm.vds_backend.mascota.repository.MascotaRepository;
 import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
+import com.uoc.tfm.vds_backend.prueba.dto.PruebaDTO;
+import com.uoc.tfm.vds_backend.prueba.service.PruebaService;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 import com.uoc.tfm.vds_backend.usuario.repository.UsuarioRepository;
+import com.uoc.tfm.vds_backend.vacuna.dto.VacunaDTO;
+import com.uoc.tfm.vds_backend.vacuna.service.VacunaService;
 
 import jakarta.transaction.Transactional;
 
@@ -42,9 +46,31 @@ public class ConsultaService {
     @Autowired
     private MascotaRepository mascotaRepository;
 
+    @Autowired
+    private VacunaService vacunaService;
+
+    @Autowired
+    private PruebaService pruebaService;
+
     @Transactional
     public Optional<ConsultaDTO> getConsultaPorId(Long id) {
-        return consultaRepository.findById(id).map(consultaMapper::toDTO);
+        return consultaRepository.findById(id).map(consulta -> {
+            ConsultaDTO consultaDTO = consultaMapper.toDTO(consulta);
+
+            // Obtenemos los IDs de las vacunas asociadas
+            List<Long> vacunaIds = vacunaService.getVacunasPorConsultaId(id).stream()
+                    .map(VacunaDTO::getId)
+                    .collect(Collectors.toList());
+            consultaDTO.setVacunaIds(vacunaIds);
+
+            // Obtenemos los IDs de las pruebas asociadas
+            List<Long> pruebaIds = pruebaService.getPruebasPorConsultaId(id).stream()
+                    .map(PruebaDTO::getId)
+                    .collect(Collectors.toList());
+            consultaDTO.setPruebaIds(pruebaIds);
+
+            return consultaDTO;
+        });
     }
 
     public List<ConsultaDTO> getConsultasPorFecha(LocalDateTime fecha) {
