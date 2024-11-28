@@ -21,7 +21,7 @@ public class DocumentoPruebaMapper {
         entity.setNombreArchivo(dto.getNombreArchivo());
         entity.setTipoArchivo(dto.getTipoArchivo());
         entity.setDatos(dto.getDatos());
-        // Prueba debe configurarse fuera del mapper.
         return entity;
     }
 }
+

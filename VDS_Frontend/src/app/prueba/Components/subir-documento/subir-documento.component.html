@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Subir Documento</h2>
+<mat-dialog-content>
+  <p>Selecciona un documento para asociarlo a la prueba.</p>
+  <input type="file" (change)="onFileSelected($event)" />
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="subirDocumento()">Subir</button>
+  <button mat-raised-button color="warn" (click)="cancelar()">Cancelar</button>
+</mat-dialog-actions>

@@ -13,13 +13,15 @@ import { AltaPruebaComponent } from './Components/alta-prueba/alta-prueba.compon
 import { BajaPruebaComponent } from './Components/baja-prueba/baja-prueba.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
+import { SubirDocumentoComponent } from './Components/subir-documento/subir-documento.component';
 
 @NgModule({
   declarations: [
     MascotaPruebasListComponent,
     PruebaDetalleComponent,
     AltaPruebaComponent,
-    BajaPruebaComponent
+    BajaPruebaComponent,
+    SubirDocumentoComponent
   ],
   imports: [
     CommonModule,

@@ -49,21 +49,6 @@ public class PruebaService {
                 .collect(Collectors.toList());
     }
 
-    /* @Transactional
-    public Optional<PruebaDTO> createPrueba(PruebaDTO pruebaDTO) {
-        try {
-            Prueba prueba = pruebaMapper.toEntity(pruebaDTO);
-
-            // Mascota y consulta deben configurarse fuera del mapper si están presentes
-            Prueba pruebaCreada = pruebaRepository.save(prueba);
-
-            return Optional.of(pruebaMapper.toDTO(pruebaCreada));
-        } catch (Exception e) {
-            // Manejo de excepciones para posibles errores durante la creación
-            return Optional.empty();
-        }
-    } */
-
     @Transactional
     public Optional<PruebaDTO> createPrueba(PruebaDTO pruebaDTO) {
         try {

@@ -10,6 +10,10 @@ import { Consulta } from 'src/app/consulta/Models/consulta.dto';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
+import { DocumentoPrueba } from '../../Models/documento-prueba.dto';
+import { DocumentoPruebaService } from '../../Services/documento-prueba.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SubirDocumentoComponent } from '../subir-documento/subir-documento.component';
 
 @Component({
   selector: 'app-prueba-detalle',
@@ -27,18 +31,21 @@ export class PruebaDetalleComponent implements OnInit {
   pruebaId: number | null = null;
   tiposPrueba = Object.values(TipoPrueba); // Tipos disponibles
 
-  // Información adicional para mostrar
+  // Información adicional
   nombreMascota: string = '';
   numeroChip: string = '';
   numColegiado: string = '';
+  documentos: DocumentoPrueba[] = [];
+  columnasTabla: string[] = ['nombreArchivo', 'acciones'];
 
   constructor(private pruebaService: PruebaService, private mascotaService: MascotaService, private consultaService: ConsultaService, private usuarioService: UsuarioService,
-              private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
+              private documentoService: DocumentoPruebaService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.pruebaId = +this.route.snapshot.paramMap.get('idPrueba')!;
     if (this.pruebaId) {
       this.cargarPrueba(this.pruebaId);
+      this.cargarDocumentos(this.pruebaId);
     } else {
       this.snackBar.open('ID de prueba no encontrado', 'Cerrar', { duration: 3000 });
       this.router.navigate(['/']);
@@ -57,7 +64,6 @@ export class PruebaDetalleComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         console.error('Error cargando prueba:', err);
         this.snackBar.open('Error cargando los datos de la prueba', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/']);
       }
     });
   }
@@ -98,6 +104,68 @@ export class PruebaDetalleComponent implements OnInit {
       }
     });
   }
+
+  cargarDocumentos(pruebaId: number): void {
+    this.documentoService.getDocumentosPorPruebaId(pruebaId).subscribe({
+      next: (documentos) => {
+        this.documentos = documentos;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error cargando documentos:', err);
+        this.snackBar.open('Error cargando documentos.', 'Cerrar', { duration: 3000 });
+      },
+    });
+  }
+
+  /* abrirDialogSubirDocumento(): void {
+    const dialogRef = this.dialog.open(SubirDocumentoComponent, {
+      width: '400px',
+      data: { pruebaId: this.pruebaId },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.cargarDocumentos(this.pruebaId!);
+      }
+    });
+  } */
+
+    abrirDialogSubirDocumento(): void {
+      const dialogRef = this.dialog.open(SubirDocumentoComponent, {
+        width: '400px',
+        data: { pruebaId: this.pruebaId }, // Pasa el ID de la prueba al diálogo
+      });
+    
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          // Si el resultado es true, recarga los documentos
+          this.cargarDocumentos(this.pruebaId!);
+        }
+      });
+    }
+
+  /* descargarDocumento(id: number): void {
+    this.documentoService.descargarDocumento(id).subscribe((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'documento';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
+
+  eliminarDocumento(id: number): void {
+    this.documentoService.eliminarDocumento(id).subscribe({
+      next: () => {
+        this.cargarDocumentos(this.pruebaId!);
+        this.snackBar.open('Documento eliminado con éxito', 'Cerrar', { duration: 3000 });
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al eliminar el documento:', err);
+      },
+    });
+  } */
 
   guardarPrueba(): void {
     if (!this.prueba) return;
