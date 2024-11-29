@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,13 +34,19 @@ public class AccesoTemporalController {
     @Autowired
     private MascotaService mascotaService;
 
+    @Autowired
+    private Environment environment;
+
     @PostMapping("/generar")
     public ResponseEntity<Map<String, String>> generarAccesoTemporal(@RequestBody GenerarAccesoRequestDTO request) {
         // Generamos el acceso temporal
         AccesoTemporalDTO accesoDTO = accesoTemporalService.generarAccesoTemporal(request.getUsuarioId(), request.getMascotaId());
 
+        String frontendUrl = environment.getProperty("FRONTEND_URL");
+
         // Creamos la URL para el QR
-        String qrUrl = String.format("http://localhost:4200/acceso-temporal/numero-colegiado/%s", accesoDTO.getToken());
+        /* String qrUrl = String.format("http://localhost:4200/acceso-temporal/numero-colegiado/%s", accesoDTO.getToken()); */
+        String qrUrl = String.format("%s/acceso-temporal/numero-colegiado/%s", frontendUrl, accesoDTO.getToken());
 
         // Respuesta
         Map<String, String> response = new HashMap<>();

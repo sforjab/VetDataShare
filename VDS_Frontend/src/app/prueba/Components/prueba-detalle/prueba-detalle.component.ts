@@ -14,6 +14,7 @@ import { DocumentoPrueba } from '../../Models/documento-prueba.dto';
 import { DocumentoPruebaService } from '../../Services/documento-prueba.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SubirDocumentoComponent } from '../subir-documento/subir-documento.component';
+import { EliminarDocumentoComponent } from '../eliminar-documento/eliminar-documento.component';
 
 @Component({
   selector: 'app-prueba-detalle',
@@ -39,7 +40,7 @@ export class PruebaDetalleComponent implements OnInit {
   columnasTabla: string[] = ['nombreArchivo', 'acciones'];
 
   constructor(private pruebaService: PruebaService, private mascotaService: MascotaService, private consultaService: ConsultaService, private usuarioService: UsuarioService,
-              private documentoService: DocumentoPruebaService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
+              private documentoPruebaService: DocumentoPruebaService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.pruebaId = +this.route.snapshot.paramMap.get('idPrueba')!;
@@ -106,7 +107,7 @@ export class PruebaDetalleComponent implements OnInit {
   }
 
   cargarDocumentos(pruebaId: number): void {
-    this.documentoService.getDocumentosPorPruebaId(pruebaId).subscribe({
+    this.documentoPruebaService.getDocumentosPorPruebaId(pruebaId).subscribe({
       next: (documentos) => {
         this.documentos = documentos;
       },
@@ -117,55 +118,49 @@ export class PruebaDetalleComponent implements OnInit {
     });
   }
 
-  /* abrirDialogSubirDocumento(): void {
+  abrirDialogSubirDocumento(): void {
     const dialogRef = this.dialog.open(SubirDocumentoComponent, {
       width: '400px',
-      data: { pruebaId: this.pruebaId },
+      data: { pruebaId: this.pruebaId }, // Pasa el ID de la prueba al diálogo
     });
-
+  
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.cargarDocumentos(this.pruebaId!);
       }
     });
-  } */
-
-    abrirDialogSubirDocumento(): void {
-      const dialogRef = this.dialog.open(SubirDocumentoComponent, {
-        width: '400px',
-        data: { pruebaId: this.pruebaId }, // Pasa el ID de la prueba al diálogo
-      });
-    
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          // Si el resultado es true, recarga los documentos
-          this.cargarDocumentos(this.pruebaId!);
-        }
-      });
-    }
-
-  /* descargarDocumento(id: number): void {
-    this.documentoService.descargarDocumento(id).subscribe((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'documento';
-      a.click();
-      window.URL.revokeObjectURL(url);
-    });
   }
 
-  eliminarDocumento(id: number): void {
-    this.documentoService.eliminarDocumento(id).subscribe({
-      next: () => {
-        this.cargarDocumentos(this.pruebaId!);
-        this.snackBar.open('Documento eliminado con éxito', 'Cerrar', { duration: 3000 });
+  descargarDocumento(documento: DocumentoPrueba): void {
+    this.documentoPruebaService.descargarDocumento(documento.id!).subscribe({
+      next: (blob: Blob | MediaSource) => {
+        const url = window.URL.createObjectURL(blob); // Se crea una URL para el Blob
+        const a = document.createElement('a'); // Creamos un enlace temporal
+        a.href = url;
+        a.download = documento.nombreArchivo; // Este es el nombre del archivo para la descarga
+        a.click(); // Se activa la descarga
+        window.URL.revokeObjectURL(url); // Se limpia la URL temporal
       },
       error: (err: HttpErrorResponse) => {
-        console.error('Error al eliminar el documento:', err);
-      },
+        console.error('Error al descargar el documento:', err);
+        this.snackBar.open(`Error al descargar el documento: ${documento.nombreArchivo}`, 'Cerrar', { duration: 3000 });
+      }
     });
-  } */
+  }
+  
+
+  eliminarDocumento(documento: DocumentoPrueba): void {
+    const dialogRef = this.dialog.open(EliminarDocumentoComponent, {
+      width: '400px',
+      data: documento
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.cargarDocumentos(this.pruebaId!);
+      }
+    });
+  }
 
   guardarPrueba(): void {
     if (!this.prueba) return;

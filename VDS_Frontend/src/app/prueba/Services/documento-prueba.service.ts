@@ -32,22 +32,13 @@ export class DocumentoPruebaService {
   } */
 
   subirDocumento(file: File, pruebaId: number): Observable<void> {
-    console.log(file.name);  // Nombre del archivo
-    console.log(file.type);  // Tipo de archivo
-    console.log(file.size);  // Tamaño del archivo
     const formData = new FormData();
     formData.append('file', file);
     formData.append('pruebaId', pruebaId.toString());
-    console.log('FormData contents:');
-
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
 
     return this.http.post<void>(`${this.docsPruebaUrl}/subirDocumento`, formData);
   }
     
-
   // Descargar un documento
   descargarDocumento(documentoId: number): Observable<Blob> {
     return this.http.get(`${this.docsPruebaUrl}/descargarDocumento/${documentoId}`, { responseType: 'blob' });

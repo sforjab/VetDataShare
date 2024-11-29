@@ -14,6 +14,7 @@ import { BajaPruebaComponent } from './Components/baja-prueba/baja-prueba.compon
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SubirDocumentoComponent } from './Components/subir-documento/subir-documento.component';
+import { EliminarDocumentoComponent } from './Components/eliminar-documento/eliminar-documento.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { SubirDocumentoComponent } from './Components/subir-documento/subir-docu
     PruebaDetalleComponent,
     AltaPruebaComponent,
     BajaPruebaComponent,
-    SubirDocumentoComponent
+    SubirDocumentoComponent,
+    EliminarDocumentoComponent
   ],
   imports: [
     CommonModule,

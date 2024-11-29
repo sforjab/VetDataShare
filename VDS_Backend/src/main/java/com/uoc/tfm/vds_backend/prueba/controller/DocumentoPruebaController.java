@@ -73,8 +73,7 @@ public class DocumentoPruebaController {
                     .contentType(org.springframework.http.MediaType.valueOf(doc.getTipoArchivo()))
                     .body(doc.getDatos());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

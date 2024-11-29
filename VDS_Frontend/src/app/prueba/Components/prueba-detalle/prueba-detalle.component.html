@@ -45,10 +45,8 @@
             <ng-container matColumnDef="acciones">
               <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
               <mat-cell *matCellDef="let documento">
-                <!-- <button mat-raised-button color="primary" (click)="descargarDocumento(documento.id)">Descargar</button>
-                <button mat-raised-button color="warn" (click)="eliminarDocumento(documento.id)">Eliminar</button> -->
-                <button mat-raised-button color="primary">Descargar</button>
-                <button mat-raised-button color="warn">Eliminar</button>
+                <button mat-raised-button color="primary" (click)="descargarDocumento(documento)">Descargar</button>
+                <button mat-raised-button color="warn" (click)="eliminarDocumento(documento)">Eliminar</button>
               </mat-cell>
             </ng-container>
 
