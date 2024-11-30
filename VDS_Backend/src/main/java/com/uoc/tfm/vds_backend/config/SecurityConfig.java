@@ -91,7 +91,7 @@ public class SecurityConfig {
     
         // Configura los orígenes permitidos desde las propiedades
        /*  String allowedOrigin = environment.getProperty("cors.allowed-origin", "http://localhost:4200"); // Fallback a localhost */
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // En producción, cambiar a la URL correcta
+        configuration.setAllowedOrigins(List.of("*")); // En producción, cambiar a la URL correcta
     
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
