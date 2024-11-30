@@ -88,19 +88,15 @@ public class SecurityConfig {
 
     private UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        // Leer la variable 'cors.allowed-origin' desde las propiedades o el entorno
-        String allowedOrigin = environment.getProperty("cors.allowed-origin");
-        if (allowedOrigin != null) {
-            configuration.setAllowedOrigins(List.of(allowedOrigin));
-        } else {
-            configuration.setAllowedOrigins(List.of("*")); // Fallback si no hay configuración
-        }
-
+    
+        // Configura los orígenes permitidos desde las propiedades
+       /*  String allowedOrigin = environment.getProperty("cors.allowed-origin", "http://localhost:4200"); // Fallback a localhost */
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // En producción, cambiar a la URL correcta
+    
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
-
+    
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

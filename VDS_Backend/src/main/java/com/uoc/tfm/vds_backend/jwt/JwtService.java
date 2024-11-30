@@ -20,11 +20,21 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
     
-    @Autowired
+    @Autowired(required = false) // Pude ser 'null' en producción
     Dotenv dotenv;
 
+    private String getEnvVariable(String key) {
+        // Prioriza dotenv (desarrollo) y usa System.getenv() como fallback (producción)
+        if (dotenv != null && dotenv.get(key) != null) {
+            return dotenv.get(key);
+        } else {
+            return System.getenv(key);
+        }
+    }
+
     private Key getSigningKey() {
-        String secretKey = dotenv.get("JWT_SECRET_KEY");
+        /* String secretKey = dotenv.get("JWT_SECRET_KEY"); */
+        String secretKey = getEnvVariable("JWT_SECRET_KEY");
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
