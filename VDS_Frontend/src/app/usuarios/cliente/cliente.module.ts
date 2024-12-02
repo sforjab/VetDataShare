@@ -32,8 +32,7 @@ import { ConfirmarTransferenciaComponent } from './Components/confirmar-transfer
     AltaClienteComponent,
     BajaClienteComponent,
     TransferirMascotasComponent,
-    ConfirmarTransferenciaComponent ,
-    MatProgressSpinnerModule
+    ConfirmarTransferenciaComponent
   ],
   imports: [
     CommonModule,
@@ -48,6 +47,7 @@ import { ConfirmarTransferenciaComponent } from './Components/confirmar-transfer
     MatDividerModule,
     MatPaginatorModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
     RouterModule
   ]
 })
