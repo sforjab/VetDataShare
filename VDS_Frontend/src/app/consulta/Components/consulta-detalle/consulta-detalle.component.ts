@@ -172,7 +172,10 @@ export class ConsultaDetalleComponent implements OnInit {
   }
 
   editarPrueba(prueba: Prueba): void {
-    this.router.navigate([`/prueba/detalle/${prueba.id}`]);
+    /* this.router.navigate([`/prueba/detalle/${prueba.id}`]); */
+    this.router.navigate([`/prueba/detalle/${prueba.id}`], {
+      queryParams: { origen: 'consulta-detalle' }
+    });
   }
 
   eliminarPrueba(prueba: Prueba): void {

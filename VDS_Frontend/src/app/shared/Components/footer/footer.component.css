@@ -1,0 +1,42 @@
+.footer {
+    background-color: #1e5067; /* Fondo según el prototipo */
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px; /* Espaciado lateral */
+    font-size: 14px;
+}
+
+.footer-container {
+    display: flex;
+    width: 100%; /* Ocupa todo el ancho del contenedor */
+}
+
+.footer-logo {
+    flex: 1; /* 25% del ancho total */
+    display: flex;
+    align-items: center; /* Centra verticalmente el contenido */
+    justify-content: center; /* Centra horizontalmente el logo */
+    padding-right: 20px; /* Espaciado adicional si lo necesitas */
+}
+
+.footer-links {
+    flex: 3; /* 75% del ancho total */
+    display: flex;
+    justify-content: space-between; /* Espacia equitativamente los enlaces */
+    align-items: center;
+}
+
+.footer-link {
+    flex: 1; /* Cada enlace ocupa un 25% del área de los enlaces */
+    text-align: center; /* Centra el texto dentro de su espacio */
+    color: #ffffff !important; /* Color del texto negro */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-link:hover {
+    background-color: #9ac5d3; /* Subrayado al pasar el cursor */
+    color: #141e26 !important;
+}

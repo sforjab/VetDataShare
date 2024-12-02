@@ -74,23 +74,6 @@ public class MascotaController {
         }
     }
 
-    
-    /* ADAPTAR ESTO BIEN
-    
-    @GetMapping("/getMascotaPorNombre/{nombre}")
-    public ResponseEntity<Object> getMascotaPorNombre(@PathVariable String nombre) {
-        List<Mascota> mascotas = mascotaService.getMascotaPorNombre(nombre);
-
-        if (mascotas.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .body(new ApiError("No se encontraron mascotas con el nombre: " + nombre));
-        } else {
-            return ResponseEntity.ok(mascotas);
-        }
-    }
- */
-
-
     @GetMapping("/buscarMascotas")
     public ResponseEntity<List<MascotaDTO>> buscarMascotas(
             @RequestParam(required = false) String numChip,
@@ -112,7 +95,6 @@ public class MascotaController {
         }
     }
 
-
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateMascota(@PathVariable Long id, @RequestBody MascotaDTO mascotaDTO) {
         Optional<MascotaDTO> mascotaModificada = mascotaService.updateMascota(id, mascotaDTO);
@@ -124,7 +106,6 @@ public class MascotaController {
                     .body(new ApiError("No se pudo actualizar. Mascota no encontrada o número de chip duplicado."));
         }
     }
-
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteMascota(@PathVariable Long id) {

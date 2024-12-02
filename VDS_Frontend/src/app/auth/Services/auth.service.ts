@@ -59,7 +59,7 @@ export class AuthService {
     return this.usuarioActualRol.asObservable();
   }
 
-  get idUsuario(): Observable<string | null> { // Nuevo getter para idUsuario
+  get idUsuario(): Observable<string | null> {
     return this.usuarioActualId.asObservable();
   }
 

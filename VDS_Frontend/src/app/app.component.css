@@ -1,0 +1,57 @@
+html, body {
+    height: 100%; /* Asegura que la altura del HTML y del body ocupe toda la ventana */
+    margin: 0; /* Elimina márgenes para evitar desplazamientos inesperados */
+}
+
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Hace que el contenedor principal ocupe toda la altura del viewport */
+}
+
+/* Contenedor principal de las páginas estáticas */
+main {
+    flex: 1;
+    padding: 20px; /* Añade un espacio alrededor del contenido */
+    max-width: 800px; /* Limita el ancho del contenido */
+    margin: 0 auto; /* Centra el contenido horizontalmente */
+    line-height: 1.6; /* Mejora la legibilidad del texto */
+    font-family: Arial, sans-serif; /* Fuente genérica para el contenido */
+}
+
+/* Estilo para los encabezados principales */
+main header h1 {
+    text-align: center; /* Centra el título */
+    font-size: 2rem; /* Tamaño más grande para resaltar */
+    margin-bottom: 20px; /* Añade espacio debajo del título */
+    color: #333; /* Color oscuro para mejor contraste */
+}
+
+/* Estilo para encabezados secundarios */
+main section h2 {
+    font-size: 1.5rem;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #555; /* Color ligeramente más claro que el título principal */
+    border-bottom: 2px solid #ddd; /* Añade una línea decorativa debajo */
+    padding-bottom: 5px;
+}
+
+/* Estilo para los párrafos */
+main section p {
+    text-align: justify; /* Alinea el texto justificado */
+    margin-bottom: 15px; /* Añade espacio entre párrafos */
+    color: #666; /* Texto en un gris suave */
+}
+
+/* Estilo para listas */
+main section ul {
+    padding-left: 20px; /* Añade sangría a las listas */
+    margin-bottom: 20px; /* Añade espacio debajo de las listas */
+}
+
+main section ul li {
+    margin-bottom: 10px; /* Espaciado entre elementos de la lista */
+    list-style-type: disc; /* Estilo predeterminado con viñetas */
+    color: #444; /* Un gris más oscuro para el texto */
+}

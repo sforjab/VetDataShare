@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './Components/home/home.component';
 import { AccesoRestringidoComponent } from './shared/Components/acceso-restringido/acceso-restringido.component';
+import { AyudaComponent } from './shared/Components/pages/ayuda/ayuda.component';
+import { PoliticaPrivacidadComponent } from './shared/Components/pages/politica-privacidad/politica-privacidad.component';
+import { SobreNosotrosComponent } from './shared/Components/pages/sobre-nosotros/sobre-nosotros.component';
 
 const routes: Routes = [
   {
@@ -51,7 +54,11 @@ const routes: Routes = [
   {
     path: 'acceso-no-autorizado',
     component: AccesoRestringidoComponent,
-  }
+  },
+  { path: 'ayuda', component: AyudaComponent },
+  { path: 'sobre-nosotros', component: SobreNosotrosComponent },
+  { path: 'politica-privacidad', component: PoliticaPrivacidadComponent }
+
 ];
 
 @NgModule({

@@ -10,6 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class MascotaDashboardComponent implements OnInit {
   idMascota: number | undefined;
+  origin: string | null = null;
 
   constructor(private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router) {}
 
@@ -18,6 +19,10 @@ export class MascotaDashboardComponent implements OnInit {
       const id = params.get('idMascota');
       if (id) {
         this.idMascota = +id;
+
+        this.route.queryParams.subscribe((queryParams) => {
+          this.origin = queryParams['origin'] || null;
+        });
   
         this.mascotaService.verificarPropietario(this.idMascota).subscribe({
           next: () => {
@@ -94,7 +99,27 @@ export class MascotaDashboardComponent implements OnInit {
       this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
     } else {
       // Navegar a la gestión de mascotas
-      this.router.navigate(['/mascota/gestion-mascotas']);
+      /* this.router.navigate(['/mascota/gestion-mascotas']); */
+      if (this.origin === 'cliente-mascotas-list') {
+        if (this.idMascota !== undefined) {
+          this.mascotaService.getMascotaPorId(this.idMascota).subscribe({
+            next: (mascota) => {
+              if (mascota && mascota.propietarioId) {
+                this.router.navigate([`/mascota/cliente-mascotas-list/${mascota.propietarioId}`]);
+              } else {
+                console.error('No se encontró el propietario de la mascota. Redirigiendo a acceso no autorizado.');
+                this.router.navigate(['/acceso-no-autorizado']);
+              }
+            },
+            error: (err) => {
+              console.error('Error obteniendo el propietario de la mascota:', err);
+              this.router.navigate(['/acceso-no-autorizado']);
+            }
+          });
+        }
+      } else {
+        this.router.navigate(['/mascota/gestion-mascotas']);
+      }
     }
   }
 }

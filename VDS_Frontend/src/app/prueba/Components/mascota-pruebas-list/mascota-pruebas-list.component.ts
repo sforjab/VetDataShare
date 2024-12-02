@@ -40,7 +40,10 @@ export class MascotaPruebasListComponent implements OnInit {
   }
 
   verDetallePrueba(idPrueba: number): void {
-    this.router.navigate([`/prueba/detalle/${idPrueba}`]);
+    /* this.router.navigate([`/prueba/detalle/${idPrueba}`]); */
+    this.router.navigate([`/prueba/detalle/${idPrueba}`], {
+      queryParams: { origen: 'mascota-pruebas-list' }
+    });
   }
 
   volver(): void {

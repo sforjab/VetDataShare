@@ -150,6 +150,11 @@ public class MascotaService {
             mascota.setRaza(mascotaDTO.getRaza());
             mascota.setSexo(mascotaDTO.getSexo());
             mascota.setFechaNacimiento(mascotaDTO.getFechaNacimiento());
+
+            if (mascotaDTO.getPropietarioId() != null) {
+                mascota.setUsuario(usuarioService.getEntityById(mascotaDTO.getPropietarioId()));
+            }
+
             Mascota mascotaActualizada = mascotaRepository.save(mascota);
 
             return Optional.of(mascotaMapper.toDTO(mascotaActualizada));

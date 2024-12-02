@@ -71,7 +71,10 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
   }
 
   navegarDashboardMascota(idMascota: number): void {
-    this.router.navigate([`/mascota/dashboard/${idMascota}`]);
+    /* this.router.navigate([`/mascota/dashboard/${idMascota}`]); */
+    this.router.navigate([`/mascota/dashboard/${idMascota}`], {
+      queryParams: { origin: 'gestion-mascotas' },
+    });
   }
 
   eliminarMascota(mascota: Mascota): void {

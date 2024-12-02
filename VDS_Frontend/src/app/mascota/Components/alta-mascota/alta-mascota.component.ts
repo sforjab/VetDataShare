@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Mascota } from '../../Models/mascota.dto';
 import { MascotaService } from '../../Services/mascota.service';
+import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 
 @Component({
   selector: 'app-alta-mascota',
@@ -17,10 +18,11 @@ export class AltaMascotaComponent implements OnInit {
     raza: '',
     sexo: 'Macho',
     fechaNacimiento: '',
-    propietarioId: 0 
+    propietarioId: 0,
+    clinicaId: 0
   };
 
-  constructor(private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
+  constructor(private mascotaService: MascotaService, private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     const idCliente = this.route.snapshot.paramMap.get('idCliente');
@@ -28,6 +30,22 @@ export class AltaMascotaComponent implements OnInit {
       this.mascota.propietarioId = +idCliente;
     } else {
       console.error('ID del cliente no encontrado en la ruta.');
+      this.router.navigate(['/acceso-no-autorizado']);
+    }
+
+    const idUsuario = sessionStorage.getItem('idUsuario');
+    if (idUsuario) {
+      this.usuarioService.getUsuarioPorId(+idUsuario).subscribe({
+        next: (usuario) => {
+          this.mascota.clinicaId = usuario.clinicaId;
+        },
+        error: (err) => {
+          console.error('Error al obtener datos del usuario:', err);
+          this.router.navigate(['/acceso-no-autorizado']);
+        }
+      });
+    } else {
+      console.error('ID del usuario no encontrado en la sesión.');
       this.router.navigate(['/acceso-no-autorizado']);
     }
   }

@@ -56,8 +56,10 @@ export class ClienteMascotasListComponent implements OnInit {
 
   // Navegar a la página de detalle de la mascota
   navegarMascotaDashboard(idMascota: number): void {
-    console.log('Navegando a Mascota Dashboard con ID:', idMascota);
-    this.router.navigate([`/mascota/dashboard/${idMascota}`]);
+    /* this.router.navigate([`/mascota/dashboard/${idMascota}`]); */
+    this.router.navigate([`/mascota/dashboard/${idMascota}`], {
+      queryParams: { origin: 'cliente-mascotas-list' },
+    });
   }
 
   crearMascota(): void {
@@ -82,12 +84,6 @@ export class ClienteMascotasListComponent implements OnInit {
   }
 
   volver(): void {
-    const idUsuarioSesion = sessionStorage.getItem('idUsuario');
-    if (idUsuarioSesion) {
-      this.router.navigate([`/cliente/dashboard/${idUsuarioSesion}`]);
-    } else {
-      console.error('No se encontró el ID del usuario en sesión.');
-      this.router.navigate(['/acceso-no-autorizado']);
-    }
+    this.router.navigate([`/cliente/dashboard/${this.idCliente}`]);
   }
 }

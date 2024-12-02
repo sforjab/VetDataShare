@@ -24,6 +24,7 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
   };
 
   dataSource = new MatTableDataSource<Usuario>();
+  isLoading: boolean = false;
   busquedaRealizada: boolean = false;
   columnasTabla: string[] = ['numIdent', 'nombre', 'apellido1', 'apellido2', 'telefono', 'email', 'acciones'];
 
@@ -42,7 +43,7 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  buscarClientes() {
+  /* buscarClientes() {
     this.busquedaRealizada = true;
     const filtrosAplicados = this.prepararFiltros(this.filtros);
   
@@ -62,7 +63,40 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
       console.log('Error en la llamada al backend: ', error);
       this.dataSource.data = [];
     });
-  }  
+  }   */
+
+  buscarClientes() {
+    this.isLoading = true; // Activa el spinner
+    this.busquedaRealizada = false; // Oculta resultados anteriores
+
+    const filtrosAplicados = this.prepararFiltros(this.filtros);
+
+    this.usuarioService.buscarClientes(filtrosAplicados).subscribe(
+      (result: Usuario[]) => {
+        this.dataSource.data = result || [];
+        console.log('Datos del DataSource antes de vincular el paginador:', this.dataSource.data);
+
+        setTimeout(() => {
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+            console.log('Paginador asignado correctamente después de la búsqueda.');
+          } else {
+            console.warn('Paginador aún no disponible después de la búsqueda.');
+          }
+        });
+
+        this.busquedaRealizada = true; // La búsqueda ha terminado
+      },
+      (error) => {
+        console.error('Error en la llamada al backend:', error);
+        this.dataSource.data = [];
+        this.busquedaRealizada = true; // Evita que el spinner quede activo
+      },
+      () => {
+        this.isLoading = false; // Finaliza el estado de carga
+      }
+    );
+  }
 
   private prepararFiltros(filtros: any): any {
     return {

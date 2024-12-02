@@ -37,6 +37,7 @@ export class PruebaDetalleComponent implements OnInit {
   numeroChip: string = '';
   numColegiado: string = '';
   documentos: DocumentoPrueba[] = [];
+  origen: string | null = null;
   columnasTabla: string[] = ['nombreArchivo', 'acciones'];
 
   constructor(private pruebaService: PruebaService, private mascotaService: MascotaService, private consultaService: ConsultaService, private usuarioService: UsuarioService,
@@ -44,6 +45,7 @@ export class PruebaDetalleComponent implements OnInit {
 
   ngOnInit(): void {
     this.pruebaId = +this.route.snapshot.paramMap.get('idPrueba')!;
+    this.origen = this.route.snapshot.queryParamMap.get('origen');
     if (this.pruebaId) {
       this.cargarPrueba(this.pruebaId);
       this.cargarDocumentos(this.pruebaId);
@@ -178,6 +180,11 @@ export class PruebaDetalleComponent implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`]);
+    /* this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`]); */
+    if (this.origen === 'consulta-detalle') {
+      this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`]);
+    } else if (this.origen === 'mascota-pruebas-list') {
+      this.router.navigate([`/prueba/mascota-pruebas-list/${this.prueba.mascotaId}`]);
+    }
   }
 }

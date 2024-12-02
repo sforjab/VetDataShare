@@ -1,30 +1,25 @@
-.perfil-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px; /* Añadido padding para evitar que los campos queden muy pegados al borde */
-  }
-  
-  .perfil-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    width: 80%;
-    max-width: 800px;
-  }
-  
-  mat-form-field {
-    width: 100%;
-  }
-  
-  .action-buttons {
-    grid-column: span 2; /* Los botones ocupan ambas columnas */
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  button {
-    min-width: 120px;
-  }
-  
+/* Contenedor general de la página */
+.perfil-page {
+  text-align: center;
+  padding: var(--padding);
+}
+
+/* Formulario */
+.perfil-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Los botones abarcan toda la fila */
+.action-buttons {
+  grid-column: span 2;
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--padding);
+}
+
+/* Campos del formulario */
+mat-form-field {
+  width: 100%;
+}

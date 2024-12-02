@@ -1,2 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+:root {
+    --primary-color: #05a6ae; /* Turquesa */
+    --secondary-color: #e8f6f7; /* Celeste */
+    --text-dark: #060505; /* Casi negro */
+    --text-light: #ffffff; /* Blanco */
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --padding: 20px;
+}
+
+/* Reset general */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: var(--text-dark);
+    background-color: #f4f4f9;
+}
+
+/* Cards generales */
+.card {
+    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px var(--card-shadow);
+    padding: var(--padding);
+    max-width: 800px;
+    margin: 20px auto; /* Centrado */
+}
+
+/* Botones */
+button {
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    padding: 10px 20px;
+}
