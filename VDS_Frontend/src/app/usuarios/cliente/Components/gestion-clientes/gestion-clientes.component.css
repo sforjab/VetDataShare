@@ -114,10 +114,11 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px 0;
-  }
+    height: 100px; /* Ajusta según el espacio deseado */
+}
   
-  .spinner {
+.spinner {
     color: #159ab7; /* Color del spinner */
-  }
+}
+  
   

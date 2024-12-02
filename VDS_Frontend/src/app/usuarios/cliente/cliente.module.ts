@@ -17,6 +17,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BajaClienteComponent } from './Components/baja-cliente/baja-cliente.component';
 import { TransferirMascotasComponent } from './Components/transferir-mascotas/transferir-mascotas.component';
 import { ConfirmarTransferenciaComponent } from './Components/confirmar-transferencia/confirmar-transferencia.component';
@@ -31,7 +32,8 @@ import { ConfirmarTransferenciaComponent } from './Components/confirmar-transfer
     AltaClienteComponent,
     BajaClienteComponent,
     TransferirMascotasComponent,
-    ConfirmarTransferenciaComponent 
+    ConfirmarTransferenciaComponent ,
+    MatProgressSpinnerModule
   ],
   imports: [
     CommonModule,

@@ -48,7 +48,18 @@
 
 <mat-divider></mat-divider>
 
-<table *ngIf="busquedaRealizada && dataSource.data.length > 0" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<!-- Spinner de carga -->
+<div *ngIf="isLoading" class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+</div>
+
+<!-- Tabla de resultados -->
+<table
+  *ngIf="!isLoading && busquedaRealizada && dataSource.data.length > 0"
+  mat-table
+  [dataSource]="dataSource"
+  class="mat-elevation-z8"
+>
   <ng-container matColumnDef="numIdent">
     <th mat-header-cell *matHeaderCellDef>Num Ident</th>
     <td mat-cell *matCellDef="let cliente">{{ cliente.numIdent }}</td>
@@ -92,9 +103,21 @@
   <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
 </table>
 
-<mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator
+  *ngIf="!isLoading && busquedaRealizada && dataSource.data.length > 0"
+  [pageSize]="5"
+  [pageSizeOptions]="[5, 10, 20]"
+  showFirstLastButtons
+>
+</mat-paginator>
 
-<p *ngIf="busquedaRealizada && dataSource.data.length === 0" class="no-results">No se encontraron clientes.</p>
+<!-- Mensaje de "No se encontraron clientes" -->
+<p
+  *ngIf="!isLoading && busquedaRealizada && dataSource.data.length === 0"
+  class="no-results"
+>
+  No se encontraron clientes.
+</p>
 
 <!-- Botón Volver al Dashboard del Veterinario -->
 <div class="boton-volver">
