@@ -1,47 +1,49 @@
-<div class="perfil-page">
-  <!-- Título principal -->
-  <h1>Editar Perfil</h1>
-
-  <!-- Card con el formulario -->
-  <div class="card">
-      <form class="perfil-form" #perfilForm="ngForm">
-          <!-- Número de Identificación -->
+<div class="page-container">
+    <!-- Título principal -->
+    <h1>Editar Perfil</h1>
+  
+    <!-- Mat Card con el formulario -->
+    <mat-card class="card perfil-card">
+      <mat-card-content>
+        <!-- Contenedor con diseño en grid -->
+        <form class="perfil-form grid-form" #perfilForm="ngForm">
+          <!-- Primera fila -->
           <mat-form-field appearance="fill">
-              <mat-label>Número de Identificación</mat-label>
-              <input matInput [(ngModel)]="usuario.numIdent" name="numIdent" required />
+            <mat-label>Número de Identificación</mat-label>
+            <input matInput [(ngModel)]="usuario.numIdent" name="numIdent" required />
           </mat-form-field>
-
-          <!-- Número de Colegiado -->
+  
           <mat-form-field appearance="fill">
-              <mat-label>Número de Colegiado</mat-label>
-              <input matInput [(ngModel)]="usuario.numColegiado" name="numColegiado" required />
+            <mat-label>Número de Colegiado</mat-label>
+            <input matInput [(ngModel)]="usuario.numColegiado" name="numColegiado" required />
           </mat-form-field>
-
-          <!-- Nombre -->
+  
+          <!-- Segunda fila -->
           <mat-form-field appearance="fill">
-              <mat-label>Nombre</mat-label>
-              <input matInput [(ngModel)]="usuario.nombre" name="nombre" required />
+            <mat-label>Nombre</mat-label>
+            <input matInput [(ngModel)]="usuario.nombre" name="nombre" required />
           </mat-form-field>
-
-          <!-- Primer Apellido -->
+  
           <mat-form-field appearance="fill">
-              <mat-label>Primer Apellido</mat-label>
-              <input matInput [(ngModel)]="usuario.apellido1" name="apellido1" required />
+            <mat-label>Primer Apellido</mat-label>
+            <input matInput [(ngModel)]="usuario.apellido1" name="apellido1" required />
           </mat-form-field>
-
-          <!-- Segundo Apellido -->
+  
           <mat-form-field appearance="fill">
-              <mat-label>Segundo Apellido</mat-label>
-              <input matInput [(ngModel)]="usuario.apellido2" name="apellido2" />
+            <mat-label>Segundo Apellido</mat-label>
+            <input matInput [(ngModel)]="usuario.apellido2" name="apellido2" />
           </mat-form-field>
-
-          <!-- Botones de acción -->
-          <div class="action-buttons">
-              <button mat-raised-button color="primary" (click)="guardarCambios()" [disabled]="!perfilForm.form.valid">
-                  Guardar
-              </button>
-              <button mat-raised-button color="accent" (click)="volver()">Volver</button>
-          </div>
-      </form>
-  </div>
+        </form>
+      </mat-card-content>
+      <!-- Botones centrados -->
+      <mat-card-actions class="action-buttons">
+        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="!perfilForm.form.valid">
+          Guardar
+        </button>
+        <button mat-raised-button class="button-secondary" (click)="volver()">
+          Volver
+        </button>
+      </mat-card-actions>
+    </mat-card>
 </div>
+  

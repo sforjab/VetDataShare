@@ -1,23 +1,51 @@
 .dashboard-container {
+    text-align: center;
+    margin: 40px auto;
+  }
+  
+  .dashboard-buttons-container {
+    margin: 20px auto;
+    padding: var(--padding);
+    max-width: 900px; /* Ajuste del ancho máximo del contenedor */
+  }
+  
+  .dashboard-buttons {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px; /* Separación entre botones */
+    flex-wrap: nowrap; /* Los botones permanecen en una fila */
+    width: 100%; /* Ocupa el ancho del contenedor */
+  }
+  
+  .dashboard-button {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-}
-
-.dashboard-title {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.dashboard-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.dashboard-buttons button {
-    margin: 10px;
-}
+    width: 150px; /* Tamaño del botón */
+    height: 150px;
+    background-color: #cbd8df; /* Fondo del botón */
+    color: #1e5067; /* Color del texto */
+    border-radius: var(--border-radius);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
   
+  .dashboard-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dashboard-button i {
+    font-size: 48px; /* Tamaño del icono */
+    margin-bottom: 10px;
+    color: #1e5067; /* Color del icono */
+  }
+  
+  .dashboard-button span {
+    font-size: 16px; /* Tamaño del texto */
+    font-weight: bold;
+    text-align: center;
+    color: #1e5067; /* Color del texto */
+  }

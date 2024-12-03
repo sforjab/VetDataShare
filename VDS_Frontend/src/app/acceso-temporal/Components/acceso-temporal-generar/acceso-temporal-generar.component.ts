@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AccesoTemporalService } from '../../Services/acceso-temporal.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GenerarAccesoRequestDTO } from '../../Models/generar-acceso-request.dto';
 import { MascotaService } from 'src/app/mascota/Services/mascota.service';
 
@@ -15,7 +15,7 @@ export class AccesoTemporalGenerarComponent {
   codigoGeneradoQR: string | null = null;
   codigoGeneradoNumerico: string | null = null;
 
-  constructor(private accesoTemporalService: AccesoTemporalService, private mascotaService: MascotaService, private route: ActivatedRoute) {}
+  constructor(private accesoTemporalService: AccesoTemporalService, private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -63,5 +63,13 @@ export class AccesoTemporalGenerarComponent {
         console.error('Error al generar acceso temporal:', err);
       }
     });
+  }
+
+  volver(): void {
+    if (this.mascotaId) {
+      this.router.navigate([`/mascota/dashboard/${this.mascotaId}`]);
+    } else {
+      console.error('ID de mascota no disponible para redirigir al dashboard.');
+    }
   }
 }

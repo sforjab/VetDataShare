@@ -1,28 +1,35 @@
-<div class="alta-prueba-container">
-    <h2>Nueva Prueba</h2>
-    <form class="alta-form" #altaPruebaForm="ngForm">
-      <div class="form-row">
+<div class="page-container">
+  <!-- Título principal -->
+  <h1>Nueva Prueba</h1>
+
+  <!-- Mat Card con el formulario -->
+  <mat-card class="card perfil-card">
+    <mat-card-content>
+      <!-- Contenedor con diseño en grid -->
+      <form class="perfil-form grid-form" #altaPruebaForm="ngForm">
+        <!-- Primera fila -->
         <mat-form-field appearance="fill">
           <mat-label>Tipo de Prueba</mat-label>
           <mat-select [(ngModel)]="prueba.tipo" name="tipo" required>
             <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
           </mat-select>
         </mat-form-field>
-      </div>
-  
-      <div class="form-row">
-        <mat-form-field appearance="fill">
+
+        <!-- Segunda fila -->
+        <mat-form-field appearance="fill" class="grid-span">
           <mat-label>Descripción</mat-label>
-          <textarea matInput [(ngModel)]="prueba.descripcion" name="descripcion"></textarea>
+          <textarea matInput [(ngModel)]="prueba.descripcion" name="descripcion" required></textarea>
         </mat-form-field>
-      </div>
-  
-      <div class="botones-accion">
-        <button mat-raised-button color="primary" (click)="crearPrueba()" [disabled]="!altaPruebaForm.form.valid">
-          Crear
-        </button>
-        <button mat-raised-button color="warn" (click)="volver()">Volver</button>
-      </div>
-    </form>
+      </form>
+    </mat-card-content>
+    <!-- Botones centrados -->
+    <mat-card-actions class="action-buttons">
+      <button mat-raised-button class="button-primary" (click)="crearPrueba()" [disabled]="!altaPruebaForm.form.valid">
+        Crear
+      </button>
+      <button mat-raised-button class="button-secondary" (click)="volver()">
+        Volver
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </div>
-  

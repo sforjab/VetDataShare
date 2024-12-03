@@ -1,36 +1,35 @@
-.perfil-container {
+/* Estilos específicos para el mat-card */
+.perfil-card {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; /* Ocupa toda la pantalla */
+  justify-content: space-between;
+  height: 100%; /* Asegura que los botones estén abajo */
+  padding-bottom: 20px;
 }
 
-.titulo-container {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 20px; /* Espacio debajo del título */
-}
-
-.titulo-perfil {
-  color: #333; /* Color opcional */
-}
-
-.perfil-form {
+/* Diseño en grid para el formulario */
+.grid-form {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  width: 80%;
-  max-width: 800px;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
+  gap: 20px; /* Espaciado entre columnas y filas */
 }
 
-mat-form-field {
-  width: 100%;
+.grid-form mat-form-field:nth-child(1),
+.grid-form mat-form-field:nth-child(2) {
+  grid-column: span 1; /* Cada campo ocupa una columna */
 }
 
-.botones-accion {
-  grid-column: span 2; /* Hace que los botones ocupen el ancho de ambas columnas */
-  display: flex;
-  justify-content: center;
-  gap: 10px; /* Espacio entre los botones */
+.grid-form mat-form-field:nth-child(3),
+.grid-form mat-form-field:nth-child(4) {
+  grid-column: span 1; /* Cada campo ocupa una columna en la segunda fila */
+}
+
+.grid-form mat-form-field:nth-child(5),
+.grid-form mat-form-field:nth-child(6) {
+  grid-column: span 1; /* Cada campo ocupa una columna en la tercera fila */
+}
+
+.grid-form mat-form-field:nth-child(7),
+.grid-form mat-form-field:nth-child(8) {
+  grid-column: span 1; /* Los dos últimos campos comparten una fila */
 }

@@ -43,28 +43,6 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /* buscarClientes() {
-    this.busquedaRealizada = true;
-    const filtrosAplicados = this.prepararFiltros(this.filtros);
-  
-    this.usuarioService.buscarClientes(filtrosAplicados).subscribe((result: Usuario[]) => {
-      this.dataSource.data = result || [];
-      console.log('Datos del DataSource antes de vincular el paginador:', this.dataSource.data);
-  
-      setTimeout(() => {
-        if (this.paginator) {
-          this.dataSource.paginator = this.paginator;
-          console.log('Paginador asignado correctamente después de la búsqueda.');
-        } else {
-          console.warn('Paginador aún no disponible después de la búsqueda.');
-        }
-      });
-    }, error => {
-      console.log('Error en la llamada al backend: ', error);
-      this.dataSource.data = [];
-    });
-  }   */
-
   buscarClientes() {
     this.isLoading = true; // Activa el spinner
     this.busquedaRealizada = false; // Oculta resultados anteriores
@@ -74,12 +52,10 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
     this.usuarioService.buscarClientes(filtrosAplicados).subscribe(
       (result: Usuario[]) => {
         this.dataSource.data = result || [];
-        console.log('Datos del DataSource antes de vincular el paginador:', this.dataSource.data);
 
         setTimeout(() => {
           if (this.paginator) {
             this.dataSource.paginator = this.paginator;
-            console.log('Paginador asignado correctamente después de la búsqueda.');
           } else {
             console.warn('Paginador aún no disponible después de la búsqueda.');
           }

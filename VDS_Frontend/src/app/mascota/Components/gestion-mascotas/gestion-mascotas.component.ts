@@ -21,6 +21,7 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
   };
 
   dataSource = new MatTableDataSource<Mascota>();
+  isLoading: boolean = false;
   busquedaRealizada: boolean = false;
   columnasTabla: string[] = ['numChip', 'nombre', 'especie', 'raza', 'fechaNacimiento', 'acciones'];
 
@@ -40,25 +41,34 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
   }
 
   buscarMascotas() {
-    this.busquedaRealizada = true;
+    this.isLoading = true; // Activa el spinner
+    this.busquedaRealizada = false; // Oculta resultados anteriores
+
     const filtrosAplicados = this.prepararFiltros(this.filtros);
 
-    this.mascotaService.buscarMascotas(filtrosAplicados).subscribe((result: Mascota[]) => {
-      this.dataSource.data = result || [];
-      console.log('Datos del DataSource antes de vincular el paginador:', this.dataSource.data);
+    this.mascotaService.buscarMascotas(filtrosAplicados).subscribe(
+      (result: Mascota[]) => {
+        this.dataSource.data = result || [];
 
-      setTimeout(() => {
-        if (this.paginator) {
-          this.dataSource.paginator = this.paginator;
-          console.log('Paginador asignado correctamente después de la búsqueda.');
-        } else {
-          console.warn('Paginador aún no disponible después de la búsqueda.');
-        }
-      });
-    }, error => {
-      console.error('Error al buscar mascotas:', error);
-      this.dataSource.data = [];
-    });
+        setTimeout(() => {
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          } else {
+            console.warn('Paginador aún no disponible después de la búsqueda.');
+          }
+        });
+
+        this.busquedaRealizada = true; // La búsqueda ha terminado
+      },
+      (error) => {
+        console.error('Error en la llamada al backend:', error);
+        this.dataSource.data = [];
+        this.busquedaRealizada = true; // Evita que el spinner quede activo
+      },
+      () => {
+        this.isLoading = false; // Finaliza el estado de carga
+      }
+    );
   }
 
   private prepararFiltros(filtros: any): any {
@@ -71,7 +81,6 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
   }
 
   navegarDashboardMascota(idMascota: number): void {
-    /* this.router.navigate([`/mascota/dashboard/${idMascota}`]); */
     this.router.navigate([`/mascota/dashboard/${idMascota}`], {
       queryParams: { origin: 'gestion-mascotas' },
     });

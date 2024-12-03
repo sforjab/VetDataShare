@@ -1,34 +1,67 @@
-h2 {
+.dashboard-container {
+  display: grid;
+  gap: 20px; /* Separación entre botones */
+  justify-content: center; /* Centra horizontalmente los botones */
   text-align: center;
-  margin-bottom: 20px;
+  margin: 40px auto;
 }
 
-.dashboard-card {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center; /* Centra el contenido dentro del card */
+.dashboard-buttons-container {
+  margin: 20px auto;
+  padding: var(--padding);
+  max-width: 900px; /* Ajuste del ancho máximo del contenedor */
+}
+
+.cliente-layout {
+  grid-template-columns: repeat(3, 1fr); /* Tres botones en la primera fila */
+}
+
+.default-layout {
+  grid-template-columns: repeat(2, 1fr); /* Dos botones por fila */
 }
 
 .dashboard-buttons {
+  display: grid;
+  gap: 20px; /* Espaciado entre botones */
+  justify-content: center; /* Centra los botones */
+}
+
+.dashboard-button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px; /* Espacio entre botones */
-}
-
-button {
-  width: auto; /* Botones de tamaño normal */
-  padding: 10px 20px; /* Espaciado adecuado */
-}
-
-.boton-volver {
-  display: flex;
   justify-content: center;
-  margin-top: 20px;
+  width: 150px; /* Tamaño del botón */
+  height: 150px;
+  background-color: #cbd8df; /* Fondo del botón */
+  color: #1e5067; /* Color del texto */
+  border-radius: var(--border-radius);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.boton-volver button {
-  width: auto; /* Botón "Volver" de tamaño normal */
-  padding: 10px 20px;
+.dashboard-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-button i {
+  font-size: 48px; /* Tamaño del icono */
+  margin-bottom: 10px;
+  color: #1e5067; /* Color del icono */
+}
+
+.dashboard-button span {
+  font-size: 16px; /* Tamaño del texto */
+  font-weight: bold;
+  text-align: center;
+  color: #1e5067; /* Color del texto */
+}
+
+.button-volver {
+  width: auto; /* Evita que ocupe todo el ancho */
+  margin: 20px auto; /* Centrado y separación superior */
+  display: inline-block; /* Ajusta el tamaño al contenido */
+  text-align: center; /* Centra el texto dentro del botón */
 }

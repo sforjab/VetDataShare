@@ -1,47 +1,55 @@
-<div class="container">
-    <h2 class="title">Alta de Consulta</h2>
-    <mat-card class="consulta-card">
-      <mat-card-content>
-        <form>
-          <div class="form-group">
-            <label for="motivo">Motivo de la consulta:</label>
-            <textarea
-              id="motivo"
-              name="motivo"
-              [(ngModel)]="consulta.motivo"
-              rows="4"
-              class="form-control full-width"
-            ></textarea>
-          </div>
-  
-          <div class="form-group" *ngIf="rol !== 'CLIENTE'">
-            <label for="notas">Notas:</label>
-            <textarea
-              id="notas"
-              name="notas"
-              [(ngModel)]="consulta.notas"
-              rows="4"
-              class="form-control full-width"
-            ></textarea>
-          </div>
-  
-          <div class="form-group">
-            <label for="medicacion">Medicación:</label>
-            <textarea
-              id="medicacion"
-              name="medicacion"
-              [(ngModel)]="consulta.medicacion"
-              rows="4"
-              class="form-control full-width"
-            ></textarea>
-          </div>
-  
-          <div class="form-actions">
-            <button mat-raised-button color="primary" (click)="crearConsulta()">Guardar</button>
-            <button mat-raised-button color="warn" (click)="volver()">Volver</button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
+<div class="page-container">
+  <!-- Título principal -->
+  <h1>Alta de Consulta</h1>
+
+  <!-- Mat Card con el formulario -->
+  <mat-card class="card perfil-card">
+    <mat-card-content>
+      <!-- Contenedor con diseño en grid -->
+      <form class="perfil-form grid-form" #altaConsultaForm="ngForm">
+        <!-- Primera fila -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Motivo de la consulta</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="consulta.motivo"
+            name="motivo"
+            rows="4"
+            required
+          ></textarea>
+        </mat-form-field>
+
+        <!-- Segunda fila (solo visible si el rol no es CLIENTE) -->
+        <mat-form-field appearance="fill" class="full-width" *ngIf="rol !== 'CLIENTE'">
+          <mat-label>Notas</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="consulta.notas"
+            name="notas"
+            rows="4"
+          ></textarea>
+        </mat-form-field>
+
+        <!-- Tercera fila -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Medicación</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="consulta.medicacion"
+            name="medicacion"
+            rows="4"
+          ></textarea>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <!-- Botones centrados -->
+    <mat-card-actions class="action-buttons">
+      <button mat-raised-button class="button-primary" (click)="crearConsulta()" [disabled]="!altaConsultaForm.form.valid">
+        Guardar
+      </button>
+      <button mat-raised-button class="button-secondary" (click)="volver()">
+        Volver
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </div>
-  

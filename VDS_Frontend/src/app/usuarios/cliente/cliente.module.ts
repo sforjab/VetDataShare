@@ -21,6 +21,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BajaClienteComponent } from './Components/baja-cliente/baja-cliente.component';
 import { TransferirMascotasComponent } from './Components/transferir-mascotas/transferir-mascotas.component';
 import { ConfirmarTransferenciaComponent } from './Components/confirmar-transferencia/confirmar-transferencia.component';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import { ConfirmarTransferenciaComponent } from './Components/confirmar-transfer
     MatDividerModule,
     MatPaginatorModule,
     MatDialogModule,
+    MatIconModule,
     MatProgressSpinnerModule,
     RouterModule
   ]

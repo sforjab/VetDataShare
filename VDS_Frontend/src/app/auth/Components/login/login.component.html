@@ -1,22 +1,30 @@
-<div class="login-container">
-  <form (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="fill">
-      <mat-label>Username</mat-label>
-      <input matInput type="text" id="username" [(ngModel)]="username" name="username" required>
-    </mat-form-field>
+<div class="page-container">
+  <h1>Iniciar sesión</h1>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Password</mat-label>
-      <input matInput type="password" id="password" [(ngModel)]="password" name="password" required>
-    </mat-form-field>
+  <!-- Mat Card con el formulario -->
+  <mat-card class="card login-card">
+    <mat-card-content>
+      <!-- Contenedor del formulario -->
+      <form class="login-form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill">
+          <mat-label>Username</mat-label>
+          <input matInput type="text" id="username" [(ngModel)]="username" name="username" required />
+        </mat-form-field>
 
-    <div class="button-group">
-      <!-- Botón de login -->
-      <button mat-raised-button color="primary" type="submit">Login</button>
-    </div>
-  </form>
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" id="password" [(ngModel)]="password" name="password" required />
+        </mat-form-field>
 
-  <div *ngIf="mensajeError" class="error-message">
-    {{ mensajeError }}
-  </div>
+        <div *ngIf="mensajeError" class="error-message">
+          {{ mensajeError }}
+        </div>
+
+        <!-- Botones Centrados dentro del Form -->
+        <div class="action-buttons">
+          <button mat-raised-button class="button-primary" type="submit">Login</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>

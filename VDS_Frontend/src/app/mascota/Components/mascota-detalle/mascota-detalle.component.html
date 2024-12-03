@@ -1,60 +1,77 @@
-<div class="perfil-container">
-  <div class="titulo-container">
-    <h1 class="titulo-perfil">Detalles de Mascota</h1>
-  </div>
-  <form class="perfil-form">
-    <mat-form-field appearance="fill">
-      <mat-label>Número de Chip</mat-label>
-      <input matInput [(ngModel)]="mascota.numChip" name="numChip" [readonly]="esCliente">
-    </mat-form-field>
+<div class="page-container">
+  <!-- Título principal -->
+  <h1>Detalles de Mascota</h1>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Nombre</mat-label>
-      <input matInput [(ngModel)]="mascota.nombre" name="nombre" [readonly]="esCliente">
-    </mat-form-field>
+  <!-- Mat Card con el formulario -->
+  <mat-card class="card perfil-card">
+    <mat-card-content>
+      <!-- Contenedor con diseño en grid -->
+      <form class="perfil-form grid-form">
+        <!-- Primera fila -->
+        <mat-form-field appearance="fill">
+          <mat-label>Número de Chip</mat-label>
+          <input matInput [(ngModel)]="mascota.numChip" name="numChip" [readonly]="esCliente" />
+        </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Especie</mat-label>
-      <input matInput [(ngModel)]="mascota.especie" name="especie" [readonly]="esCliente">
-    </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre</mat-label>
+          <input matInput [(ngModel)]="mascota.nombre" name="nombre" [readonly]="esCliente" />
+        </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Raza</mat-label>
-      <input matInput [(ngModel)]="mascota.raza" name="raza" [readonly]="esCliente">
-    </mat-form-field>
+        <!-- Segunda fila -->
+        <mat-form-field appearance="fill">
+          <mat-label>Especie</mat-label>
+          <input matInput [(ngModel)]="mascota.especie" name="especie" [readonly]="esCliente" />
+        </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Sexo</mat-label>
-      <input matInput [(ngModel)]="mascota.sexo" name="sexo" [readonly]="esCliente">
-    </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Raza</mat-label>
+          <input matInput [(ngModel)]="mascota.raza" name="raza" [readonly]="esCliente" />
+        </mat-form-field>
 
-    <!-- <mat-form-field appearance="fill">
-      <mat-label>Fecha de Nacimiento</mat-label>
-      <input matInput [(ngModel)]="mascota.fechaNacimiento" name="fechaNacimiento" [readonly]="esCliente">
-    </mat-form-field> -->
-    <mat-form-field appearance="fill">
-        <mat-label>Fecha de nacimiento</mat-label>
-        <input matInput [matDatepicker]="picker" [(ngModel)]="mascota.fechaNacimiento" name="fechaNacimiento" [readonly]="esCliente">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+        <!-- Tercera fila -->
+        <mat-form-field appearance="fill">
+          <mat-label>Sexo</mat-label>
+          <input matInput [(ngModel)]="mascota.sexo" name="sexo" [readonly]="esCliente" />
+        </mat-form-field>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Edad</mat-label>
-        <input matInput
-               [value]="mascota ? (mascota.fechaNacimiento | calcularEdad:'años') + ' años ' + (mascota.fechaNacimiento | calcularEdad:'meses') + ' meses' : 'No disponible'" 
-               readonly>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Fecha de nacimiento</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [(ngModel)]="mascota.fechaNacimiento"
+            name="fechaNacimiento"
+            [readonly]="esCliente" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
 
-    <mat-form-field *ngIf="propietario" appearance="fill">
-      <mat-label>Propietario</mat-label>
-      <input matInput [value]="propietario.nombre + ' ' + propietario.apellido1 + ' ' + propietario.apellido2" readonly>
-    </mat-form-field>
+        <!-- Cuarta fila -->
+        <mat-form-field appearance="fill">
+          <mat-label>Edad</mat-label>
+          <input
+            matInput
+            [value]="mascota ? (mascota.fechaNacimiento | calcularEdad:'años') + ' años ' + (mascota.fechaNacimiento | calcularEdad:'meses') + ' meses' : 'No disponible'"
+            readonly />
+        </mat-form-field>
 
-    <!-- Contenedor para los botones -->
-    <div class="botones-accion">
-      <button *ngIf="!esCliente" mat-raised-button color="primary" (click)="guardarCambios()">Guardar</button>
-      <button mat-raised-button color="warn" (click)="volver()">Volver</button>
-    </div>
-  </form>
+        <mat-form-field *ngIf="propietario" appearance="fill">
+          <mat-label>Propietario</mat-label>
+          <input matInput [value]="propietario.nombre + ' ' + propietario.apellido1 + ' ' + propietario.apellido2" readonly />
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <!-- Botones centrados -->
+    <mat-card-actions class="action-buttons">
+      <button
+        *ngIf="!esCliente"
+        mat-raised-button
+        class="button-primary"
+        (click)="guardarCambios()">
+        Guardar
+      </button>
+      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+    </mat-card-actions>
+  </mat-card>
 </div>

@@ -12,6 +12,20 @@
   margin-bottom: 20px;
 }
 
+.documentos-table {
+  width: 100%;
+  margin: 20px auto; /* Centramos la tabla horizontalmente */
+  text-align: center; /* Centra el contenido dentro de las celdas */
+  border-collapse: collapse;
+}
+
+.documentos-table th,
+.documentos-table td {
+  padding: 10px;
+  text-align: center; /* Centra el contenido dentro de cada celda */
+  border: 1px solid #ccc;
+}
+
 .info-row {
   display: flex;
   justify-content: space-between;
@@ -20,12 +34,20 @@
 
 .info-row p {
   margin: 0;
+  text-align: center; /* Centra el texto dentro de las columnas */
+  width: 100%; /* Asegura que los textos ocupen el espacio adecuado */
 }
 
 .detalle-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
+}
+
+.botones-documento {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
 
 .botones-accion {

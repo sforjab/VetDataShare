@@ -75,9 +75,8 @@ th, td {
 }
 
 th {
-    background-color: #1976d2; /* Azul Material Design */
-    color: white;
     font-weight: bold;
+    text-align: center;
 }
 
 td {
@@ -125,4 +124,29 @@ td.date-cell {
 .boton-volver {
     margin-top: 20px;
     text-align: center;
+}
+
+.table-container {
+    display: flex;
+    justify-content: center; /* Centra la tabla horizontalmente */
+    margin-top: 20px; /* Espaciado superior */
+}
+
+.clientes-tabla {
+    width: 90%; /* Ajusta el ancho según el diseño */
+    max-width: 1200px; /* Limita el ancho máximo */
+    margin: 0 auto; /* Asegura que esté centrada */
+    border-collapse: collapse;
+}
+
+.paginator-container {
+    display: flex;
+    justify-content: center; /* Centra el paginador horizontalmente */
+    margin-top: 10px; /* Separación con la tabla */
+    width: 90%; /* Alineado con la tabla */
+    max-width: 1200px; /* Igual al max-width de la tabla */
+    padding: 10px; /* Espaciado interno */
+    background-color: #f9f9f9; /* Fondo consistente */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }

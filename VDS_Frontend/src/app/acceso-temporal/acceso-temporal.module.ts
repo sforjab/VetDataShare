@@ -12,6 +12,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { AccesoTemporalGenerarComponent } from './Components/acceso-temporal-generar/acceso-temporal-generar.component';
 import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatButtonModule,
     MatOptionModule,
+    MatCardModule,
     FormsModule,
     QRCodeModule
   ]

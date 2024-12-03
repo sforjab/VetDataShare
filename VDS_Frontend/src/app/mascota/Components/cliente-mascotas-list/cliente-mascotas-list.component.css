@@ -1,37 +1,30 @@
 .mascotas-container {
   margin: 40px auto;
   padding: 20px;
-  max-width: 600px; /* Ajustamos el ancho del contenedor */
+  max-width: 900px;
 }
 
 .mascotas-tabla {
   width: 100%;
-  table-layout: auto;
-  border-collapse: collapse;
-}
-
-mat-header-cell, mat-cell {
-  padding: 12px 16px;
-  text-align: left;
+  border-collapse: collapse; /* Elimina espacios entre celdas */
 }
 
 mat-header-cell {
   font-weight: bold;
+  text-align: left;
+  padding: 12px 16px;
+  background-color: var(--primary-color); /* Color de encabezado */
+  color: var(--text-light); /* Texto blanco */
 }
 
-.mat-cell button {
-  margin-left: auto; /* Botón alineado a la derecha en la celda */
+mat-cell {
+  padding: 12px 16px;
+  text-align: left;
 }
 
-.boton-volver {
+.acciones-cell {
   display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.boton-volver button {
-  width: auto; /* Botón "Volver" de tamaño normal */
-  padding: 10px 20px;
+  gap: 10px; /* Espaciado entre botones */
 }
 
 .no-mascotas {

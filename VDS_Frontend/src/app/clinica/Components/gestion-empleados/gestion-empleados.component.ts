@@ -27,6 +27,7 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
   ];
 
   dataSource = new MatTableDataSource<Usuario>();
+  isLoading: boolean = false;
   busquedaRealizada: boolean = false;
   columnasTabla: string[] = ['numIdent', 'nombre', 'apellido1', 'apellido2', 'rol', 'acciones'];
   idClinica: number | null = null;
@@ -55,22 +56,35 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
       console.error('ID de clínica no encontrado.');
       return;
     }
+    
+    this.isLoading = true; // Activa el spinner
+    this.busquedaRealizada = false; // Oculta resultados anteriores
 
-    this.busquedaRealizada = true;
     const filtrosAplicados = this.prepararFiltros(this.filtros);
 
-    this.usuarioService.buscarEmpleados(this.idClinica, filtrosAplicados).subscribe((result: Usuario[]) => {
-      this.dataSource.data = result || [];
-      console.log('Empleados encontrados:', this.dataSource.data);
-      setTimeout(() => {
-        if (this.paginator) {
-          this.dataSource.paginator = this.paginator;
-        }
-      });
-    }, error => {
-      console.error('Error en la llamada al backend: ', error);
-      this.dataSource.data = [];
-    });
+    this.usuarioService.buscarEmpleados(this.idClinica, filtrosAplicados).subscribe(
+      (result: Usuario[]) => {
+        this.dataSource.data = result || [];
+
+        setTimeout(() => {
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          } else {
+            console.warn('Paginador aún no disponible después de la búsqueda.');
+          }
+        });
+
+        this.busquedaRealizada = true; // La búsqueda ha terminado
+      },
+      (error) => {
+        console.error('Error en la llamada al backend:', error);
+        this.dataSource.data = [];
+        this.busquedaRealizada = true; // Evita que el spinner quede activo
+      },
+      () => {
+        this.isLoading = false; // Finaliza el estado de carga
+      }
+    );
   }
 
   private prepararFiltros(filtros: any): any {

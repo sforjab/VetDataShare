@@ -1,25 +1,26 @@
-/* Contenedor general de la página */
-.perfil-page {
-  text-align: center;
-  padding: var(--padding);
-}
-
-/* Formulario */
-.perfil-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-/* Los botones abarcan toda la fila */
-.action-buttons {
-  grid-column: span 2;
+/* Estilos para el mat-card */
+.perfil-card {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  margin-top: var(--padding);
+  height: 100%; /* Asegura que los botones estén abajo */
+  padding-bottom: 20px;
 }
 
-/* Campos del formulario */
-mat-form-field {
-  width: 100%;
+/* Diseño en grid para el formulario */
+.grid-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
+  gap: 20px; /* Espaciado entre columnas y filas */
+}
+
+.grid-form mat-form-field:nth-child(1),
+.grid-form mat-form-field:nth-child(2) {
+  grid-column: span 1; /* Cada campo ocupa una columna */
+}
+
+.grid-form mat-form-field:nth-child(3),
+.grid-form mat-form-field:nth-child(4),
+.grid-form mat-form-field:nth-child(5) {
+  grid-column: span 1; /* Cada campo ocupa una columna en la segunda fila */
 }

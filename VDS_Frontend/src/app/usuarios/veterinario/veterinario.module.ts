@@ -10,6 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { VeterinarioPerfilComponent } from './Components/veterinario-perfil/veterinario-perfil.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -26,6 +28,8 @@ import { VeterinarioPerfilComponent } from './Components/veterinario-perfil/vete
     MatFormFieldModule,
     MatTableModule,
     MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
     RouterModule
   ]
 })

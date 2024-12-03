@@ -1,9 +1,24 @@
-<h1>Número de Colegiado</h1>
-<mat-form-field appearance="fill">
-  <mat-label>Introduce el número de colegiado</mat-label>
-  <input matInput [(ngModel)]="numColegiado">
-</mat-form-field>
+<div class="page-container">
+  <h1>Validar Número de Colegiado</h1>
 
-<button mat-raised-button color="primary" (click)="validarColegiado()">Validar y Registrar</button>
+  <!-- Formulario para número de colegiado -->
+  <mat-card class="card colegiado-card">
+    <mat-card-content>
+      <form class="colegiado-form">
+        <!-- Campo para introducir el número de colegiado -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Introduce el número de colegiado</mat-label>
+          <input matInput [(ngModel)]="numColegiado" name="numColegiado" required />
+        </mat-form-field>
+      </form>
+    </mat-card-content>
 
-<p *ngIf="mensaje">{{ mensaje }}</p>
+    <!-- Botón de validar y registrar -->
+    <mat-card-actions class="action-buttons">
+      <button mat-raised-button class="button-primary" (click)="validarColegiado()">Validar y Registrar</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Mensaje de resultado -->
+  <p *ngIf="mensaje" class="mensaje-validacion">{{ mensaje }}</p>
+</div>

@@ -1,10 +1,28 @@
-<h1>Generar acceso temporal</h1>
-<p>Mascota: {{ numChip }}</p>
+<div class="page-container">
+  <h1>Generar acceso temporal</h1>
 
-<button mat-raised-button color="primary" (click)="generarAcceso()">Generar</button>
+  <!-- Información de la mascota -->
+  <div class="info-container">
+    <p><strong>Mascota:</strong> {{ numChip }}</p>
+  </div>
 
-<div *ngIf="codigoGeneradoQR && codigoGeneradoNumerico">
-  <p>Código QR:</p>
-  <qrcode [qrdata]="codigoGeneradoQR" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
-  <p>Código numérico: {{ codigoGeneradoNumerico }}</p>
+  <!-- Botón para generar acceso -->
+  <div class="action-buttons">
+    <button mat-raised-button class="button-primary" (click)="generarAcceso()">Generar</button>
+    <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+  </div>
+
+  <!-- Resultados del acceso generado -->
+  <div *ngIf="codigoGeneradoQR && codigoGeneradoNumerico" class="resultado-container">
+    <h3>Acceso generado</h3>
+
+    <div class="qr-container">
+      <p><strong>Código QR:</strong></p>
+      <qrcode [qrdata]="codigoGeneradoQR" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+    </div>
+
+    <div class="codigo-numerico">
+      <p><strong>Código numérico:</strong> {{ codigoGeneradoNumerico }}</p>
+    </div>
+  </div>
 </div>

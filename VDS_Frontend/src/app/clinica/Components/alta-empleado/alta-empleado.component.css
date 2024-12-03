@@ -1,42 +1,50 @@
-.perfil-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Ocupa toda la pantalla */
-  }
-  
-  .titulo-container {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 20px; /* Espacio debajo del título */
-  }
-  
-  .titulo-perfil {
-    color: #333; /* Color opcional */
-  }
-  
-  .perfil-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    width: 80%;
-    max-width: 800px;
-  }
-  
-  mat-form-field {
-    width: 100%;
-  }
-  
-  .botones-accion {
-    grid-column: span 2; /* Hace que los botones ocupen el ancho de ambas columnas */
-    display: flex;
-    justify-content: center;
-    gap: 10px; /* Espacio entre los botones */
-  }
-  
-  .snackbar-exito {
-    background-color: #4caf50 !important; /* Verde */
-    color: white !important;
-  }
-  
+/* Estilo general para el card del formulario */
+.perfil-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%; /* Asegura que los botones estén alineados */
+  padding-bottom: 20px;
+  margin-top: 20px;
+}
+
+/* Diseño en grid para los campos del formulario */
+.grid-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
+  gap: 20px; /* Espaciado entre filas y columnas */
+}
+
+/* Campos específicos que ocupan toda la fila */
+.grid-form mat-form-field:nth-child(5),
+.grid-form mat-form-field:nth-child(6) {
+  grid-column: span 1; /* Segunda fila: Rol */
+}
+
+/* Botones del formulario */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Separación entre botones */
+  margin-top: 20px;
+}
+
+button.button-primary {
+  background-color: #1976d2;
+  color: #fff;
+}
+
+button.button-secondary {
+  background-color: #ffffff;
+  color: #1976d2;
+  border: 1px solid #1976d2;
+}
+
+button.button-secondary:hover {
+  background-color: #e3f2fd;
+}
+
+.page-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}

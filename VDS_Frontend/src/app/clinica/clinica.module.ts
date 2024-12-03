@@ -18,6 +18,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { AltaEmpleadoComponent } from './Components/alta-empleado/alta-empleado.component';
 import { BajaEmpleadoComponent } from './Components/baja-empleado/baja-empleado.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -41,7 +43,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatPaginatorModule,
     MatDividerModule,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
+    MatIconModule,
+    MatProgressSpinnerModule
   ]
 })
 export class ClinicaModule { }

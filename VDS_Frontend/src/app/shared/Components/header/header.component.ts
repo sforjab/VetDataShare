@@ -70,4 +70,16 @@ export class HeaderComponent implements OnInit {
   navegarAccesoTemporalValidar(): void {
     this.router.navigate(['/acceso-temporal/validar']);
   }
+
+  navegarDashboard(): void {
+    if (this.usuario?.id) {
+      this.router.navigate([`/usuario/dashboard/${this.usuario.id}`]);
+    } else {
+      console.error('ID de usuario no encontrado para redirigir al dashboard.');
+    }
+  }
+
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
 }

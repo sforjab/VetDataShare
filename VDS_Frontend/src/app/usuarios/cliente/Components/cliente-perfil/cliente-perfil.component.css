@@ -1,42 +1,41 @@
-.perfil-container {
+/* Mat-card para perfil */
+.perfil-card {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;  /* Ocupa toda la pantalla */
-}
-
-.titulo-container {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 20px; /* Espacio debajo del título */
-}
-
-.titulo-perfil {
-    /* font-size: 24px; */ /* Tamaño de la fuente */
-    color: #333; /* Color opcional */
-}
-
-.perfil-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    width: 80%;
-    max-width: 800px;
-}
-
-mat-form-field {
-    width: 100%;
-}
-
-.botones-accion {
-    grid-column: span 2; /* Hace que los botones ocupen el ancho de ambas columnas */
-    display: flex;
-    justify-content: center;
-    gap: 10px; /* Espacio entre los botones */
-}
-
-.snackbar-exito {
-    background-color: #4caf50 !important; /* Verde */
-    color: white !important;
+    justify-content: space-between;
+    height: 100%; /* Asegura que los botones estén abajo */
+    padding-bottom: 20px;
   }
+  
+  /* Diseño en grid para el formulario */
+  .grid-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
+    gap: 20px; /* Espaciado entre columnas y filas */
+  }
+  
+  /* Ajuste de columnas para cada fila */
+  .grid-form mat-form-field:nth-child(1),
+  .grid-form mat-form-field:nth-child(2) {
+    grid-column: span 1; /* Primera fila: Num Ident y Nombre */
+  }
+  
+  .grid-form mat-form-field:nth-child(3),
+  .grid-form mat-form-field:nth-child(4) {
+    grid-column: span 1; /* Segunda fila: Apellido 1 y Apellido 2 */
+  }
+  
+  .grid-form mat-form-field:nth-child(5) {
+    grid-column: span 2; /* Tercera fila: Dirección ocupa toda la fila */
+  }
+  
+  .grid-form mat-form-field:nth-child(6),
+  .grid-form mat-form-field:nth-child(7) {
+    grid-column: span 1; /* Cuarta fila: Teléfono y Email */
+  }
+  
+  /* Clase para campos que ocupan todo el ancho */
+  .full-width {
+    grid-column: span 2 !important;
+  }
+  

@@ -1,6 +1,8 @@
 <header class="header">
   <!-- Logo a la izquierda -->
-  <a routerLink="/" class="logo">Mi Logo</a>
+  <div class="header-logo">
+    <button mat-button (click)="navigateTo('/')">VetDataShare</button>
+  </div>
 
   <!-- Opciones a la derecha -->
   <div class="header-options">
@@ -12,7 +14,10 @@
 
     <!-- Si el usuario está logueado, mostramos el botón "Logout" y el rol -->
     <div *ngIf="isLogged" class="user-info">
-      <span>{{ usuario?.username }}</span>
+      <button mat-button (click)="navegarDashboard()" class="user-button">
+        <i class="fa-solid fa-user fa-lg user-icon"> </i>
+        <span>{{ usuario?.username }}</span>
+      </button>
       <button mat-raised-button color="warn" (click)="logout()" class="logout-btn">Logout</button>
     </div>
   </div>

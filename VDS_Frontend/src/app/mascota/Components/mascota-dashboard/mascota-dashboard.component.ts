@@ -10,6 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class MascotaDashboardComponent implements OnInit {
   idMascota: number | undefined;
+  rolUsuario: string | null = null;
   origin: string | null = null;
 
   constructor(private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router) {}
@@ -23,6 +24,8 @@ export class MascotaDashboardComponent implements OnInit {
         this.route.queryParams.subscribe((queryParams) => {
           this.origin = queryParams['origin'] || null;
         });
+
+        this.rolUsuario = sessionStorage.getItem('rol'); // Obtener
   
         this.mascotaService.verificarPropietario(this.idMascota).subscribe({
           next: () => {

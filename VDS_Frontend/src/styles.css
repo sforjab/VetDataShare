@@ -19,19 +19,59 @@ body {
     background-color: #f4f4f9;
 }
 
+/* Contenedor principal */
+.page-container {
+    text-align: center;
+    padding: 20px;
+}
+
 /* Cards generales */
 .card {
-    background-color: var(--secondary-color);
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 8px var(--card-shadow);
-    padding: var(--padding);
-    max-width: 800px;
+    width: 100% !important;
+    min-width: 800px !important;
+    /* max-width: 800px !important; */
     margin: 20px auto; /* Centrado */
 }
 
-/* Botones */
+/* Botones comunes */
 button {
-    border-radius: var(--border-radius);
-    font-weight: bold;
-    padding: 10px 20px;
+    font-weight: bold !important; /* Mantiene el texto en negrita */
 }
+
+button:disabled {
+    background-color: #d3d3d3 !important; /* Gris claro para botón deshabilitado */
+    color: #ffffff !important; /* Texto blanco */
+    cursor: not-allowed !important; /* Cursor no permitido */
+    box-shadow: none !important; /* Sin sombra */
+  }
+
+/* Botón principal (Guardar, Confirmar, etc.) */
+.button-primary {
+    background-color: #159ab7 !important; /* Azul */
+    color: #ffffff !important; /* Blanco */
+    border: none !important; /* Sin borde */
+}
+
+/* Botón secundario (Volver, Cancelar, etc.) */
+.button-secondary {
+    background-color: #ffffff !important; /* Blanco */
+    color: #159ab7 !important; /* Azul */
+    border: 1px solid #159ab7 !important; /* Borde azul */
+}
+
+/* Centrado de botones con espaciado */
+.action-buttons {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+    gap: 20px; /* Espaciado entre botones */
+    margin-top: 20px;
+}
+
+mat-divider {
+    margin: 1rem 0 !important;
+}
+
+mat-icon {
+    color: #159ab7 !important;
+}
+

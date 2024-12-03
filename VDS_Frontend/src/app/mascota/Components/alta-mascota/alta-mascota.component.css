@@ -1,24 +1,27 @@
-.alta-mascota-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .alta-form {
-    display: grid;
-    gap: 20px;
-  }
-  
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-  
-  .botones-accion {
-    display: flex;
-    justify-content: center;
-    gap: 20px; 
-    margin-top: 20px;
-  }
-  
+.perfil-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%; /* Asegura que los botones estén abajo */
+  padding-bottom: 20px;
+}
+
+.grid-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
+  gap: 20px; /* Espaciado entre columnas y filas */
+}
+
+.grid-form mat-form-field:nth-child(1),
+.grid-form mat-form-field:nth-child(2) {
+  grid-column: span 1; /* Cada campo ocupa una columna */
+}
+
+.grid-form mat-form-field:nth-child(3),
+.grid-form mat-form-field:nth-child(4) {
+  grid-column: span 1; /* Cada campo ocupa una columna en la segunda fila */
+}
+
+.grid-form mat-form-field:nth-child(5) {
+  grid-column: span 1; /* Ocupa toda la fila */
+}

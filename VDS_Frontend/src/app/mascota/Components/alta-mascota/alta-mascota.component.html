@@ -1,31 +1,35 @@
-<div class="alta-mascota-container">
-    <h2>Nueva Mascota</h2>
-    <form class="alta-form" #altaMascotaForm="ngForm">
-      <div class="form-row">
+<div class="page-container">
+  <!-- Título principal -->
+  <h1>Nueva Mascota</h1>
+
+  <!-- Mat Card con el formulario -->
+  <mat-card class="card perfil-card">
+    <mat-card-content>
+      <!-- Contenedor con diseño en grid -->
+      <form class="perfil-form grid-form" #altaMascotaForm="ngForm">
+        <!-- Primera fila -->
         <mat-form-field appearance="fill">
           <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="mascota.nombre" name="nombre" required>
+          <input matInput [(ngModel)]="mascota.nombre" name="nombre" required />
         </mat-form-field>
-  
+
         <mat-form-field appearance="fill">
           <mat-label>Número de Chip</mat-label>
-          <input matInput [(ngModel)]="mascota.numChip" name="numChip" required>
+          <input matInput [(ngModel)]="mascota.numChip" name="numChip" required />
         </mat-form-field>
-      </div>
-  
-      <div class="form-row">
+
+        <!-- Segunda fila -->
         <mat-form-field appearance="fill">
           <mat-label>Especie</mat-label>
-          <input matInput [(ngModel)]="mascota.especie" name="especie" required>
+          <input matInput [(ngModel)]="mascota.especie" name="especie" required />
         </mat-form-field>
-  
+
         <mat-form-field appearance="fill">
           <mat-label>Raza</mat-label>
-          <input matInput [(ngModel)]="mascota.raza" name="raza" required>
+          <input matInput [(ngModel)]="mascota.raza" name="raza" required />
         </mat-form-field>
-      </div>
-  
-      <div class="form-row">
+
+        <!-- Tercera fila -->
         <mat-form-field appearance="fill">
           <mat-label>Sexo</mat-label>
           <mat-select [(ngModel)]="mascota.sexo" name="sexo" required>
@@ -33,21 +37,24 @@
             <mat-option value="Hembra">Hembra</mat-option>
           </mat-select>
         </mat-form-field>
-  
+
         <mat-form-field appearance="fill">
-            <mat-label>Fecha de Nacimiento</mat-label>
-            <input matInput [matDatepicker]="picker" [(ngModel)]="mascota.fechaNacimiento" name="fechaNacimiento" required>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-      </div>
-  
-      <div class="botones-accion">
-        <button mat-raised-button color="primary" (click)="crearMascota()" [disabled]="!altaMascotaForm.form.valid">
-          Crear
-        </button>
-        <button mat-raised-button color="warn" (click)="volver()">Volver</button>
-      </div>
-    </form>
-  </div>
-  
+          <mat-label>Fecha de Nacimiento</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="mascota.fechaNacimiento" name="fechaNacimiento" required />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <!-- Botones centrados -->
+    <mat-card-actions class="action-buttons">
+      <button mat-raised-button class="button-primary" (click)="crearMascota()" [disabled]="!altaMascotaForm.form.valid">
+        Crear
+      </button>
+      <button mat-raised-button class="button-secondary" (click)="volver()">
+        Volver
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

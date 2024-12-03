@@ -21,6 +21,17 @@
     padding-right: 20px; /* Espaciado adicional si lo necesitas */
 }
 
+.footer-logo button {
+    color: #ffffff; /* Color blanco consistente */
+    font-size: 1.5rem;
+    transition: transform 0.2s ease-in-out; 
+}
+  
+.footer-logo button:hover {
+    transform: scale(1.1); /* Aumenta el tamaño ligeramente */
+    transition: transform 0.2s ease-in-out; 
+}
+
 .footer-links {
     flex: 3; /* 75% del ancho total */
     display: flex;

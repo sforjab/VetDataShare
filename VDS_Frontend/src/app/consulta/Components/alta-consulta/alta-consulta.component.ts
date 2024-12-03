@@ -73,6 +73,6 @@ export class AltaConsultaComponent implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate([`/mascota/dashboard/${this.consulta.mascotaId}`]);
+    this.router.navigate([`/consulta/mascota-consultas-list/${this.consulta.mascotaId}`]);
   }
 }

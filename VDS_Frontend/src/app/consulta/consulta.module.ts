@@ -15,6 +15,8 @@ import { AltaConsultaComponent } from './Components/alta-consulta/alta-consulta.
 import { FormsModule } from '@angular/forms';
 import { BajaConsultaComponent } from './Components/baja-consulta/baja-consulta.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -28,6 +30,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule,
     ConsultaRoutingModule,
     FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     MatCardModule,
     MatDividerModule,

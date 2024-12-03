@@ -17,8 +17,10 @@ import { AltaMascotaComponent } from './Components/alta-mascota/alta-mascota.com
 import { MAT_DATE_LOCALE, MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { BajaMascotaComponent } from './Components/baja-mascota/baja-mascota.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
@@ -47,7 +49,9 @@ import { BajaMascotaComponent } from './Components/baja-mascota/baja-mascota.com
     MatOptionModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatDialogModule
+    MatDialogModule,
+    MatIconModule,
+    MatProgressSpinnerModule
     
   ],
   providers: [

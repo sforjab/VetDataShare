@@ -1,29 +1,36 @@
-<div class="alta-vacuna-container">
-    <h2>Nueva Vacuna</h2>
-    <form class="alta-form" #altaVacunaForm="ngForm">
-      <div class="form-row">
+<div class="page-container">
+  <!-- Título principal -->
+  <h1>Nueva Vacuna</h1>
+
+  <!-- Mat Card con el formulario -->
+  <mat-card class="card perfil-card">
+    <mat-card-content>
+      <!-- Contenedor con diseño en grid -->
+      <form class="perfil-form grid-form" #altaVacunaForm="ngForm">
+        <!-- Primera fila: Nombre -->
         <mat-form-field appearance="fill">
           <mat-label>Nombre</mat-label>
           <input matInput [(ngModel)]="vacuna.nombre" name="nombre" required />
         </mat-form-field>
-  
+
+        <!-- Segunda fila: Laboratorio -->
         <mat-form-field appearance="fill">
           <mat-label>Laboratorio</mat-label>
           <input matInput [(ngModel)]="vacuna.laboratorio" name="laboratorio" required />
         </mat-form-field>
-      </div>
-  
-      <div class="botones-accion">
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="crearVacuna()"
-          [disabled]="!altaVacunaForm.form.valid"
-        >
-          Crear
-        </button>
-        <button mat-raised-button color="warn" (click)="volver()">Volver</button>
-      </div>
-    </form>
-  </div>
-  
+      </form>
+    </mat-card-content>
+    <!-- Botones centrados -->
+    <mat-card-actions class="action-buttons">
+      <button
+        mat-raised-button
+        class="button-primary"
+        (click)="crearVacuna()"
+        [disabled]="!altaVacunaForm.form.valid"
+      >
+        Crear
+      </button>
+      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

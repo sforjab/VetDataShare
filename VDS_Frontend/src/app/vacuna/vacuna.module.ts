@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { VacunaDetalleComponent } from './Components/vacuna-detalle/vacuna-detalle.component';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { VacunaDetalleComponent } from './Components/vacuna-detalle/vacuna-detal
     VacunaRoutingModule,
     FormsModule,
     MatFormFieldModule,
+    MatCardModule,
     MatTableModule,      // Para poder usar <table mat-table>
     MatButtonModule,     // Para poder usar <button mat-button>
     MatInputModule,

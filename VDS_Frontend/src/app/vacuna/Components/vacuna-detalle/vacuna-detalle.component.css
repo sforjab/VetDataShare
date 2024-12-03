@@ -1,25 +1,5 @@
-.detalle-vacuna-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.detalle-form {
-    width: 100%;
-    max-width: 400px; 
-}
-
-.form-column {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; 
-    margin-bottom: 20px; 
-}
-
-.botones-accion {
-    display: flex;
-    justify-content: center;
-    gap: 15px; 
-    margin-top: 20px;
-}
+.grid-form {
+    display: grid;
+    grid-template-columns: 1fr; /* Una sola columna */
+    gap: 20px; /* Espaciado entre filas */
+  }

@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: #1e5067; /* Fondo del header */
+  background-color: #1e5067;
   color: #ffffff;
 
   .logo {
@@ -29,8 +29,8 @@
       .login-btn,
       .logout-btn,
       .acceso-temporal-btn {
-          background-color: #cbd8df; /* Fondo de los botones */
-          color: #141e26; /* Color del texto */
+          background-color: #cbd8df; 
+          color: #141e26; 
           border: none;
           padding: 8px 16px;
           border-radius: 4px;
@@ -40,9 +40,22 @@
           margin-left: 1rem;
 
           &:hover {
-              background-color: #9ac5d3; /* Fondo más claro al pasar el cursor */
-              color: #141e26; /* Mantén el color del texto */
+              background-color: #9ac5d3;
+              color: #141e26;
           }
       }
   }
+}
+
+.header-logo button {
+    color: #ffffff; 
+    font-size: 1.5rem;
+}
+
+.user-button {
+    color:  #ffffff !important;
+}
+
+.user-icon {
+    margin-right: 0.5rem;
 }
