@@ -72,10 +72,25 @@ export class HeaderComponent implements OnInit {
   }
 
   navegarDashboard(): void {
-    if (this.usuario?.id) {
-      this.router.navigate([`/usuario/dashboard/${this.usuario.id}`]);
-    } else {
-      console.error('ID de usuario no encontrado para redirigir al dashboard.');
+    if (!this.usuario || !this.usuario.rol) {
+      console.error('Datos de usuario o rol no disponibles');
+      return;
+    }
+  
+    switch (this.usuario.rol) {
+      case 'CLIENTE':
+        this.router.navigate([`/cliente/dashboard/${this.usuario.id}`]);
+        break;
+      case 'VETERINARIO':
+        this.router.navigate([`/veterinario/dashboard/${this.usuario.id}`]);
+        break;
+      case 'ADMIN_CLINICA':
+        this.router.navigate([`/veterinario/dashboard/${this.usuario.id}`]);
+        break;
+      default:
+        console.error('Rol no reconocido:', this.usuario.rol);
+        this.router.navigate(['/acceso-no-autorizado']);
+        break;
     }
   }
 
