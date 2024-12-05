@@ -11,12 +11,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import com.uoc.tfm.vds_backend.clinica.dto.ClinicaDTO;
+import com.uoc.tfm.vds_backend.clinica.service.ClinicaService;
 import com.uoc.tfm.vds_backend.consulta.dto.ConsultaDTO;
+import com.uoc.tfm.vds_backend.consulta.model.ConsultaDetalleResponse;
 import com.uoc.tfm.vds_backend.consulta.service.ConsultaService;
 import com.uoc.tfm.vds_backend.error.ApiError;
 import com.uoc.tfm.vds_backend.jwt.CustomUserDetails;
+import com.uoc.tfm.vds_backend.mascota.dto.MascotaDTO;
+import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
 import com.uoc.tfm.vds_backend.prueba.dto.PruebaDTO;
 import com.uoc.tfm.vds_backend.prueba.service.PruebaService;
+import com.uoc.tfm.vds_backend.usuario.dto.UsuarioDTO;
+import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
 import com.uoc.tfm.vds_backend.vacuna.dto.VacunaDTO;
 import com.uoc.tfm.vds_backend.vacuna.service.VacunaService;
 
@@ -32,6 +39,45 @@ public class ConsultaController {
 
     @Autowired
     private VacunaService vacunaService;
+
+    @Autowired
+    private MascotaService mascotaService;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private ClinicaService clinicaService;
+
+    // Obtener el detalle completo de una consulta
+    @GetMapping("/getConsultaDetalle/{id}")
+    public ResponseEntity<Object> getConsultaDetalle(@PathVariable Long id) {
+        Optional<ConsultaDTO> consulta = consultaService.getConsultaPorId(id);
+
+        if (consulta.isPresent()) {
+            MascotaDTO mascota = mascotaService.getMascotaPorId(consulta.get().getMascotaId()).orElse(null);
+            UsuarioDTO veterinario = usuarioService.getUsuarioPorId(consulta.get().getVeterinarioId()).orElse(null);
+            ClinicaDTO clinica = consulta.get().getClinicaId() != null
+                    ? clinicaService.getClinicaPorId(consulta.get().getClinicaId()).orElse(null)
+                    : null;
+            List<PruebaDTO> pruebas = pruebaService.getPruebasPorConsultaId(id);
+            List<VacunaDTO> vacunas = vacunaService.getVacunasPorConsultaId(id);
+
+            ConsultaDetalleResponse response = new ConsultaDetalleResponse(
+                    consulta.get(),
+                    pruebas,
+                    vacunas,
+                    mascota,
+                    veterinario,
+                    clinica
+            );
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("Consulta no encontrada con ID: " + id));
+        }
+    }
+
 
     // Obtener consulta por ID
     @GetMapping("/getConsultaPorId/{id}")

@@ -7,6 +7,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Prueba } from 'src/app/prueba/Models/prueba.dto';
 import { Vacuna } from 'src/app/vacuna/Models/vacuna.dto';
+import { ConsultaDetalleResponse } from '../Models/consulta-detalle-response.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,15 @@ export class ConsultaService {
   private consultaUrl = `${environment.APIHost}api/consultas`;
 
   constructor(private http: HttpClient) {}
+
+  // Obtener el detalle completo de una consulta
+  getConsultaDetalle(id: number): Observable<ConsultaDetalleResponse> {
+    return this.http.get<ConsultaDetalleResponse>(`${this.consultaUrl}/getConsultaDetalle/${id}`).pipe(
+      tap((response) => console.log('Consulta detalle obtenida:', response)),
+      catchError(this.handleError)
+    );
+  }
+  
 
   // Obtener consulta por ID
   getConsultaPorId(id: number): Observable<Consulta> {

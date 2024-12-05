@@ -15,6 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { BajaVacunaComponent } from 'src/app/vacuna/Components/baja-vacuna/baja-vacuna.component';
 import { BajaPruebaComponent } from 'src/app/prueba/Components/baja-prueba/baja-prueba.component';
+import { ConsultaDetalleResponse } from '../../Models/consulta-detalle-response.dto';
 
 @Component({
   selector: 'app-consulta-detalle',
@@ -50,7 +51,8 @@ export class ConsultaDetalleComponent implements OnInit {
         const id = params.get('idConsulta');
         if (id) {
           this.idConsulta = +id;
-          this.cargarConsulta(+id);
+          /* this.cargarConsulta(+id); */
+          this.cargarConsultaDetalle(+id);
         }
       });
     });
@@ -64,7 +66,30 @@ export class ConsultaDetalleComponent implements OnInit {
     });
   }
 
-  cargarConsulta(idConsulta: number): void {
+  cargarConsultaDetalle(idConsulta: number): void {
+    this.consultaService.getConsultaDetalle(idConsulta).subscribe({
+      next: (response: ConsultaDetalleResponse) => {
+        this.consulta = response.consulta;
+        this.mascota = response.mascota;
+        this.veterinario = response.veterinario;
+        this.clinica = response.clinica;
+        this.pruebas = response.pruebas;
+        this.vacunas = response.vacunas;
+        this.motivo = response.consulta.motivo || '';
+        this.notas = response.consulta.notas || '';
+        this.medicacion = response.consulta.medicacion || '';
+        this.evaluarPermisosConsulta();
+      },
+      error: (err) => {
+        console.error('Error al cargar detalles de la consulta:', err);
+        this.snackBar.open('Error al cargar detalles de la consulta', 'Cerrar', {
+          duration: 3000,
+        });
+      },
+    });
+  }
+
+  /* cargarConsulta(idConsulta: number): void {
     this.consultaService.getConsultaPorId(idConsulta).subscribe((consulta) => {
       this.consulta = consulta;
       this.motivo = consulta.motivo || '';
@@ -122,7 +147,7 @@ export class ConsultaDetalleComponent implements OnInit {
     this.clinicaService.getClinicaPorId(clinicaId).subscribe((clinica) => {
       this.clinica = clinica;
     });
-  }
+  } */
 
   evaluarPermisos(): void {
     this.mostrarNotas = this.rol !== 'CLIENTE';

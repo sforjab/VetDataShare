@@ -18,30 +18,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/* @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-public class AccesoTemporal {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String token; // Token QR o código numérico
-
-    @Column(columnDefinition = "TIMESTAMP")
-    private ZonedDateTime fechaExpiracion; // Inicialmente null
-
-    private String numColegiado; // Inicialmente null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mascota_id", nullable = false)
-    private Mascota mascota;
-} */
 
 @Data
 @AllArgsConstructor
