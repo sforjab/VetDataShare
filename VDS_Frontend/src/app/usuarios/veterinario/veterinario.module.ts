@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { VeterinarioPerfilComponent } from './Components/veterinario-perfil/veterinario-perfil.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatButtonModule,
     MatCardModule,
     MatDividerModule,
-    RouterModule
+    RouterModule,
+    MatProgressSpinnerModule
   ]
 })
 export class VeterinarioModule { }
