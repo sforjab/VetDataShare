@@ -26,6 +26,7 @@ export class ClientePerfilComponent implements OnInit {
 
   idCliente: number | null = null;
   esCliente: boolean = false;
+  isLoading: boolean = false;
 
   constructor(private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
 
@@ -55,6 +56,7 @@ export class ClientePerfilComponent implements OnInit {
     });
   }
   obtenerDatosUsuario(id: number): void {
+    this.isLoading = true;
     this.usuarioService.getUsuarioPorId(id).subscribe({
       next: (usuario) => {
         this.usuario = usuario;
@@ -65,12 +67,16 @@ export class ClientePerfilComponent implements OnInit {
         /* if (err.status === 403) {
           this.router.navigate(['/acceso-no-autorizado']);  //REPASAR ESTO
         } */
+      },
+      complete: () => {
+        this.isLoading = false; // Desactivar spinner
       }
     });
   }
 
   guardarCambios(): void {
     if (this.usuario) {
+      this.isLoading = true;
       this.usuarioService.updateUsuario(this.idCliente!, this.usuario).subscribe({
         next: () => {
           // Mostramos el snackbar al guardar con éxito
@@ -81,6 +87,9 @@ export class ClientePerfilComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           console.error('Error al actualizar el usuario:', err);
+        },
+        complete: () => {
+          this.isLoading = false;
         }
       });
     }

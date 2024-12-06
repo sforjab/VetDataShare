@@ -1,60 +1,68 @@
 <div class="page-container">
-  <!-- Título principal -->
-  <h1>Perfil de Cliente</h1>
+  <!-- Spinner de carga -->
+  <div *ngIf="isLoading" class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+  </div>
 
-  <!-- Mat Card con el formulario -->
-  <mat-card class="card perfil-card">
-    <mat-card-content>
-      <!-- Contenedor con diseño en grid -->
-      <form class="perfil-form grid-form" #perfilForm="ngForm">
-        <!-- Primera fila -->
-        <mat-form-field appearance="fill">
-          <mat-label>Número de Identificación</mat-label>
-          <input matInput [(ngModel)]="usuario.numIdent" name="numIdent" [readonly]="esCliente" required />
-        </mat-form-field>
+  <!-- Contenido principal -->
+  <div *ngIf="!isLoading">
+    <!-- Título principal -->
+    <h1>Perfil de Cliente</h1>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="usuario.nombre" name="nombre" [readonly]="esCliente" required />
-        </mat-form-field>
+    <!-- Mat Card con el formulario -->
+    <mat-card class="card perfil-card">
+      <mat-card-content>
+        <!-- Contenedor con diseño en grid -->
+        <form class="perfil-form grid-form" #perfilForm="ngForm">
+          <!-- Primera fila -->
+          <mat-form-field appearance="fill">
+            <mat-label>Número de Identificación</mat-label>
+            <input matInput [(ngModel)]="usuario.numIdent" name="numIdent" [readonly]="esCliente" required />
+          </mat-form-field>
 
-        <!-- Segunda fila -->
-        <mat-form-field appearance="fill">
-          <mat-label>Primer Apellido</mat-label>
-          <input matInput [(ngModel)]="usuario.apellido1" name="apellido1" [readonly]="esCliente" required />
-        </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input matInput [(ngModel)]="usuario.nombre" name="nombre" [readonly]="esCliente" required />
+          </mat-form-field>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Segundo Apellido</mat-label>
-          <input matInput [(ngModel)]="usuario.apellido2" name="apellido2" [readonly]="esCliente" />
-        </mat-form-field>
+          <!-- Segunda fila -->
+          <mat-form-field appearance="fill">
+            <mat-label>Primer Apellido</mat-label>
+            <input matInput [(ngModel)]="usuario.apellido1" name="apellido1" [readonly]="esCliente" required />
+          </mat-form-field>
 
-        <!-- Tercera fila -->
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Dirección</mat-label>
-          <input matInput [(ngModel)]="usuario.direccion" name="direccion" />
-        </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Segundo Apellido</mat-label>
+            <input matInput [(ngModel)]="usuario.apellido2" name="apellido2" [readonly]="esCliente" />
+          </mat-form-field>
 
-        <!-- Cuarta fila -->
-        <mat-form-field appearance="fill">
-          <mat-label>Teléfono</mat-label>
-          <input matInput [(ngModel)]="usuario.telefono" name="telefono" />
-        </mat-form-field>
+          <!-- Tercera fila -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Dirección</mat-label>
+            <input matInput [(ngModel)]="usuario.direccion" name="direccion" />
+          </mat-form-field>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Email</mat-label>
-          <input matInput [(ngModel)]="usuario.email" name="email" />
-        </mat-form-field>
-      </form>
-    </mat-card-content>
-    <!-- Botones centrados -->
-    <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="!perfilForm.form.valid">
-        Guardar
-      </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">
-        Volver
-      </button>
-    </mat-card-actions>
-  </mat-card>
+          <!-- Cuarta fila -->
+          <mat-form-field appearance="fill">
+            <mat-label>Teléfono</mat-label>
+            <input matInput [(ngModel)]="usuario.telefono" name="telefono" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput [(ngModel)]="usuario.email" name="email" />
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+      <!-- Botones centrados -->
+      <mat-card-actions class="action-buttons">
+        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="!perfilForm.form.valid">
+          Guardar
+        </button>
+        <button mat-raised-button class="button-secondary" (click)="volver()">
+          Volver
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>
