@@ -1,6 +1,6 @@
 .search-container {
-    max-width: 900px; /* Reduce el ancho del contenedor principal */
-    margin: 0 auto; /* Centra el contenedor */
+    max-width: 900px;
+    margin: 0 auto;
     padding: 15px;
     background-color: #f9f9f9;
     border-radius: 8px;
@@ -15,14 +15,14 @@ h2 {
 .formulario-busqueda {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Menor separación entre filas */
+    gap: 15px; 
     margin-bottom: 15px;
 }
 
 .form-row {
     display: flex;
     justify-content: space-between;
-    gap: 10px; /* Separación más compacta entre campos */
+    gap: 10px; 
 }
 
 .form-field {
@@ -49,13 +49,13 @@ hr {
 h3 {
     text-align: center;
     margin-bottom: 10px;
-    color: #1976d2; /* Azul Material Design */
+    color: #1976d2; 
 }
 
 .clientes-tabla {
     width: 100%;
     margin-top: 10px;
-    overflow-x: auto; /* Maneja desbordamiento */
+    overflow-x: auto; 
 }
 
 table {
@@ -64,17 +64,16 @@ table {
 }
 
 th, td {
-    padding: 10px 12px; /* Reduce el padding */
+    padding: 10px 12px; 
     text-align: left;
 }
 
 th {
-    background-color: #1976d2; /* Azul Material Design */
-    /* color: white; */
+    background-color: #1976d2;
     font-weight: bold;
-    white-space: nowrap; /* Previene saltos de línea */
+    white-space: nowrap; 
     overflow: hidden;
-    text-overflow: ellipsis; /* Si el contenido es demasiado largo */
+    text-overflow: ellipsis; 
     text-align: center;
 }
 
@@ -83,7 +82,7 @@ td {
 }
 
 .mat-row:hover {
-    background-color: #e3f2fd; /* Hover azul claro */
+    background-color: #e3f2fd; 
 }
 
 p {
@@ -92,19 +91,16 @@ p {
     font-weight: bold;
 }
 
-/* Botón de Acceder */
 .mat-raised-button {
     margin: auto;
     display: inline-block;
     min-width: 100px;
 }
 
-/* Ajuste de fila clickeable */
 .clickable-row {
     cursor: pointer;
 }
 
-/* Hover en filas */
 .clickable-row:hover {
     background-color: #f0f0f0;
 }
@@ -118,7 +114,7 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px; /* Ajusta según el espacio deseado */
+    height: 100px;
 }
   
 .spinner {
@@ -128,25 +124,25 @@ p {
   
 .table-container {
     display: flex;
-    justify-content: center; /* Centra la tabla horizontalmente */
-    margin-top: 20px; /* Espaciado superior */
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .clientes-tabla {
-    width: 90%; /* Ajusta el ancho según el diseño */
-    max-width: 1200px; /* Limita el ancho máximo */
-    margin: 0 auto; /* Asegura que esté centrada */
+    width: 90%; 
+    max-width: 1200px; 
+    margin: 0 auto;
     border-collapse: collapse;
 }
 
 .paginator-container {
     display: flex;
-    justify-content: center; /* Centra el paginador horizontalmente */
-    margin-top: 10px; /* Separación con la tabla */
-    width: 90%; /* Alineado con la tabla */
-    max-width: 1200px; /* Igual al max-width de la tabla */
-    padding: 10px; /* Espaciado interno */
-    background-color: #f9f9f9; /* Fondo consistente */
-    border-radius: 8px; /* Bordes redondeados */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    justify-content: center; 
+    margin-top: 10px; 
+    width: 90%; 
+    max-width: 1200px; 
+    padding: 10px; 
+    background-color: #f9f9f9;
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

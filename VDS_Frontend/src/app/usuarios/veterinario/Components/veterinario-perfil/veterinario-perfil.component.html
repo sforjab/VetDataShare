@@ -1,4 +1,11 @@
 <div class="page-container">
+  <!-- Spinner de carga -->
+  <div *ngIf="isLoading" class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+  </div>
+
+  <!-- Contenido principal -->
+  <div *ngIf="!isLoading">
     <!-- Título principal -->
     <h1>Editar Perfil</h1>
   
@@ -45,5 +52,5 @@
         </button>
       </mat-card-actions>
     </mat-card>
+  </div>
 </div>
-  
