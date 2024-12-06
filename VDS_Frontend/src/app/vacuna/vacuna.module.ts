@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { VacunaDetalleComponent } from './Components/vacuna-detalle/vacuna-detalle.component';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -28,10 +29,11 @@ import { MatCardModule } from '@angular/material/card';
     FormsModule,
     MatFormFieldModule,
     MatCardModule,
-    MatTableModule,      // Para poder usar <table mat-table>
-    MatButtonModule,     // Para poder usar <button mat-button>
+    MatTableModule,
+    MatButtonModule,
     MatInputModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressSpinnerModule
   
   ]
 })

@@ -37,6 +37,7 @@ export class ConsultaDetalleComponent implements OnInit {
   puedeEditar: boolean = false;
   mostrarNotas: boolean = true;
   idConsulta: number | null = null;
+  isLoading: boolean = false;
 
   constructor(private consultaService: ConsultaService, private mascotaService: MascotaService, private usuarioService: UsuarioService, private clinicaService: ClinicaService,
               private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
@@ -51,7 +52,6 @@ export class ConsultaDetalleComponent implements OnInit {
         const id = params.get('idConsulta');
         if (id) {
           this.idConsulta = +id;
-          /* this.cargarConsulta(+id); */
           this.cargarConsultaDetalle(+id);
         }
       });
@@ -59,14 +59,23 @@ export class ConsultaDetalleComponent implements OnInit {
   }
 
   cargarUsuarioLogueado(id: number, callback: () => void): void {
-    this.usuarioService.getUsuarioPorId(id).subscribe((usuario) => {
-      this.usuarioLogueado = usuario;
-      console.log('Usuario logueado cargado:', usuario);
-      callback();
+    this.isLoading = true;
+    this.usuarioService.getUsuarioPorId(id).subscribe({
+      next: (usuario) => {
+        this.usuarioLogueado = usuario;
+        callback();
+      },
+      error: (err) => {
+        console.error('Error al cargar usuario logueado:', err);
+      },
+      complete: () => {
+        this.isLoading = false;
+      },
     });
   }
 
   cargarConsultaDetalle(idConsulta: number): void {
+    this.isLoading = true;
     this.consultaService.getConsultaDetalle(idConsulta).subscribe({
       next: (response: ConsultaDetalleResponse) => {
         this.consulta = response.consulta;
@@ -86,68 +95,11 @@ export class ConsultaDetalleComponent implements OnInit {
           duration: 3000,
         });
       },
-    });
-  }
-
-  /* cargarConsulta(idConsulta: number): void {
-    this.consultaService.getConsultaPorId(idConsulta).subscribe((consulta) => {
-      this.consulta = consulta;
-      this.motivo = consulta.motivo || '';
-      this.notas = consulta.notas || '';
-      this.medicacion = consulta.medicacion || '';
-
-       // Cargar pruebas relacionadas con la consulta
-      this.consultaService.getPruebasPorConsultaId(idConsulta).subscribe((pruebas) => {
-        this.pruebas = pruebas;
-      });
-
-      // Cargar vacunas relacionadas con la consulta
-      this.consultaService.getVacunasPorConsultaId(idConsulta).subscribe((vacunas) => {
-        this.vacunas = vacunas;
-      });
-
-      this.cargarMascota(consulta.mascotaId);
-      this.cargarVeterinario(consulta.veterinarioId);
-      if (consulta.clinicaId) {
-        this.cargarClinica(consulta.clinicaId);
+      complete: () => {
+        this.isLoading = false;
       }
-      this.evaluarPermisosConsulta();
     });
   }
-
-  cargarPruebas(pruebaIds: number[]): void {
-    pruebaIds.forEach((id) => {
-      this.consultaService.getPruebaPorId(id).subscribe((prueba) => {
-        this.pruebas.push(prueba);
-      });
-    });
-  }
-  
-  cargarVacunas(vacunaIds: number[]): void {
-    vacunaIds.forEach((id) => {
-      this.consultaService.getVacunaPorId(id).subscribe((vacuna) => {
-        this.vacunas.push(vacuna);
-      });
-    });
-  }
-
-  cargarMascota(mascotaId: number): void {
-    this.mascotaService.getMascotaPorId(mascotaId).subscribe((mascota) => {
-      this.mascota = mascota;
-    });
-  }
-
-  cargarVeterinario(veterinarioId: number): void {
-    this.usuarioService.getUsuarioPorId(veterinarioId).subscribe((usuario) => {
-      this.veterinario = usuario;
-    });
-  }
-
-  cargarClinica(clinicaId: number): void {
-    this.clinicaService.getClinicaPorId(clinicaId).subscribe((clinica) => {
-      this.clinica = clinica;
-    });
-  } */
 
   evaluarPermisos(): void {
     this.mostrarNotas = this.rol !== 'CLIENTE';
@@ -166,11 +118,12 @@ export class ConsultaDetalleComponent implements OnInit {
   guardar(): void {
     if (!this.puedeEditar || !this.consulta) return;
 
-    // Actualizar campos antes de enviar
+    // Se actualizan los campos antes de enviar
     this.consulta.motivo = this.motivo;
     this.consulta.notas = this.notas;
     this.consulta.medicacion = this.medicacion;
 
+    this.isLoading = true;
     this.consultaService.updateConsulta(this.consulta.id!, this.consulta).subscribe({
       next: () => {
         this.snackBar.open('Consulta actualizada correctamente', 'Cerrar', {
@@ -183,6 +136,9 @@ export class ConsultaDetalleComponent implements OnInit {
           duration: 3000,
         });
       },
+      complete: () => {
+        this.isLoading = false;
+      }
     });
   }
 

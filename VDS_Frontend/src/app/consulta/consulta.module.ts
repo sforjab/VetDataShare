@@ -17,6 +17,7 @@ import { BajaConsultaComponent } from './Components/baja-consulta/baja-consulta.
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { MatInputModule } from '@angular/material/input';
     MatListModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressSpinnerModule
   ]
 })
 export class ConsultaModule { }

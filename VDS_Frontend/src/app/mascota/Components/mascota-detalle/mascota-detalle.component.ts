@@ -24,6 +24,7 @@ export class MascotaDetalleComponent implements OnInit {
   propietario: Usuario | null = null;
   idMascota: number | null = null;
   esCliente: boolean = false;
+  isLoading: boolean = false;
 
   constructor(private mascotaService: MascotaService, private usuarioService: UsuarioService, 
               private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
@@ -45,6 +46,7 @@ export class MascotaDetalleComponent implements OnInit {
   }
   
   cargarMascotaDetalle(id: number): void {
+    this.isLoading = true;
     this.mascotaService.getMascotaPorId(id).subscribe({
       next: (mascota) => {
         this.mascota = mascota;
@@ -57,6 +59,9 @@ export class MascotaDetalleComponent implements OnInit {
         if (err.status === 403) {
           this.router.navigate(['/acceso-no-autorizado']);
         }
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
@@ -76,13 +81,14 @@ export class MascotaDetalleComponent implements OnInit {
     if (this.mascota && this.idMascota) {
         const fechaNacimiento = this.mascota.fechaNacimiento 
             ? new Date(this.mascota.fechaNacimiento).toLocaleDateString('en-CA')
-            : ''; // Usar un valor vacío en lugar de null
+            : '';
 
         const mascotaActualizada: Mascota = {
             ...this.mascota,
             fechaNacimiento
         };
 
+        this.isLoading = true;
         this.mascotaService.updateMascota(this.idMascota, mascotaActualizada).subscribe({
             next: () => {
                 this.snackBar.open('Mascota actualizada con éxito', 'Cerrar', {
@@ -91,11 +97,13 @@ export class MascotaDetalleComponent implements OnInit {
             },
             error: (err) => {
                 console.error('Error al actualizar la mascota:', err);
+            },
+            complete: () => {
+                this.isLoading = false;
             }
         });
     }
   }
-
 
   volver(): void {
     this.router.navigate([`/mascota/dashboard/${this.idMascota}`]);

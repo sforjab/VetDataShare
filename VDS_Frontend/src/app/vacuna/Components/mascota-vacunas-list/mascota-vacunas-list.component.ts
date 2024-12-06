@@ -13,6 +13,7 @@ export class MascotaVacunasListComponent implements OnInit {
   vacunas: Vacuna[] = [];
   idMascota: number | undefined;
   columnasTabla: string[] = ['fecha', 'nombre'];
+  isLoading: boolean = false;
 
   constructor(private vacunaService: VacunaService, private route: ActivatedRoute, private router: Router) {}
 
@@ -29,12 +30,16 @@ export class MascotaVacunasListComponent implements OnInit {
   }
 
   cargarVacunas(idMascota: number): void {
+    this.isLoading = true;
     this.vacunaService.getVacunasPorIdMascota(idMascota).subscribe({
       next: (vacunas) => {
         this.vacunas = vacunas;
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar las vacunas:', err);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }

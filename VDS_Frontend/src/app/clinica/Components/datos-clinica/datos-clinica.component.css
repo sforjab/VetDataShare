@@ -21,3 +21,10 @@
 .grid-form mat-form-field:nth-child(4) {
   grid-column: span 1; /* Cada campo ocupa una columna en la segunda fila */
 }
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}

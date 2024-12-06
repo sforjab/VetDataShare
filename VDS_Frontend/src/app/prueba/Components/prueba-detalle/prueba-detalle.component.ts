@@ -31,6 +31,7 @@ export class PruebaDetalleComponent implements OnInit {
   };
   pruebaId: number | null = null;
   tiposPrueba = Object.values(TipoPrueba); // Tipos disponibles
+  isLoading: boolean = false;
 
   // Información adicional
   nombreMascota: string = '';
@@ -56,6 +57,7 @@ export class PruebaDetalleComponent implements OnInit {
   }
 
   cargarPrueba(id: number): void {
+    this.isLoading = true;
     this.pruebaService.getPruebaPorId(id).subscribe({
       next: (prueba) => {
         this.prueba = prueba;
@@ -67,11 +69,15 @@ export class PruebaDetalleComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         console.error('Error cargando prueba:', err);
         this.snackBar.open('Error cargando los datos de la prueba', 'Cerrar', { duration: 3000 });
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
 
   cargarMascota(mascotaId: number): void {
+    this.isLoading = true;
     this.mascotaService.getMascotaPorId(mascotaId).subscribe({
       next: (mascota: Mascota) => {
         this.nombreMascota = mascota.nombre || 'No disponible';
@@ -80,11 +86,15 @@ export class PruebaDetalleComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         console.error('Error cargando mascota:', err);
         this.snackBar.open('Error cargando los datos de la mascota', 'Cerrar', { duration: 3000 });
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
 
   cargarConsulta(consultaId: number): void {
+    this.isLoading = true;
     this.consultaService.getConsultaPorId(consultaId).subscribe({
       next: (consulta: Consulta) => {
         this.cargarVeterinario(consulta.veterinarioId);
@@ -92,11 +102,15 @@ export class PruebaDetalleComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         console.error('Error cargando consulta:', err);
         this.snackBar.open('Error cargando los datos de la consulta', 'Cerrar', { duration: 3000 });
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
 
   cargarVeterinario(veterinarioId: number): void {
+    this.isLoading = true;
     this.usuarioService.getUsuarioPorId(veterinarioId).subscribe({
       next: (veterinario: Usuario) => {
         this.numColegiado = veterinario.numColegiado || 'No disponible';
@@ -104,11 +118,15 @@ export class PruebaDetalleComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         console.error('Error cargando veterinario:', err);
         this.snackBar.open('Error cargando los datos del veterinario', 'Cerrar', { duration: 3000 });
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
 
   cargarDocumentos(pruebaId: number): void {
+    this.isLoading = true;
     this.documentoPruebaService.getDocumentosPorPruebaId(pruebaId).subscribe({
       next: (documentos) => {
         this.documentos = documentos;
@@ -117,6 +135,9 @@ export class PruebaDetalleComponent implements OnInit {
         console.error('Error cargando documentos:', err);
         this.snackBar.open('Error cargando documentos.', 'Cerrar', { duration: 3000 });
       },
+      complete: () => {
+        this.isLoading = false;
+      }
     });
   }
 
@@ -165,8 +186,7 @@ export class PruebaDetalleComponent implements OnInit {
   }
 
   guardarPrueba(): void {
-    if (!this.prueba) return;
-
+    this.isLoading = true;
     this.pruebaService.updatePrueba(this.prueba.id!, this.prueba).subscribe({
       next: () => {
         this.snackBar.open('Prueba actualizada con éxito', 'Cerrar', { duration: 3000 });
@@ -175,12 +195,14 @@ export class PruebaDetalleComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         console.error('Error al actualizar la prueba:', err);
         this.snackBar.open('Error al actualizar la prueba', 'Cerrar', { duration: 3000 });
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
 
   volver(): void {
-    /* this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`]); */
     if (this.origen === 'consulta-detalle') {
       this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`]);
     } else if (this.origen === 'mascota-pruebas-list') {

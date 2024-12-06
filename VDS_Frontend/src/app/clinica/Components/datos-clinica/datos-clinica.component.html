@@ -1,44 +1,52 @@
 <div class="page-container">
-  <!-- Título principal -->
-  <h1>Datos de la Clínica</h1>
+  <!-- Spinner de carga -->
+  <div *ngIf="isLoading" class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+  </div>
 
-  <!-- Mat Card con el formulario -->
-  <mat-card class="card perfil-card">
-    <mat-card-content>
-      <!-- Contenedor con diseño en grid -->
-      <form class="perfil-form grid-form" #datosClinicaForm="ngForm">
-        <!-- Primera fila -->
-        <mat-form-field appearance="fill">
-          <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="clinica.nombre" name="nombre" required />
-        </mat-form-field>
+  <!-- Contenido principal -->
+  <div *ngIf="!isLoading">
+    <!-- Título principal -->
+    <h1>Datos de la Clínica</h1>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Dirección</mat-label>
-          <input matInput [(ngModel)]="clinica.direccion" name="direccion" required />
-        </mat-form-field>
+    <!-- Mat Card con el formulario -->
+    <mat-card class="card perfil-card">
+      <mat-card-content>
+        <!-- Contenedor con diseño en grid -->
+        <form class="perfil-form grid-form" #datosClinicaForm="ngForm">
+          <!-- Primera fila -->
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input matInput [(ngModel)]="clinica.nombre" name="nombre" required />
+          </mat-form-field>
 
-        <!-- Segunda fila -->
-        <mat-form-field appearance="fill">
-          <mat-label>Teléfono</mat-label>
-          <input matInput [(ngModel)]="clinica.telefono" name="telefono" required />
-        </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Dirección</mat-label>
+            <input matInput [(ngModel)]="clinica.direccion" name="direccion" required />
+          </mat-form-field>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Email</mat-label>
-          <input matInput [(ngModel)]="clinica.email" name="email" required />
-        </mat-form-field>
-      </form>
-    </mat-card-content>
+          <!-- Segunda fila -->
+          <mat-form-field appearance="fill">
+            <mat-label>Teléfono</mat-label>
+            <input matInput [(ngModel)]="clinica.telefono" name="telefono" required />
+          </mat-form-field>
 
-    <!-- Botones centrados -->
-    <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="!datosClinicaForm.form.valid">
-        Guardar
-      </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">
-        Volver
-      </button>
-    </mat-card-actions>
-  </mat-card>
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput [(ngModel)]="clinica.email" name="email" required />
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+
+      <!-- Botones centrados -->
+      <mat-card-actions class="action-buttons">
+        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="!datosClinicaForm.form.valid">
+          Guardar
+        </button>
+        <button mat-raised-button class="button-secondary" (click)="volver()">
+          Volver
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>

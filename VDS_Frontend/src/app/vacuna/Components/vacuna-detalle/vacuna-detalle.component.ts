@@ -20,6 +20,7 @@ export class VacunaDetalleComponent implements OnInit {
     mascotaId: 0
   };
   vacunaId: number | null = null;
+  isLoading: boolean = false;
 
   constructor(private route: ActivatedRoute, private vacunaService: VacunaService, private router: Router, private snackBar: MatSnackBar) {}
 
@@ -34,6 +35,7 @@ export class VacunaDetalleComponent implements OnInit {
   }
 
   cargarVacuna(id: number): void {
+    this.isLoading = true;
     this.vacunaService.getVacunaPorId(id).subscribe({
       next: (vacuna) => {
         this.vacuna = vacuna;
@@ -42,6 +44,9 @@ export class VacunaDetalleComponent implements OnInit {
         console.error('Error cargando vacuna:', err);
         this.snackBar.open('Error cargando los datos de la vacuna', 'Cerrar', { duration: 3000 });
         this.router.navigate(['/']);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
@@ -49,6 +54,7 @@ export class VacunaDetalleComponent implements OnInit {
   guardarVacuna(): void {
     if (!this.vacuna) return;
 
+    this.isLoading = true;
     this.vacunaService.updateVacuna(this.vacuna.id!, this.vacuna).subscribe({
       next: () => {
         this.snackBar.open('Vacuna actualizada con éxito', 'Cerrar', { duration: 3000 });
@@ -57,6 +63,9 @@ export class VacunaDetalleComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         console.error('Error al actualizar la vacuna:', err);
         this.snackBar.open('Error al actualizar la vacuna', 'Cerrar', { duration: 3000 });
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }

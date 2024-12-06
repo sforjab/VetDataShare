@@ -33,3 +33,10 @@ mat-cell {
   color: #757575;
   margin-top: 20px;
 }
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}

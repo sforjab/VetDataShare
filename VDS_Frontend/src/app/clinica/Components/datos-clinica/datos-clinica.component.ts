@@ -19,6 +19,7 @@ export class DatosClinicaComponent {
   };
 
   idClinica: number | null = null;
+  isLoading: boolean = false;
 
   constructor(private clinicaService: ClinicaService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
 
@@ -33,6 +34,7 @@ export class DatosClinicaComponent {
   }
 
   obtenerDatosClinica(id: number): void {
+    this.isLoading = true;
     this.clinicaService.getClinicaPorId(id).subscribe({
       next: (clinica) => {
         this.clinica = clinica;
@@ -40,22 +42,27 @@ export class DatosClinicaComponent {
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al obtener los datos de la clínica:', err);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
 
   guardarCambios(): void {
     if (this.idClinica) {
+      this.isLoading = true;
       this.clinicaService.updateClinica(this.idClinica, this.clinica).subscribe({
         next: () => {
-          // Mostramos el snackbar al guardar con éxito
           this.snackBar.open('Clínica actualizada con éxito', 'Cerrar', {
-            duration: 3000, // Duración de 3 segundos
-            panelClass: ['snackbar-exito'] // Clase CSS personalizada
+            duration: 3000
           });
         },
         error: (err: HttpErrorResponse) => {
           console.error('Error al actualizar la clínica:', err);
+        },
+        complete: () => {
+          this.isLoading = false;
         }
       });
     }

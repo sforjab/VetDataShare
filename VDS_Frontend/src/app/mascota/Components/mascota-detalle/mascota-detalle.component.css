@@ -33,3 +33,10 @@
 .grid-form mat-form-field:nth-child(8) {
   grid-column: span 1; /* Los dos últimos campos comparten una fila */
 }
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* Espacio suficiente para el spinner */
+}

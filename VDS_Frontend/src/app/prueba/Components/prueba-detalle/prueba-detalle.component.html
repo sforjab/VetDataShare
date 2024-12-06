@@ -1,84 +1,92 @@
 <div class="page-container">
-  <h1>Detalle de Prueba</h1>
+  <!-- Spinner de carga -->
+  <div *ngIf="isLoading" class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+  </div>
 
-  <div class="detalle-prueba-container">
-    <!-- Tarjeta de información general -->
-    <mat-card class="card info-card">
-      <mat-card-content>
-        <div class="info-row">
-          <p><strong>Fecha:</strong> {{ prueba.fecha | date: 'dd/MM/yyyy' }}</p>
-          <p><strong>Número de chip:</strong> {{ numeroChip }}</p>
-        </div>
-        <div class="info-row">
-          <p><strong>Veterinario:</strong> {{ numColegiado }}</p>
-          <p><strong>Nombre de mascota:</strong> {{ nombreMascota }}</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
+  <!-- Contenido principal -->
+  <div *ngIf="!isLoading">
+    <h1>Detalle de Prueba</h1>
 
-    <!-- Tarjeta de detalles y documentos -->
-    <mat-card class="card form-card">
-      <mat-card-content>
-        <form class="detalle-form grid-form" #detallePruebaForm="ngForm">
-          <!-- Tipo de Prueba -->
-          <mat-form-field appearance="fill">
-            <mat-label>Tipo de Prueba</mat-label>
-            <mat-select [(ngModel)]="prueba.tipo" name="tipo" required>
-              <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <!-- Descripción -->
-          <mat-form-field appearance="fill">
-            <mat-label>Descripción</mat-label>
-            <textarea matInput [(ngModel)]="prueba.descripcion" name="descripcion"></textarea>
-          </mat-form-field>
-
-          <!-- Documentos -->
-          <h3>Documentos Adjuntos</h3>
-          <ng-container *ngIf="documentos.length > 0; else noDocumentos">
-            <mat-table [dataSource]="documentos" class="documentos-table" matSort>
-              <ng-container matColumnDef="nombreArchivo">
-                <mat-header-cell *matHeaderCellDef> Nombre Archivo </mat-header-cell>
-                <mat-cell *matCellDef="let documento"> {{ documento.nombreArchivo }} </mat-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="acciones">
-                <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
-                <mat-cell *matCellDef="let documento">
-                  <button mat-icon-button color="primary" (click)="descargarDocumento(documento)">
-                    <mat-icon>file_download</mat-icon>
-                  </button>
-                  <button mat-icon-button color="warn" (click)="eliminarDocumento(documento)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </mat-cell>
-              </ng-container>
-
-              <mat-header-row *matHeaderRowDef="columnasTabla"></mat-header-row>
-              <mat-row *matRowDef="let row; columns: columnasTabla;"></mat-row>
-            </mat-table>
-          </ng-container>
-
-          <!-- Mensaje cuando no hay documentos -->
-          <ng-template #noDocumentos>
-            <p class="no-documentos-text">No existen documentos asociados a esta prueba.</p>
-          </ng-template>
-
-          <!-- Botón para añadir documentos -->
-          <div class="botones-documento">
-            <button mat-raised-button class="button-primary" (click)="abrirDialogSubirDocumento()">Añadir Documento</button>
+    <div class="detalle-prueba-container">
+      <!-- Tarjeta de información general -->
+      <mat-card class="card info-card">
+        <mat-card-content>
+          <div class="info-row">
+            <p><strong>Fecha:</strong> {{ prueba.fecha | date: 'dd/MM/yyyy' }}</p>
+            <p><strong>Número de chip:</strong> {{ numeroChip }}</p>
           </div>
+          <div class="info-row">
+            <p><strong>Veterinario:</strong> {{ numColegiado }}</p>
+            <p><strong>Nombre de mascota:</strong> {{ nombreMascota }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
 
-          <!-- Botones de guardar y volver -->
-          <mat-card-actions class="action-buttons">
-            <button mat-raised-button class="button-primary" (click)="guardarPrueba()" [disabled]="!detallePruebaForm.form.valid">
-              Guardar
-            </button>
-            <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
-          </mat-card-actions>
-        </form>
-      </mat-card-content>
-    </mat-card>
+      <!-- Tarjeta de detalles y documentos -->
+      <mat-card class="card form-card">
+        <mat-card-content>
+          <form class="detalle-form grid-form" #detallePruebaForm="ngForm">
+            <!-- Tipo de Prueba -->
+            <mat-form-field appearance="fill">
+              <mat-label>Tipo de Prueba</mat-label>
+              <mat-select [(ngModel)]="prueba.tipo" name="tipo" required>
+                <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Descripción -->
+            <mat-form-field appearance="fill">
+              <mat-label>Descripción</mat-label>
+              <textarea matInput [(ngModel)]="prueba.descripcion" name="descripcion"></textarea>
+            </mat-form-field>
+
+            <!-- Documentos -->
+            <h3>Documentos Adjuntos</h3>
+            <ng-container *ngIf="documentos.length > 0; else noDocumentos">
+              <mat-table [dataSource]="documentos" class="documentos-table" matSort>
+                <ng-container matColumnDef="nombreArchivo">
+                  <mat-header-cell *matHeaderCellDef> Nombre Archivo </mat-header-cell>
+                  <mat-cell *matCellDef="let documento"> {{ documento.nombreArchivo }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                  <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+                  <mat-cell *matCellDef="let documento">
+                    <button mat-icon-button color="primary" (click)="descargarDocumento(documento)">
+                      <mat-icon>file_download</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="eliminarDocumento(documento)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="columnasTabla"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: columnasTabla;"></mat-row>
+              </mat-table>
+            </ng-container>
+
+            <!-- Mensaje cuando no hay documentos -->
+            <ng-template #noDocumentos>
+              <p class="no-documentos-text">No existen documentos asociados a esta prueba.</p>
+            </ng-template>
+
+            <!-- Botón para añadir documentos -->
+            <div class="botones-documento">
+              <button mat-raised-button class="button-primary" (click)="abrirDialogSubirDocumento()">Añadir Documento</button>
+            </div>
+
+            <!-- Botones de guardar y volver -->
+            <mat-card-actions class="action-buttons">
+              <button mat-raised-button class="button-primary" (click)="guardarPrueba()" [disabled]="!detallePruebaForm.form.valid">
+                Guardar
+              </button>
+              <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+            </mat-card-actions>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>

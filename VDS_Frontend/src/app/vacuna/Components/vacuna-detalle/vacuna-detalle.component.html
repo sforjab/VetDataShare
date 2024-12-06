@@ -1,37 +1,46 @@
 <div class="page-container">
-    <!-- Título principal -->
-    <h1>Editar Vacuna</h1>
+    <!-- Spinner de carga -->
+    <div *ngIf="isLoading" class="spinner-container">
+      <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    </div>
   
-    <!-- Mat Card con el formulario -->
-    <mat-card class="card perfil-card">
-      <mat-card-content>
-        <!-- Contenedor con diseño en grid -->
-        <form class="perfil-form grid-form" #detalleVacunaForm="ngForm">
-          <!-- Primera fila: Nombre -->
-          <mat-form-field appearance="fill">
-            <mat-label>Nombre</mat-label>
-            <input matInput [(ngModel)]="vacuna.nombre" name="nombre" required />
-          </mat-form-field>
+    <!-- Contenido principal -->
+    <div *ngIf="!isLoading">
+      <!-- Título principal -->
+      <h1>Editar Vacuna</h1>
   
-          <!-- Segunda fila: Laboratorio -->
-          <mat-form-field appearance="fill">
-            <mat-label>Laboratorio</mat-label>
-            <input matInput [(ngModel)]="vacuna.laboratorio" name="laboratorio" required />
-          </mat-form-field>
-        </form>
-      </mat-card-content>
-      <!-- Botones centrados -->
-      <mat-card-actions class="action-buttons">
-        <button
-          mat-raised-button
-          class="button-primary"
-          (click)="guardarVacuna()"
-          [disabled]="!detalleVacunaForm.form.valid"
-        >
-          Guardar
-        </button>
-        <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
-      </mat-card-actions>
-    </mat-card>
+      <!-- Mat Card con el formulario -->
+      <mat-card class="card perfil-card">
+        <mat-card-content>
+          <!-- Contenedor con diseño en grid -->
+          <form class="perfil-form grid-form" #detalleVacunaForm="ngForm">
+            <!-- Primera fila: Nombre -->
+            <mat-form-field appearance="fill">
+              <mat-label>Nombre</mat-label>
+              <input matInput [(ngModel)]="vacuna.nombre" name="nombre" required />
+            </mat-form-field>
+  
+            <!-- Segunda fila: Laboratorio -->
+            <mat-form-field appearance="fill">
+              <mat-label>Laboratorio</mat-label>
+              <input matInput [(ngModel)]="vacuna.laboratorio" name="laboratorio" required />
+            </mat-form-field>
+          </form>
+        </mat-card-content>
+  
+        <!-- Botones centrados -->
+        <mat-card-actions class="action-buttons">
+          <button
+            mat-raised-button
+            class="button-primary"
+            (click)="guardarVacuna()"
+            [disabled]="!detalleVacunaForm.form.valid"
+          >
+            Guardar
+          </button>
+          <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   </div>
   

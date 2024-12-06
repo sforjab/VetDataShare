@@ -76,3 +76,11 @@
   gap: 15px;
   margin-top: 20px;
 }
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* Espacio suficiente para el spinner */
+}
+

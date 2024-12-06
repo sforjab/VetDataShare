@@ -16,6 +16,7 @@ export class MascotaConsultasListComponent {
   consultas: Consulta[] = [];
   idMascota: number | undefined;
   rol: string | null = null;
+  isLoading: boolean = false;
 
   columnasTabla: string[] = ['fecha', 'acciones'];
 
@@ -36,12 +37,16 @@ export class MascotaConsultasListComponent {
   }
 
   cargarConsultas(idMascota: number): void {
+    this.isLoading = true;
     this.consultaService.getConsultasPorIdMascota(idMascota).subscribe({
       next: (consultas) => {
         this.consultas = consultas;
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar las consultas:', err);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }

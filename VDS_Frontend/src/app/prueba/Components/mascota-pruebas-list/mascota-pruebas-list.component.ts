@@ -13,10 +13,12 @@ export class MascotaPruebasListComponent implements OnInit {
   pruebas: Prueba[] = [];
   idMascota: number | undefined;
   columnasTabla: string[] = ['tipo', 'fecha', 'acciones'];
+  isLoading: boolean = false;
 
   constructor(private pruebaService: PruebaService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.route.paramMap.subscribe(params => {
       const id = params.get('idMascota');
       if (id) {
@@ -35,12 +37,14 @@ export class MascotaPruebasListComponent implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar las pruebas:', err);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
 
   verDetallePrueba(idPrueba: number): void {
-    /* this.router.navigate([`/prueba/detalle/${idPrueba}`]); */
     this.router.navigate([`/prueba/detalle/${idPrueba}`], {
       queryParams: { origen: 'mascota-pruebas-list' }
     });

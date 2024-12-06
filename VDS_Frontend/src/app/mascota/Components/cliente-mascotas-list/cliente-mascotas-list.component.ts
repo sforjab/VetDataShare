@@ -13,6 +13,7 @@ import { BajaMascotaComponent } from '../baja-mascota/baja-mascota.component';
 export class ClienteMascotasListComponent implements OnInit {
   mascotas: Mascota[] = [];
   idCliente: number | null = null;
+  isLoading: boolean = false;
 
   columnasTabla: string[] = ['nombre', 'numChip', 'acciones'];
 
@@ -44,12 +45,16 @@ export class ClienteMascotasListComponent implements OnInit {
 
   // Cargar las mascotas del usuario logueado
   cargarMascotas(idUsuario: number): void {
+    this.isLoading = true;
     this.mascotaService.getMascotasPorIdUsuario(idUsuario).subscribe({
       next: (mascotas) => {
         this.mascotas = mascotas;
       },
       error: (err) => {
         console.error('Error obteniendo las mascotas:', err);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }

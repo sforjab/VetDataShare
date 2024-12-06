@@ -3,3 +3,11 @@
     grid-template-columns: 1fr; /* Una sola columna */
     gap: 20px; /* Espaciado entre filas */
   }
+
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }
+  
