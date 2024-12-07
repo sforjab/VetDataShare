@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { BajaVacunaComponent } from 'src/app/vacuna/Components/baja-vacuna/baja-vacuna.component';
 import { BajaPruebaComponent } from 'src/app/prueba/Components/baja-prueba/baja-prueba.component';
 import { ConsultaDetalleResponse } from '../../Models/consulta-detalle-response.dto';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-consulta-detalle',
@@ -42,7 +43,7 @@ export class ConsultaDetalleComponent implements OnInit {
   constructor(private consultaService: ConsultaService, private mascotaService: MascotaService, private usuarioService: UsuarioService, private clinicaService: ClinicaService,
               private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
 
-  ngOnInit(): void {
+  /* ngOnInit(): void {
     const usuarioId = +sessionStorage.getItem('idUsuario')!;
     this.cargarUsuarioLogueado(usuarioId, () => {
       this.rol = sessionStorage.getItem('rol');
@@ -56,9 +57,60 @@ export class ConsultaDetalleComponent implements OnInit {
         }
       });
     });
-  }
+  } */
 
-  cargarUsuarioLogueado(id: number, callback: () => void): void {
+    ngOnInit(): void {
+      const usuarioId = +sessionStorage.getItem('idUsuario')!;
+      const consultaId = +this.route.snapshot.paramMap.get('idConsulta')!;
+    
+      if (!consultaId) {
+        this.snackBar.open('ID de consulta no encontrado', 'Cerrar', { duration: 3000 });
+        this.router.navigate(['/']);
+        return;
+      }
+    
+      this.isLoading = true; // Activar spinner
+    
+      this.cargarDatos(usuarioId, consultaId);
+    }
+
+    cargarDatos(usuarioId: number, consultaId: number): void {
+      forkJoin({
+        usuario: this.usuarioService.getUsuarioPorId(usuarioId),
+        consultaDetalle: this.consultaService.getConsultaDetalle(consultaId),
+      }).subscribe({
+        next: ({ usuario, consultaDetalle }) => {
+          // Datos del usuario logueado
+          this.usuarioLogueado = usuario;
+    
+          // Datos de la consulta
+          this.consulta = consultaDetalle.consulta;
+          this.mascota = consultaDetalle.mascota;
+          this.veterinario = consultaDetalle.veterinario;
+          this.clinica = consultaDetalle.clinica;
+          this.pruebas = consultaDetalle.pruebas;
+          this.vacunas = consultaDetalle.vacunas;
+          this.motivo = consultaDetalle.consulta.motivo || '';
+          this.notas = consultaDetalle.consulta.notas || '';
+          this.medicacion = consultaDetalle.consulta.medicacion || '';
+    
+          // Evaluar permisos y otras configuraciones
+          this.rol = sessionStorage.getItem('rol');
+          this.evaluarPermisos();
+          this.evaluarPermisosConsulta();
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Error al cargar los datos:', err);
+          this.snackBar.open('Error al cargar los datos', 'Cerrar', { duration: 3000 });
+          this.router.navigate(['/']);
+        },
+        complete: () => {
+          this.isLoading = false; 
+        },
+      });
+    }
+
+  /* cargarUsuarioLogueado(id: number, callback: () => void): void {
     this.isLoading = true;
     this.usuarioService.getUsuarioPorId(id).subscribe({
       next: (usuario) => {
@@ -72,9 +124,9 @@ export class ConsultaDetalleComponent implements OnInit {
         this.isLoading = false;
       },
     });
-  }
+  } */
 
-  cargarConsultaDetalle(idConsulta: number): void {
+  /* cargarConsultaDetalle(idConsulta: number): void {
     this.isLoading = true;
     this.consultaService.getConsultaDetalle(idConsulta).subscribe({
       next: (response: ConsultaDetalleResponse) => {
@@ -99,7 +151,7 @@ export class ConsultaDetalleComponent implements OnInit {
         this.isLoading = false;
       }
     });
-  }
+  } */
 
   evaluarPermisos(): void {
     this.mostrarNotas = this.rol !== 'CLIENTE';
