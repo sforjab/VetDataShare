@@ -43,22 +43,6 @@ export class ConsultaDetalleComponent implements OnInit {
   constructor(private consultaService: ConsultaService, private mascotaService: MascotaService, private usuarioService: UsuarioService, private clinicaService: ClinicaService,
               private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
 
-  /* ngOnInit(): void {
-    const usuarioId = +sessionStorage.getItem('idUsuario')!;
-    this.cargarUsuarioLogueado(usuarioId, () => {
-      this.rol = sessionStorage.getItem('rol');
-      this.evaluarPermisos();
-  
-      this.route.paramMap.subscribe((params) => {
-        const id = params.get('idConsulta');
-        if (id) {
-          this.idConsulta = +id;
-          this.cargarConsultaDetalle(+id);
-        }
-      });
-    });
-  } */
-
     ngOnInit(): void {
       const usuarioId = +sessionStorage.getItem('idUsuario')!;
       const consultaId = +this.route.snapshot.paramMap.get('idConsulta')!;

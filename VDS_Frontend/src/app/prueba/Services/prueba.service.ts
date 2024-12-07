@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Prueba } from '../Models/prueba.dto';
 import { environment } from 'src/environments/environment';
 
@@ -12,7 +12,7 @@ export class PruebaService {
 
     constructor(private http: HttpClient) {}
 
-    // Obtener las pruebas por ID de la mascota
+ // Obtener las pruebas por ID de la mascota
     getPruebasPorIdMascota(idMascota: number): Observable<Prueba[]> {
         return this.http.get<Prueba[]>(`${this.pruebaUrl}/getPruebasPorIdMascota/${idMascota}`);
     }
@@ -35,5 +35,13 @@ export class PruebaService {
     // Eliminar una prueba por su ID
     deletePrueba(idPrueba: number): Observable<void> {
         return this.http.delete<void>(`${this.pruebaUrl}/delete/${idPrueba}`);
+    }
+
+    // Manejo de errores
+    private handleError(error: HttpErrorResponse): Observable<never> {
+        console.error(`Código de error: ${error.status}\nMensaje: ${error.message}`);
+        
+        // Se propaga el error original para que el componente pueda manejar el código de estado
+        return throwError(() => error);
     }
 }
