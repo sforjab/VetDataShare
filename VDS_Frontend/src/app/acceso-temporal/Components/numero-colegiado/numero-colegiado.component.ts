@@ -72,6 +72,9 @@ export class NumeroColegiadoComponent {
         const jwtTemporal = res.jwtTemporal; 
         sessionStorage.setItem('jwtTemporal', jwtTemporal);
 
+        // Guardamos el rol temporal en sesión
+        sessionStorage.setItem('rol', 'TEMPORAL'); 
+
         // Recuperamos el id de la mascota
         const idMascota = res.idMascota;
 

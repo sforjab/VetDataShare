@@ -16,7 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { BajaVacunaComponent } from 'src/app/vacuna/Components/baja-vacuna/baja-vacuna.component';
 import { BajaPruebaComponent } from 'src/app/prueba/Components/baja-prueba/baja-prueba.component';
 import { ConsultaDetalleResponse } from '../../Models/consulta-detalle-response.dto';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-consulta-detalle',
@@ -43,99 +43,66 @@ export class ConsultaDetalleComponent implements OnInit {
   constructor(private consultaService: ConsultaService, private mascotaService: MascotaService, private usuarioService: UsuarioService, private clinicaService: ClinicaService,
               private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
 
-    ngOnInit(): void {
-      const usuarioId = +sessionStorage.getItem('idUsuario')!;
-      const consultaId = +this.route.snapshot.paramMap.get('idConsulta')!;
-    
-      if (!consultaId) {
-        this.snackBar.open('ID de consulta no encontrado', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/']);
-        return;
+  ngOnInit(): void {
+    const usuarioId = +sessionStorage.getItem('idUsuario')!;
+    const consultaId = +this.route.snapshot.paramMap.get('idConsulta')!;
+    this.rol = sessionStorage.getItem('rol'); // Recuperamos el rol del usuario logueado
+  
+    if (!consultaId) {
+      this.snackBar.open('ID de consulta no encontrado', 'Cerrar', { duration: 3000 });
+      this.router.navigate(['/']);
+      return;
+    }
+  
+    this.isLoading = true; // Activar spinner
+    this.cargarDatos(usuarioId, consultaId);
+  }
+  
+  cargarDatos(usuarioId: number, consultaId: number): void {
+    const requests: { [key: string]: Observable<any> } = {
+      consultaDetalle: this.consultaService.getConsultaDetalle(consultaId),
+    };
+  
+    // Solo añade la carga del usuario si el usuarioId es válido (no temporal)
+    if (usuarioId !== 0) {
+      requests['usuario'] = this.usuarioService.getUsuarioPorId(usuarioId);
+    }
+  
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        // Extraemos 'consultaDetalle' directamente
+      const consultaDetalle = responses['consultaDetalle'];
+  
+        // Datos de la consulta
+        this.consulta = consultaDetalle.consulta;
+        this.mascota = consultaDetalle.mascota;
+        this.veterinario = consultaDetalle.veterinario;
+        this.clinica = consultaDetalle.clinica;
+        this.pruebas = consultaDetalle.pruebas;
+        this.vacunas = consultaDetalle.vacunas;
+        this.motivo = consultaDetalle.consulta.motivo || '';
+        this.notas = consultaDetalle.consulta.notas || '';
+        this.medicacion = consultaDetalle.consulta.medicacion || '';
+  
+        // Asignamos el usuario si está disponible en las respuestas
+      if ('usuario' in responses) {
+        this.usuarioLogueado = responses['usuario'];
       }
-    
-      this.isLoading = true; // Activar spinner
-    
-      this.cargarDatos(usuarioId, consultaId);
-    }
-
-    cargarDatos(usuarioId: number, consultaId: number): void {
-      forkJoin({
-        usuario: this.usuarioService.getUsuarioPorId(usuarioId),
-        consultaDetalle: this.consultaService.getConsultaDetalle(consultaId),
-      }).subscribe({
-        next: ({ usuario, consultaDetalle }) => {
-          // Datos del usuario logueado
-          this.usuarioLogueado = usuario;
-    
-          // Datos de la consulta
-          this.consulta = consultaDetalle.consulta;
-          this.mascota = consultaDetalle.mascota;
-          this.veterinario = consultaDetalle.veterinario;
-          this.clinica = consultaDetalle.clinica;
-          this.pruebas = consultaDetalle.pruebas;
-          this.vacunas = consultaDetalle.vacunas;
-          this.motivo = consultaDetalle.consulta.motivo || '';
-          this.notas = consultaDetalle.consulta.notas || '';
-          this.medicacion = consultaDetalle.consulta.medicacion || '';
-    
-          // Evaluar permisos y otras configuraciones
-          this.rol = sessionStorage.getItem('rol');
-          this.evaluarPermisos();
-          this.evaluarPermisosConsulta();
-        },
-        error: (err: HttpErrorResponse) => {
-          console.error('Error al cargar los datos:', err);
-          this.snackBar.open('Error al cargar los datos', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/']);
-        },
-        complete: () => {
-          this.isLoading = false; 
-        },
-      });
-    }
-
-  /* cargarUsuarioLogueado(id: number, callback: () => void): void {
-    this.isLoading = true;
-    this.usuarioService.getUsuarioPorId(id).subscribe({
-      next: (usuario) => {
-        this.usuarioLogueado = usuario;
-        callback();
-      },
-      error: (err) => {
-        console.error('Error al cargar usuario logueado:', err);
-      },
-      complete: () => {
-        this.isLoading = false;
-      },
-    });
-  } */
-
-  /* cargarConsultaDetalle(idConsulta: number): void {
-    this.isLoading = true;
-    this.consultaService.getConsultaDetalle(idConsulta).subscribe({
-      next: (response: ConsultaDetalleResponse) => {
-        this.consulta = response.consulta;
-        this.mascota = response.mascota;
-        this.veterinario = response.veterinario;
-        this.clinica = response.clinica;
-        this.pruebas = response.pruebas;
-        this.vacunas = response.vacunas;
-        this.motivo = response.consulta.motivo || '';
-        this.notas = response.consulta.notas || '';
-        this.medicacion = response.consulta.medicacion || '';
+  
+        // Evaluar permisos
+        this.evaluarPermisos();
         this.evaluarPermisosConsulta();
       },
-      error: (err) => {
-        console.error('Error al cargar detalles de la consulta:', err);
-        this.snackBar.open('Error al cargar detalles de la consulta', 'Cerrar', {
-          duration: 3000,
-        });
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al cargar los datos:', err);
+        this.snackBar.open('Error al cargar los datos', 'Cerrar', { duration: 3000 });
+        this.router.navigate(['/']);
       },
       complete: () => {
         this.isLoading = false;
-      }
+      },
     });
-  } */
+  }
 
   evaluarPermisos(): void {
     this.mostrarNotas = this.rol !== 'CLIENTE';
