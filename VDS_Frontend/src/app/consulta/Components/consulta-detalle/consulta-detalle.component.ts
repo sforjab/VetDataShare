@@ -96,6 +96,8 @@ export class ConsultaDetalleComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar los datos:', err);
         this.snackBar.open('No se pudieron cargar los datos.', 'Cerrar', { duration: 3000 });
+        this.isLoading = false;
+        this.router.navigate(['/acceso-no-autorizado']);
       },
       complete: () => {
         this.isLoading = false;
