@@ -1,5 +1,7 @@
 package com.uoc.tfm.vds_backend.acceso_temporal.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.Random;
 
@@ -55,28 +57,62 @@ public class AccesoTemporalService {
         return accesoTemporalMapper.toDTO(accesoTemporal);
     }
 
+    /* @Transactional
     public String generarTokenTemporal(String tokenAccesoTemporal, Long idMascota) {
         return jwtService.generateTemporalToken(tokenAccesoTemporal, idMascota);
+    } */
+
+    @Transactional
+    public String generarTokenConExpiracion(String tokenAccesoTemporal, Long idMascota, LocalDateTime expirationTime) {
+        long expirationMillis = expirationTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        // Utilizamos el JwtService para generar el token
+        return jwtService.generateTemporalToken(tokenAccesoTemporal, idMascota, expirationMillis);
     }
 
+    @Transactional
     private String generarCodigoNumerico() {
         Random random = new Random();
         int code = random.nextInt(999999);
         return String.format("%06d", code);
     }
 
+    @Transactional
     public Optional<AccesoTemporalDTO> findByToken(String token) {
         return accesoTemporalRepository.findByToken(token)
                 .map(accesoTemporalMapper::toDTO);
     }
 
+    /* @Transactional
     public Optional<AccesoTemporalDTO> findByTokenAndFechaExpiracionIsNull(String token) {
-        return accesoTemporalRepository.findByTokenAndFechaExpiracionIsNull(token)
+        return accesoTemporalRepository.findByTokenAndFechaExpiracionIsNull(tmascotaoken)
+                .map(accesoTemporalMapper::toDTO);
+    } */
+
+    @Transactional
+    public Optional<AccesoTemporalDTO> findValidToken(String token) {
+        return accesoTemporalRepository.findByToken(token)
+                .filter(acceso -> acceso.getFechaExpiracion() == null || acceso.getFechaExpiracion().isAfter(LocalDateTime.now()))
                 .map(accesoTemporalMapper::toDTO);
     }
 
+    @Transactional
     public void save(AccesoTemporalDTO accesoDTO, Usuario usuario, Mascota mascota) {
         AccesoTemporal acceso = accesoTemporalMapper.toEntity(accesoDTO, usuario, mascota);
+        accesoTemporalRepository.save(acceso);
+    }
+
+    @Transactional
+    public void update(AccesoTemporalDTO accesoDTO) {
+        // Buscamos el acceso temporal existente
+        AccesoTemporal acceso = accesoTemporalRepository.findByToken(accesoDTO.getToken())
+                .orElseThrow(() -> new IllegalStateException("Acceso temporal no encontrado"));
+
+        // Se actualizan los campos necesarios
+        acceso.setNumColegiado(accesoDTO.getNumColegiado());
+        acceso.setFechaExpiracion(accesoDTO.getFechaExpiracion());
+
+        // Guardamos los cambios
         accesoTemporalRepository.save(acceso);
     }
 }

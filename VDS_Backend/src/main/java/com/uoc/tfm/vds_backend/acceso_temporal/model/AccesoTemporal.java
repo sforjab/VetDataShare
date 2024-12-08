@@ -1,6 +1,6 @@
 package com.uoc.tfm.vds_backend.acceso_temporal.model;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
@@ -31,7 +31,7 @@ public class AccesoTemporal {
     private String token;
 
     @Column(columnDefinition = "TIMESTAMP")
-    private ZonedDateTime fechaExpiracion;
+    private LocalDateTime  fechaExpiracion;
 
     private String numColegiado;
 

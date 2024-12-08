@@ -3,7 +3,6 @@ package com.uoc.tfm.vds_backend.prueba.controller;
 import com.uoc.tfm.vds_backend.prueba.dto.PruebaDTO;
 import com.uoc.tfm.vds_backend.prueba.service.PruebaService;
 import com.uoc.tfm.vds_backend.error.ApiError;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ public class PruebaController {
 
     @Autowired
     private PruebaService pruebaService;
+
 
     @GetMapping("/getPruebaPorId/{id}")
     public ResponseEntity<Object> getPruebaPorId(@PathVariable Long id) {

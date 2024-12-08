@@ -14,7 +14,7 @@ export class NumeroColegiadoComponent {
 
   constructor(private accesoTemporalService: AccesoTemporalService, private route: ActivatedRoute, private router: Router) {}
 
-  ngOnInit(): void {
+  /* ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const token = params.get('token'); // Recuperamos el token desde la URL
       if (token) {
@@ -24,7 +24,32 @@ export class NumeroColegiadoComponent {
         this.router.navigate(['/']);
       }
     });
+  } */
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      const token = params.get('token'); // Recuperamos el token desde la URL
+      if (token) {
+        this.accesoTemporalService.validarTokenSinExpiracion(token).subscribe({
+          next: (res: any) => {
+            this.accesoToken = token;
+            if (res.numColegiado && res.fechaExpiracion) {
+              // Token ya válido, redirigir directamente al dashboard
+              this.router.navigate([`/mascota/dashboard/${res.mascotaId}`]);
+            }
+          },
+          error: () => {
+            this.mensaje = 'Token no válido o expirado.';
+            this.router.navigate(['/']); // Redirigir a la página de inicio en caso de error
+          }
+        });
+      } else {
+        console.error('Token de acceso temporal no encontrado en la URL.');
+        this.router.navigate(['/']);
+      }
+    });
   }
+    
 
   validarColegiado(): void {
     if (!this.numColegiado) {

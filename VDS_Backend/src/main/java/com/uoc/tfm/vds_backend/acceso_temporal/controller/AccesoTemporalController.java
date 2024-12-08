@@ -1,7 +1,6 @@
 package com.uoc.tfm.vds_backend.acceso_temporal.controller;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,10 +15,7 @@ import com.uoc.tfm.vds_backend.acceso_temporal.dto.AccesoTemporalDTO;
 import com.uoc.tfm.vds_backend.acceso_temporal.dto.ActualizarAccesoRequestDTO;
 import com.uoc.tfm.vds_backend.acceso_temporal.dto.GenerarAccesoRequestDTO;
 import com.uoc.tfm.vds_backend.acceso_temporal.service.AccesoTemporalService;
-import com.uoc.tfm.vds_backend.mascota.model.Mascota;
-import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
-import com.uoc.tfm.vds_backend.usuario.model.Usuario;
-import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
+import com.uoc.tfm.vds_backend.jwt.JwtService;
 
 @RestController
 @RequestMapping("/api/accesos-temporales")
@@ -29,10 +25,7 @@ public class AccesoTemporalController {
     private AccesoTemporalService accesoTemporalService;
 
     @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
-    private MascotaService mascotaService;
+    private JwtService jwtService;
 
     @Autowired
     private Environment environment;
@@ -45,7 +38,6 @@ public class AccesoTemporalController {
         String frontendUrl = environment.getProperty("FRONTEND_URL");
 
         // Creamos la URL para el QR
-        /* String qrUrl = String.format("http://localhost:4200/acceso-temporal/numero-colegiado/%s", accesoDTO.getToken()); */
         String qrUrl = String.format("%s/acceso-temporal/numero-colegiado/%s", frontendUrl, accesoDTO.getToken());
 
         // Respuesta
@@ -58,31 +50,65 @@ public class AccesoTemporalController {
 
     @GetMapping("/validar-sin-expiracion/{token}")
     public ResponseEntity<AccesoTemporalDTO> validarTokenSinExpiracion(@PathVariable String token) {
-        // Buscar acceso temporal sin expiración
-        return accesoTemporalService.findByTokenAndFechaExpiracionIsNull(token)
+        // Buscamos acceso temporal que no tenga fecha de expiración o que no haya caducado
+        return accesoTemporalService.findValidToken(token)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Acceso temporal no válido o ya expirado"));
     }
 
-    @PutMapping("/actualizar")
+    @PostMapping("/verificar-temporal")
+    public ResponseEntity<String> verificarTokenTemporal(@RequestBody String token) {
+        boolean isExpired = jwtService.isTokenExpired(token);
+
+        if (isExpired) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("El token ha expirado.");
+        } else {
+            return ResponseEntity.ok("El token es válido.");
+        }
+    }
+
+    /* @PutMapping("/actualizar")
     public ResponseEntity<Map<String, String>> actualizarAccesoTemporal(@RequestBody ActualizarAccesoRequestDTO request) {
-        // Buscar el acceso temporal
+        // Buscamos el acceso temporal existente
         AccesoTemporalDTO accesoDTO = accesoTemporalService.findByToken(request.getToken())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Acceso temporal no encontrado"));
 
-         // Recuperar entidades gestionadas antes de guardar
-        Usuario usuario = usuarioService.getEntityById(accesoDTO.getUsuarioId());
-        Mascota mascota = mascotaService.getEntityById(accesoDTO.getMascotaId());
-
-        // Actualizar los datos del acceso temporal
+        // Actualizamos los datos del acceso temporal
         accesoDTO.setNumColegiado(request.getNumColegiado());
-        accesoDTO.setFechaExpiracion(ZonedDateTime.now(ZoneId.of("Europe/Madrid")).plusHours(1));
+        accesoDTO.setFechaExpiracion(LocalDateTime.now().plusHours(1));
 
-        // Guardar los cambios
-        accesoTemporalService.save(accesoDTO, usuario, mascota);
+        // Se guardan los cambios en el registro existente
+        accesoTemporalService.update(accesoDTO);
 
-        // Generar el JWT temporal
+        // Se genera el JWT temporal
         String jwtTemporal = accesoTemporalService.generarTokenTemporal(request.getToken(), accesoDTO.getMascotaId());
+
+        // Respuesta
+        Map<String, String> response = new HashMap<>();
+        response.put("jwtTemporal", jwtTemporal);
+        response.put("idMascota", String.valueOf(accesoDTO.getMascotaId()));
+
+        return ResponseEntity.ok(response);
+    } */
+
+    @PutMapping("/actualizar")
+    public ResponseEntity<Map<String, String>> actualizarAccesoTemporal(@RequestBody ActualizarAccesoRequestDTO request) {
+        // Buscamos el acceso temporal existente
+        AccesoTemporalDTO accesoDTO = accesoTemporalService.findByToken(request.getToken())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Acceso temporal no encontrado"));
+
+        // Calculamos la fecha de expiración una sola vez
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(5); // Tiempo de duración de token
+
+        // Actualizamos los datos del acceso temporal
+        accesoDTO.setNumColegiado(request.getNumColegiado());
+        accesoDTO.setFechaExpiracion(expirationTime);
+
+        // Se guardan los cambios en el registro existente
+        accesoTemporalService.update(accesoDTO);
+
+        // Generamos el JWT temporal utilizando el tiempo de expiración
+        String jwtTemporal = accesoTemporalService.generarTokenConExpiracion(request.getToken(), accesoDTO.getMascotaId(), expirationTime);
 
         // Respuesta
         Map<String, String> response = new HashMap<>();
