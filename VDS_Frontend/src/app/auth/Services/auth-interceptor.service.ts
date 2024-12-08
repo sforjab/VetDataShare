@@ -64,6 +64,7 @@ export class AuthInterceptor implements HttpInterceptor {
             this.router.navigate(['/acceso-no-autorizado']);
           } else {
             this.snackBar.open('Acceso no autorizado. Inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+            this.router.navigate(['/acceso-no-autorizado']);
           }
         } else if (error.status === 403) {
           this.snackBar.open('No tiene permisos para realizar esta acción.', 'Cerrar', { duration: 3000 });

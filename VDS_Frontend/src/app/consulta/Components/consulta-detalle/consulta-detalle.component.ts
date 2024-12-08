@@ -73,30 +73,29 @@ export class ConsultaDetalleComponent implements OnInit {
         // Extraemos 'consultaDetalle' directamente
       const consultaDetalle = responses['consultaDetalle'];
   
-        // Datos de la consulta
-        this.consulta = consultaDetalle.consulta;
-        this.mascota = consultaDetalle.mascota;
-        this.veterinario = consultaDetalle.veterinario;
-        this.clinica = consultaDetalle.clinica;
-        this.pruebas = consultaDetalle.pruebas;
-        this.vacunas = consultaDetalle.vacunas;
-        this.motivo = consultaDetalle.consulta.motivo || '';
-        this.notas = consultaDetalle.consulta.notas || '';
-        this.medicacion = consultaDetalle.consulta.medicacion || '';
-  
-        // Asignamos el usuario si está disponible en las respuestas
+      // Datos de la consulta
+      this.consulta = consultaDetalle.consulta;
+      this.mascota = consultaDetalle.mascota;
+      this.veterinario = consultaDetalle.veterinario;
+      this.clinica = consultaDetalle.clinica;
+      this.pruebas = consultaDetalle.pruebas;
+      this.vacunas = consultaDetalle.vacunas;
+      this.motivo = consultaDetalle.consulta.motivo || '';
+      this.notas = consultaDetalle.consulta.notas || '';
+      this.medicacion = consultaDetalle.consulta.medicacion || '';
+
+      // Asignamos el usuario si está disponible en las respuestas
       if ('usuario' in responses) {
         this.usuarioLogueado = responses['usuario'];
       }
   
-        // Evaluar permisos
-        this.evaluarPermisos();
-        this.evaluarPermisosConsulta();
+      // Evaluar permisos
+      this.evaluarPermisos();
+      this.evaluarPermisosConsulta();
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar los datos:', err);
-        this.snackBar.open('Error al cargar los datos', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/']);
+        this.snackBar.open('No se pudieron cargar los datos.', 'Cerrar', { duration: 3000 });
       },
       complete: () => {
         this.isLoading = false;
