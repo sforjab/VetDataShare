@@ -28,9 +28,9 @@ export class LoginComponent {
         } else if (rolUsuario === 'VETERINARIO' || rolUsuario === 'ADMIN_CLINICA') {
           this.router.navigate([`/veterinario/dashboard/${idUsuario}`]);
         } else if (rolUsuario === 'ADMIN') {
-          this.router.navigate([`/admin/dashboard/${idUsuario}`]);
+          this.router.navigate([`/admin/dashboard`]);
         } else {
-          this.router.navigate(['/']);  // Ruta por defecto o home
+          this.router.navigate(['/acceso-restringido']);
         }
       },
       error: (error) => {

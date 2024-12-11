@@ -1,0 +1,159 @@
+/* Estilos generales para el contenedor de búsqueda */
+.search-container {
+    max-width: 900px; /* Reduce el ancho del contenedor principal */
+    margin: 20px auto; /* Centra el contenedor con separación superior */
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+/* Formulario de búsqueda */
+.formulario-busqueda {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Menor separación entre filas */
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Separación más compacta entre campos */
+}
+
+.form-field {
+    width: 48%;
+}
+
+.boton-buscar {
+    display: block;
+    margin: 20px auto; /* Centra el botón */
+}
+
+/* Línea divisoria */
+hr, .divider {
+    margin: 20px 0; /* Mayor separación entre secciones */
+}
+
+/* Contenedor de resultados */
+.resultados-container {
+    margin-top: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #1976d2; /* Azul Material Design */
+}
+
+/* Tabla de resultados */
+.clientes-tabla {
+    width: 100%;
+    margin-top: 10px;
+    overflow-x: auto; /* Maneja desbordamiento horizontal */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px 12px; /* Reduce el padding */
+    text-align: left;
+}
+
+th {
+    font-weight: bold;
+    text-align: center;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+.mat-row:hover {
+    background-color: #e3f2fd; /* Hover azul claro */
+}
+
+/* Mensajes */
+p {
+    text-align: center;
+    color: red;
+    font-weight: bold;
+}
+
+/* Botón de Acceder */
+.mat-raised-button {
+    margin: auto;
+    display: inline-block;
+    min-width: 100px;
+}
+
+/* Ajuste de fila clickeable */
+.clickable-row {
+    cursor: pointer;
+}
+
+/* Hover en filas */
+.clickable-row:hover {
+    background-color: #f0f0f0;
+}
+
+/* Paginador */
+.mat-paginator {
+    margin-top: 15px; /* Separación del paginador respecto a la tabla */
+}
+
+/* Ajuste de celdas con formato de fecha */
+td.date-cell {
+    text-align: center; /* Centra las fechas */
+}
+
+.boton-volver {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+.table-container {
+    display: flex;
+    justify-content: center; /* Centra la tabla horizontalmente */
+    margin-top: 20px; /* Espaciado superior */
+}
+
+.clientes-tabla {
+    width: 90%; /* Ajusta el ancho según el diseño */
+    max-width: 1200px; /* Limita el ancho máximo */
+    margin: 0 auto; /* Asegura que esté centrada */
+    border-collapse: collapse;
+}
+
+.paginator-container {
+    display: flex;
+    justify-content: center; /* Centra el paginador horizontalmente */
+    margin-top: 10px; /* Separación con la tabla */
+    width: 90%; /* Alineado con la tabla */
+    max-width: 1200px; /* Igual al max-width de la tabla */
+    padding: 10px; /* Espaciado interno */
+    background-color: #f9f9f9; /* Fondo consistente */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}

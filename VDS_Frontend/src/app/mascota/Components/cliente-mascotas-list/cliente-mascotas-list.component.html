@@ -9,7 +9,6 @@
     <h1>Listado de mascotas</h1>
 
     <div class="mascotas-container">
-      <!-- Tabla mejorada -->
       <table *ngIf="mascotas.length > 0" mat-table [dataSource]="mascotas" class="mascotas-tabla mat-elevation-z8">
         <!-- Nombre -->
         <ng-container matColumnDef="nombre">
@@ -30,7 +29,7 @@
             <button mat-icon-button color="primary" (click)="navegarMascotaDashboard(mascota.id)">
               <mat-icon>remove_red_eye</mat-icon>
             </button>
-            <button mat-icon-button color="warn" (click)="eliminarMascota(mascota)">
+            <button mat-icon-button color="warn" (click)="eliminarMascota(mascota)" *ngIf="rolUsuarioSesion !== 'CLIENTE'">
               <mat-icon>delete</mat-icon>
             </button>
           </td>
@@ -48,7 +47,7 @@
 
       <!-- Botones de acción -->
       <div class="action-buttons">
-        <button mat-raised-button class="button-primary" (click)="crearMascota()">Nueva Mascota</button>
+        <button mat-raised-button class="button-primary" (click)="crearMascota()" *ngIf="rolUsuarioSesion !== 'CLIENTE' && rolUsuarioSesion !== 'ADMIN'">Nueva Mascota</button>
         <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
       </div>
     </div>

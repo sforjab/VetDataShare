@@ -34,8 +34,22 @@ export class ClinicaDashboardComponent {
 
   navegarVolver(): void {
     const idUsuario = sessionStorage.getItem('idUsuario');
-    if (idUsuario) {
+    const rolUsuario = sessionStorage.getItem('rol'); // Obtenemos el rol del usuario
+
+    if (!idUsuario) {
+      console.error('ID del usuario no encontrado en la sesión.');
+      this.router.navigate(['/acceso-no-autorizado']);
+      return;
+    }
+
+    // Redirigimos según el rol del usuario
+    if (rolUsuario === 'ADMIN') {
+      this.router.navigate(['/clinica/gestion-clinicas']);
+    } else if (rolUsuario === 'VETERINARIO' || rolUsuario === 'ADMIN_CLINICA') {
       this.router.navigate([`/veterinario/dashboard/${idUsuario}`]);
+    } else {
+      console.error('Rol del usuario no reconocido.');
+      this.router.navigate(['/acceso-no-autorizado']);
     }
   }
 }

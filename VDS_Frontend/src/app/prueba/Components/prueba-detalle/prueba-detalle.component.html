@@ -30,7 +30,7 @@
             <!-- Tipo de Prueba -->
             <mat-form-field appearance="fill">
               <mat-label>Tipo de Prueba</mat-label>
-              <mat-select [(ngModel)]="prueba.tipo" name="tipo" required>
+              <mat-select [(ngModel)]="prueba.tipo" name="tipo" required [disabled]="!puedeEditar">
                 <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
               </mat-select>
             </mat-form-field>
@@ -38,7 +38,7 @@
             <!-- Descripción -->
             <mat-form-field appearance="fill">
               <mat-label>Descripción</mat-label>
-              <textarea matInput [(ngModel)]="prueba.descripcion" name="descripcion"></textarea>
+              <textarea matInput [(ngModel)]="prueba.descripcion" name="descripcion" [disabled]="!puedeEditar"></textarea>
             </mat-form-field>
 
             <!-- Documentos -->
@@ -56,7 +56,7 @@
                     <button mat-icon-button color="primary" (click)="descargarDocumento(documento)">
                       <mat-icon>file_download</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="eliminarDocumento(documento)">
+                    <button mat-icon-button color="warn" (click)="eliminarDocumento(documento)" *ngIf="puedeEditar">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-cell>
@@ -74,12 +74,12 @@
 
             <!-- Botón para añadir documentos -->
             <div class="botones-documento">
-              <button mat-raised-button class="button-primary" (click)="abrirDialogSubirDocumento()">Añadir Documento</button>
+              <button mat-raised-button class="button-primary" (click)="abrirDialogSubirDocumento()" *ngIf="puedeEditar">Añadir Documento</button>
             </div>
 
             <!-- Botones de guardar y volver -->
             <mat-card-actions class="action-buttons">
-              <button mat-raised-button class="button-primary" (click)="guardarPrueba()" [disabled]="!detallePruebaForm.form.valid">
+              <button mat-raised-button class="button-primary" (click)="guardarPrueba()" [disabled]="!detallePruebaForm.form.valid" *ngIf="puedeEditar">
                 Guardar
               </button>
               <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>

@@ -40,6 +40,15 @@
             <mat-label>Segundo Apellido</mat-label>
             <input matInput [(ngModel)]="usuario.apellido2" name="apellido2" />
           </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Rol</mat-label>
+            <mat-select [(ngModel)]="usuario.rol" name="rol" [disabled]="!puedeEditarRol">
+              <mat-option *ngFor="let rol of rolesDisponibles" [value]="rol">
+                {{ rol }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
         </form>
       </mat-card-content>
       <!-- Botones centrados -->

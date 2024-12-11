@@ -5,13 +5,39 @@ import { MascotaDetalleComponent } from './Components/mascota-detalle/mascota-de
 import { ClienteMascotasListComponent } from './Components/cliente-mascotas-list/cliente-mascotas-list.component';
 import { GestionMascotasComponent } from './Components/gestion-mascotas/gestion-mascotas.component';
 import { AltaMascotaComponent } from './Components/alta-mascota/alta-mascota.component';
+import { AuthGuard } from '../auth/Guards/auth.guard';
 
 const routes: Routes = [
-  { path: 'dashboard/:idMascota', component: MascotaDashboardComponent },  // Dashboard de la mascota
-  { path: 'detalle/:idMascota', component: MascotaDetalleComponent },      // Detalle de la mascota
-  { path: 'cliente-mascotas-list/:idUsuario', component: ClienteMascotasListComponent }, // Lista de mascotas del cliente
-  { path: 'gestion-mascotas', component: GestionMascotasComponent }, // Gestión de mascotas
-  { path: 'alta-mascota/:idCliente', component: AltaMascotaComponent }  // Alta de mascota
+  { 
+    path: 'dashboard/:idMascota', // Dashboard de la mascota
+    component: MascotaDashboardComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN', 'CLIENTE', 'TEMPORAL'] }
+  },
+  { 
+    path: 'detalle/:idMascota', // Detalle de la mascota
+    component: MascotaDetalleComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN', 'CLIENTE', 'TEMPORAL'] }
+  },      
+  { 
+    path: 'cliente-mascotas-list/:idUsuario', // Lista de mascotas del cliente
+    component: ClienteMascotasListComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['CLIENTE', 'VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
+  }, 
+  { 
+    path: 'gestion-mascotas', // Gestión de mascotas
+    component: GestionMascotasComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
+  }, 
+  { 
+    path: 'alta-mascota/:idCliente', // Alta de mascota
+    component: AltaMascotaComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
+  }
 ];
 
 @NgModule({

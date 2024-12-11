@@ -15,7 +15,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { BajaVacunaComponent } from 'src/app/vacuna/Components/baja-vacuna/baja-vacuna.component';
 import { BajaPruebaComponent } from 'src/app/prueba/Components/baja-prueba/baja-prueba.component';
-import { ConsultaDetalleResponse } from '../../Models/consulta-detalle-response.dto';
 import { forkJoin, Observable } from 'rxjs';
 
 @Component({
@@ -45,17 +44,17 @@ export class ConsultaDetalleComponent implements OnInit {
 
   ngOnInit(): void {
     const usuarioId = +sessionStorage.getItem('idUsuario')!;
-    const consultaId = +this.route.snapshot.paramMap.get('idConsulta')!;
+    this.idConsulta = +this.route.snapshot.paramMap.get('idConsulta')!;
     this.rol = sessionStorage.getItem('rol'); // Recuperamos el rol del usuario logueado
   
-    if (!consultaId) {
+    if (!this.idConsulta) {
       this.snackBar.open('ID de consulta no encontrado', 'Cerrar', { duration: 3000 });
       this.router.navigate(['/']);
       return;
     }
   
     this.isLoading = true; // Activar spinner
-    this.cargarDatos(usuarioId, consultaId);
+    this.cargarDatos(usuarioId, this.idConsulta);
   }
   
   cargarDatos(usuarioId: number, consultaId: number): void {
@@ -110,12 +109,17 @@ export class ConsultaDetalleComponent implements OnInit {
   }
 
   evaluarPermisosConsulta(): void {
+    if (this.rol === 'ADMIN') {
+      this.puedeEditar = true; // ADMIN siempre puede editar
+      return;
+    }
+  
     if (this.rol === 'CLIENTE' || this.rol === 'TEMPORAL') {
-        this.puedeEditar = false;
+      this.puedeEditar = false;
     } else if (this.rol === 'VETERINARIO' || this.rol === 'ADMIN_CLINICA') {
-        this.puedeEditar = this.consulta?.clinicaId === this.usuarioLogueado?.clinicaId;
+      this.puedeEditar = this.consulta?.clinicaId === this.usuarioLogueado?.clinicaId;
     } else {
-        this.puedeEditar = true;
+      this.puedeEditar = false;
     }
   }
 

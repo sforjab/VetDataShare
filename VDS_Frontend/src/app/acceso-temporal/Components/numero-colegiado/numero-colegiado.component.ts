@@ -14,18 +14,6 @@ export class NumeroColegiadoComponent {
 
   constructor(private accesoTemporalService: AccesoTemporalService, private route: ActivatedRoute, private router: Router) {}
 
-  /* ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const token = params.get('token'); // Recuperamos el token desde la URL
-      if (token) {
-        this.accesoToken = token; // Guardamos en 'accesoToken'
-      } else {
-        console.error('Token de acceso temporal no encontrado en la URL.');
-        this.router.navigate(['/']);
-      }
-    });
-  } */
-
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const token = params.get('token'); // Recuperamos el token desde la URL
@@ -79,7 +67,9 @@ export class NumeroColegiadoComponent {
         const idMascota = res.idMascota;
 
         // Navegamos al dashboard de la mascota
-        this.router.navigate([`/mascota/dashboard/${idMascota}`]);
+        setTimeout(() => {
+          this.router.navigate([`/mascota/dashboard/${idMascota}`]);
+        }, 0);
       },
       error: (err) => {
         console.error('Error al registrar el acceso temporal:', err);

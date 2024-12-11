@@ -23,10 +23,10 @@ const routes: Routes = [
     path: 'veterinario', 
     loadChildren: () => import('./usuarios/veterinario/veterinario.module').then(m => m.VeterinarioModule),
   },
-  /* {
+  {
     path: 'admin', 
     loadChildren: () => import('./usuarios/admin/admin.module').then(m => m.AdminModule),
-  }, */
+  },
   {
     path: 'mascota', 
     loadChildren: () => import('./mascota/mascota.module').then(m => m.MascotaModule),

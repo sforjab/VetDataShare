@@ -108,11 +108,7 @@ public class UsuarioService {
                 .withIgnoreCase();
 
         Example<Usuario> example = Example.of(empleado, matcher);
-        /* return usuarioRepository.findAll(example)
-                .stream()
-                .filter(usuario -> rol != null || usuario.getRol() == Rol.VETERINARIO || usuario.getRol() == Rol.ADMIN_CLINICA)
-                .map(usuarioMapper::toDTO)
-                .collect(Collectors.toList()); */
+    
         return usuarioRepository.findAll(example)
                 .stream()
                 .filter(usuario -> usuario.getClinica() != null && usuario.getClinica().getId().equals(idClinica))
@@ -221,33 +217,27 @@ public class UsuarioService {
     @Transactional
     public Optional<UsuarioDTO> updateUsuario(Long id, UsuarioDTO usuarioDTO) {
         try {
-            System.out.println("Buscando usuario con ID: " + id);
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
             
             if (usuarioOpt.isEmpty()) {
-                System.out.println("Usuario no encontrado con ID: " + id);
                 return Optional.empty(); // Si el usuario no existe, se devuelve un 'Optional' vacío
             }
 
             Usuario usuario = usuarioOpt.get();
 
             // Validación de 'numIdent' único
-            System.out.println("Validando 'numIdent'...");
             Optional<Usuario> usuarioMismoNumIdent = usuarioRepository.findByNumIdent(usuarioDTO.getNumIdent());
             if (usuarioMismoNumIdent.isPresent() && !usuarioMismoNumIdent.get().getId().equals(id)) {
-                System.out.println("Número de identificación duplicado: " + usuarioDTO.getNumIdent());
                 return Optional.empty(); // Si otro usuario tiene el mismo 'numIdent', devolvemos un 'Optional' vacío
             }
 
             // Validación de 'username' único
-            System.out.println("Validando 'username'...");
             Optional<Usuario> usuarioMismoUsername = usuarioRepository.findByUsername(usuarioDTO.getUsername());
             if (usuarioMismoUsername.isPresent() && !usuarioMismoUsername.get().getId().equals(id)) {
-                System.out.println("Nombre de usuario duplicado: " + usuarioDTO.getUsername());
                 return Optional.empty(); // Si otro usuario tiene el mismo 'username', se devuelve 'Optional' vacío
             }
 
-            // Copiar propiedades manualmente según rol
+            // Copiamos las propiedades manualmente según rol
             usuario.setNumIdent(usuarioDTO.getNumIdent());
             usuario.setNombre(usuarioDTO.getNombre());
             usuario.setApellido1(usuarioDTO.getApellido1());
@@ -258,18 +248,18 @@ public class UsuarioService {
             usuario.setRol(Rol.valueOf(usuarioDTO.getRol()));
             usuario.setUsername(usuarioDTO.getUsername());
 
-            // Condicionar según el rol del usuario
+            // Según el rol del usuario...
             if (usuario.getRol() == Rol.VETERINARIO || usuario.getRol() == Rol.ADMIN_CLINICA) {
                 if (usuarioDTO.getClinicaId() != null) {
                     Clinica clinica = new Clinica();
                     clinica.setId(usuarioDTO.getClinicaId());
-                    usuario.setClinica(clinica); // Asociar clínica si corresponde
+                    usuario.setClinica(clinica); // Se asocia clínica si corresponde
                 } else {
-                    usuario.setClinica(null); // Limpiar clínica si no está en el DTO
+                    usuario.setClinica(null); // Limpiamos clínica si no está en el DTO
                 }
                 usuario.setNumColegiado(usuarioDTO.getNumColegiado());
             } else if (usuario.getRol() == Rol.CLIENTE) {
-                // Los clientes no pueden tener clínica ni numColegiado
+                // Los clientes no pueden tener clínica ni 'numColegiado'
                 usuario.setClinica(null);
                 usuario.setNumColegiado(null);
             }
@@ -304,7 +294,7 @@ public class UsuarioService {
                 throw new RuntimeException("El empleado ya no está asociado a una clínica");
             }
 
-            empleado.setClinica(null); // Desvincular clínica
+            empleado.setClinica(null); // Desvinculamos clínica
             Usuario empleadoActualizado  = usuarioRepository.save(empleado);
             return Optional.of(usuarioMapper.toDTO(empleadoActualizado ));
         } catch (Exception e) {

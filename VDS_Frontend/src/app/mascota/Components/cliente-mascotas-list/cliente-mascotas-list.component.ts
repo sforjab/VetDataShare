@@ -14,6 +14,7 @@ export class ClienteMascotasListComponent implements OnInit {
   mascotas: Mascota[] = [];
   idCliente: number | null = null;
   isLoading: boolean = false;
+  rolUsuarioSesion: string | null = null;
 
   columnasTabla: string[] = ['nombre', 'numChip', 'acciones'];
 
@@ -25,15 +26,15 @@ export class ClienteMascotasListComponent implements OnInit {
       if (id) {
         this.idCliente = +id;
         const idUsuarioSesion = sessionStorage.getItem('idUsuario');
-        const rolUsuarioSesion = sessionStorage.getItem('rol');
+        this.rolUsuarioSesion = sessionStorage.getItem('rol');
 
-        if (!idUsuarioSesion || !rolUsuarioSesion) {
+        if (!idUsuarioSesion || !this.rolUsuarioSesion) {
           // Redirige al usuario a la página de "Acceso No Autorizado" si no está logueado
           this.router.navigate(['/acceso-no-autorizado']);
           return;
         }
 
-        if (rolUsuarioSesion === 'CLIENTE' && idUsuarioSesion && Number(idUsuarioSesion) !== this.idCliente) {
+        if (this.rolUsuarioSesion === 'CLIENTE' && idUsuarioSesion && Number(idUsuarioSesion) !== this.idCliente) {
           // Se redirige al usuario a una página de "Acceso No Autorizado" si no coincide el usuario logueado con el propietarios de las mascotas
           this.router.navigate(['/acceso-no-autorizado']);
         } else {
@@ -43,7 +44,7 @@ export class ClienteMascotasListComponent implements OnInit {
     });
   }
 
-  // Cargar las mascotas del usuario logueado
+  // Cargamos las mascotas del usuario logueado
   cargarMascotas(idUsuario: number): void {
     this.isLoading = true;
     this.mascotaService.getMascotasPorIdUsuario(idUsuario).subscribe({

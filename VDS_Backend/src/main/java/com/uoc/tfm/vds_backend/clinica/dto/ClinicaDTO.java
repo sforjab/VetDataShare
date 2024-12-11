@@ -11,5 +11,6 @@ public class ClinicaDTO {
     private String direccion;
     private String telefono;
     private String email;
+    private boolean activo;
     private List<Long> veterinarioIds;
 }

@@ -4,5 +4,6 @@ export interface Clinica {
     direccion: string;
     telefono: string;
     email: string;
+    activo?: boolean;
 }
   

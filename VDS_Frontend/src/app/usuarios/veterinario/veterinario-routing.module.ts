@@ -8,10 +8,14 @@ const routes: Routes = [
   {
     path: 'dashboard/:idUsuario', // Dashboard de veterinario
     component: VeterinarioDashboardComponent,
-    /* canActivate: [AuthGuard],
-    data: { roles: ['VETERINARIO'] } */
+    canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
   },
-  { path: 'perfil/:idUsuario', component: VeterinarioPerfilComponent }, // Perfil del veterinario
+  { path: 'perfil/:idUsuario', // Perfil del veterinario
+    component: VeterinarioPerfilComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
+  },
 
 ];
 

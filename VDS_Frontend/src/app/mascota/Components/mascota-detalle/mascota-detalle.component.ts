@@ -23,8 +23,8 @@ export class MascotaDetalleComponent implements OnInit {
   };
   propietario: Usuario | null = null;
   idMascota: number | null = null;
-  esCliente: boolean = false;
   isLoading: boolean = false;
+  puedeEditar: boolean = false;
 
   constructor(private mascotaService: MascotaService, private usuarioService: UsuarioService, 
               private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
@@ -37,7 +37,7 @@ export class MascotaDetalleComponent implements OnInit {
         this.cargarMascotaDetalle(this.idMascota);
 
         const rolUsuarioSesion = sessionStorage.getItem('rol');
-        this.esCliente = rolUsuarioSesion === 'CLIENTE';
+        this.puedeEditar = this.evaluarPermisos(rolUsuarioSesion);
       } else {
         console.error('ID de la mascota no disponible en la URL');
         this.router.navigate(['/acceso-no-autorizado']);
@@ -75,6 +75,19 @@ export class MascotaDetalleComponent implements OnInit {
         console.error('Error obteniendo los detalles del propietario:', err);
       }
     });
+  }
+
+  evaluarPermisos(rol: string | null): boolean {
+    // CLIENTE y TEMPORAL no pueden editar
+    if (rol === 'CLIENTE' || rol === 'TEMPORAL') {
+      return false;
+    }
+    // VETERINARIO, ADMIN_CLINICA y ADMIN pueden editar
+    if (rol === 'VETERINARIO' || rol === 'ADMIN_CLINICA' || rol === 'ADMIN') {
+      return true;
+    }
+    // Por defecto, no permitir la edición
+    return false;
   }
 
   guardarCambios(): void {

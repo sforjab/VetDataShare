@@ -15,6 +15,7 @@ public class ClinicaMapper {
         dto.setDireccion(entity.getDireccion());
         dto.setTelefono(entity.getTelefono());
         dto.setEmail(entity.getEmail());
+        dto.setActivo(entity.isActivo());
         dto.setVeterinarioIds(entity.getVeterinarios().stream().map(v -> v.getId()).collect(Collectors.toList()));
         return dto;
     }
@@ -25,6 +26,7 @@ public class ClinicaMapper {
         entity.setDireccion(dto.getDireccion());
         entity.setTelefono(dto.getTelefono());
         entity.setEmail(dto.getEmail());
+        entity.setActivo(dto.isActivo());
         // Veterinarios deben configurarse fuera del mapper.
         return entity;
     }

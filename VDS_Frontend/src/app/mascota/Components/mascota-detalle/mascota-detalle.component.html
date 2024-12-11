@@ -17,40 +17,35 @@
           <!-- Primera fila -->
           <mat-form-field appearance="fill">
             <mat-label>Número de Chip</mat-label>
-            <input matInput [(ngModel)]="mascota.numChip" name="numChip" [readonly]="esCliente" />
+            <input matInput [(ngModel)]="mascota.numChip" name="numChip" [readonly]="!puedeEditar" />
           </mat-form-field>
 
           <mat-form-field appearance="fill">
             <mat-label>Nombre</mat-label>
-            <input matInput [(ngModel)]="mascota.nombre" name="nombre" [readonly]="esCliente" />
+            <input matInput [(ngModel)]="mascota.nombre" name="nombre" [readonly]="!puedeEditar" />
           </mat-form-field>
 
           <!-- Segunda fila -->
           <mat-form-field appearance="fill">
             <mat-label>Especie</mat-label>
-            <input matInput [(ngModel)]="mascota.especie" name="especie" [readonly]="esCliente" />
+            <input matInput [(ngModel)]="mascota.especie" name="especie" [readonly]="!puedeEditar" />
           </mat-form-field>
 
           <mat-form-field appearance="fill">
             <mat-label>Raza</mat-label>
-            <input matInput [(ngModel)]="mascota.raza" name="raza" [readonly]="esCliente" />
+            <input matInput [(ngModel)]="mascota.raza" name="raza" [readonly]="!puedeEditar" />
           </mat-form-field>
 
           <!-- Tercera fila -->
           <mat-form-field appearance="fill">
             <mat-label>Sexo</mat-label>
-            <input matInput [(ngModel)]="mascota.sexo" name="sexo" [readonly]="esCliente" />
+            <input matInput [(ngModel)]="mascota.sexo" name="sexo" [readonly]="!puedeEditar" />
           </mat-form-field>
 
           <mat-form-field appearance="fill">
             <mat-label>Fecha de nacimiento</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker"
-              [(ngModel)]="mascota.fechaNacimiento"
-              name="fechaNacimiento"
-              [readonly]="esCliente" />
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="mascota.fechaNacimiento" name="fechaNacimiento" [readonly]="!puedeEditar" />
+            <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="!puedeEditar"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
 
@@ -71,13 +66,7 @@
       </mat-card-content>
       <!-- Botones centrados -->
       <mat-card-actions class="action-buttons">
-        <button
-          *ngIf="!esCliente"
-          mat-raised-button
-          class="button-primary"
-          (click)="guardarCambios()">
-          Guardar
-        </button>
+        <button mat-raised-button class="button-primary" (click)="guardarCambios()" *ngIf="puedeEditar">Guardar</button>
         <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
       </mat-card-actions>
     </mat-card>

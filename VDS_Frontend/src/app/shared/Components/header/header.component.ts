@@ -87,6 +87,9 @@ export class HeaderComponent implements OnInit {
       case 'ADMIN_CLINICA':
         this.router.navigate([`/veterinario/dashboard/${this.usuario.id}`]);
         break;
+        case 'ADMIN':
+          this.router.navigate([`/admin/dashboard`]);
+          break;
       default:
         console.error('Rol no reconocido:', this.usuario.rol);
         this.router.navigate(['/acceso-no-autorizado']);

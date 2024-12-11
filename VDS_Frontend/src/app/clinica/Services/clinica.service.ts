@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -28,6 +28,37 @@ export class ClinicaService {
     );
   }
 
+  buscarClinicas(filtros: {
+    nombre?: string;
+    direccion?: string;
+    telefono?: string;
+    email?: string;
+    activo?: boolean;
+  }): Observable<Clinica[]> {
+    let params = new HttpParams();
+    if (filtros.nombre) {
+      params = params.set('nombre', filtros.nombre);
+    }
+    if (filtros.direccion) {
+      params = params.set('direccion', filtros.direccion);
+    }
+    if (filtros.telefono) {
+      params = params.set('telefono', filtros.telefono);
+    }
+    if (filtros.email) {
+      params = params.set('email', filtros.email);
+    }
+    if (filtros.activo !== undefined) {
+      params = params.set('activo', String(filtros.activo));
+    }
+  
+    return this.http.get<Clinica[]>(`${this.clinicaUrl}/buscarClinicas`, { params }).pipe(
+      tap((clinicas) => console.log('Clínicas encontradas:', clinicas)),
+      catchError(this.handleError)
+    );
+  }
+  
+
   // Creación de una nueva clínica
   createClinica(clinica: Clinica): Observable<Clinica> {
     return this.http.post<Clinica>(`${this.clinicaUrl}/create`, clinica).pipe(
@@ -49,6 +80,16 @@ export class ClinicaService {
     return this.http.delete<void>(`${this.clinicaUrl}/delete/${id}`).pipe(
       tap(() => console.log(`Clínica con ID: ${id} eliminada`)),
       catchError(this.handleError)
+    );
+  }
+
+  // Baja lógica de una clínica y sus empleados
+  darBajaClinica(idClinica: number): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(`${this.clinicaUrl}/darBajaClinica/${idClinica}`, {}).pipe(
+      catchError((error) => {
+        console.error('Error al dar de baja la clínica:', error);
+        throw error; // Propaga el error para que el componente lo maneje
+      })
     );
   }
 

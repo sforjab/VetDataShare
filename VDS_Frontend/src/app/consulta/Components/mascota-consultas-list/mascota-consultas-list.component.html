@@ -26,7 +26,7 @@
             <button mat-icon-button color="primary" (click)="verDetalleConsulta(consulta.id)">
               <mat-icon>remove_red_eye</mat-icon>
             </button>
-            <button *ngIf="rol !== 'CLIENTE'" mat-icon-button color="warn" (click)="eliminarConsulta(consulta)">
+            <button *ngIf="puedeEliminarConsulta(consulta)" mat-icon-button color="warn" (click)="eliminarConsulta(consulta)">
               <mat-icon>delete</mat-icon>
             </button>
           </td>
@@ -43,7 +43,7 @@
     
     <!-- Botón de Volver -->
     <div class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="nuevaConsulta()">Nueva Consulta</button>
+      <button mat-raised-button class="button-primary" (click)="nuevaConsulta()" *ngIf="rolUsuarioSesion === 'VETERINARIO' || rolUsuarioSesion === 'ADMIN_CLINICA'">Nueva Consulta</button>
       <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
     </div>
   </div>

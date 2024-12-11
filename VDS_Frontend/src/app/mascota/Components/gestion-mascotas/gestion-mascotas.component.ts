@@ -104,12 +104,22 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
   }
 
   volver(): void {
-    const idVeterinario = sessionStorage.getItem('idUsuario');
-    if (idVeterinario) {
-      this.router.navigate([`/veterinario/dashboard/${idVeterinario}`]);
-    } else {
-      console.error('ID del veterinario no encontrado en la sesión.');
+    const idUsuario = sessionStorage.getItem('idUsuario');
+    const rolUsuario = sessionStorage.getItem('rol');
+  
+    if (!idUsuario || !rolUsuario) {
+      console.error('ID del usuario o rol no encontrado en la sesión.');
       this.router.navigate(['/acceso-no-autorizado']);
+      return;
+    }
+  
+    if (rolUsuario === 'ADMIN') {
+      // Redirige al dashboard de administrador general
+      this.router.navigate(['/admin/dashboard']);
+    } else {
+      // Redirige al dashboard del veterinario o administrador de clínica
+      this.router.navigate([`/veterinario/dashboard/${idUsuario}`]);
     }
   }
+  
 }

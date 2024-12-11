@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ConsultaService } from '../../Services/consulta.service';
 import { Consulta } from '../../Models/consulta.dto';
-import { MascotaService } from 'src/app/mascota/Services/mascota.service';
+import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 
 @Component({
   selector: 'app-alta-consulta',
@@ -26,24 +26,13 @@ export class AltaConsultaComponent implements OnInit {
   usuarioId: number | null = null;
   rol: string | null = null;
 
-  constructor(private consultaService: ConsultaService, private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
+  constructor(private consultaService: ConsultaService, private usuarioService: UsuarioService, 
+              private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     const idMascota = this.route.snapshot.paramMap.get('idMascota');
     if (idMascota) {
       this.consulta.mascotaId = +idMascota;
-
-      // Obtenemos datos de la mascota para asignar clinicaId
-      this.mascotaService.getMascotaPorId(+idMascota).subscribe({
-        next: (mascota) => {
-          this.consulta.clinicaId = mascota.clinicaId!;
-        },
-        error: (err) => {
-          console.error('Error al obtener los detalles de la mascota:', err);
-          this.snackBar.open('Error al cargar los datos de la mascota', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/acceso-no-autorizado']);
-        }
-      });
     } else {
       console.error('ID de la mascota no encontrado en la ruta.');
       this.router.navigate(['/acceso-no-autorizado']);
@@ -54,6 +43,18 @@ export class AltaConsultaComponent implements OnInit {
     this.usuarioId = +sessionStorage.getItem('idUsuario')!;
     this.rol = sessionStorage.getItem('rol');
     this.consulta.veterinarioId = this.usuarioId!;
+
+    // Obtener el clinicaId del usuario logueado
+    this.usuarioService.getUsuarioPorId(this.usuarioId).subscribe({
+      next: (usuario) => {
+        this.consulta.clinicaId = usuario.clinicaId; // Asignar la clínica del usuario logueado
+      },
+      error: (err: any) => {
+        console.error('Error al obtener datos del usuario:', err);
+        this.snackBar.open('Error al cargar los datos del usuario', 'Cerrar', { duration: 3000 });
+        this.router.navigate(['/acceso-no-autorizado']);
+      }
+    });
   }
 
   crearConsulta(): void {

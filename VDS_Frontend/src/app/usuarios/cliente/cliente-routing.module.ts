@@ -10,29 +10,41 @@ import { TransferirMascotasComponent } from './Components/transferir-mascotas/tr
 
 const routes: Routes = [
   {
-    path: 'dashboard/:idUsuario', // Dashboard de cliente
+    path: 'dashboard/:idUsuario',
     component: ClienteDashboardComponent,
-    /* canActivate: [AuthGuard],
-    data: { roles: ['CLIENTE'] } */
+    canActivate: [AuthGuard],
+    data: { roles: ['CLIENTE', 'VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
   },
-  /* {
-    path: 'veterinario-dashboard', // Dashboard de veterinario
-    component: VetDashboardComponent,  // Asegúrate de crear este componente
-    canActivate: [RolGuard],
-    data: { roles: ['VETERINARIO'] }
+  { 
+    path: 'perfil/:idUsuario', 
+    component: ClientePerfilComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['CLIENTE', 'VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
+  },     
+  { 
+    path: 'gestion-clientes', 
+    component: GestionClientesComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
+  }, 
+  { 
+    path: 'alta-cliente', 
+    component: AltaClienteComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
   },
-  {
-    path: 'admin-dashboard', // Dashboard de admin
-    component: AdminDashboardComponent,  // Asegúrate de crear este componente
-    canActivate: [RolGuard],
-    data: { roles: ['ADMIN'] }
-  }, */
-  // MIRAR QUÉ RUTAS LLEVAN GUARD O NO
-  { path: 'perfil/:idUsuario', component: ClientePerfilComponent },        // Perfil del cliente
-  { path: 'gestion-clientes', component: GestionClientesComponent }, // Gestión del cliente GUARD PARA ESTA RUTA
-  { path: 'alta-cliente', component: AltaClienteComponent },
-  { path: 'transferir-mascotas/:numIdent', component: TransferirMascotasComponent },
-  { path: 'transferir-mascota/:idMascota', component: TransferirMascotasComponent },
+  { 
+    path: 'transferir-mascotas/:numIdent', 
+    component: TransferirMascotasComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
+  },
+  { 
+    path: 'transferir-mascota/:idMascota', 
+    component: TransferirMascotasComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'] }
+  },
 ];
 
 @NgModule({

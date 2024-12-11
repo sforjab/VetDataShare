@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatosClinicaComponent } from './Components/datos-clinica/datos-clinica.component';
 import { GestionEmpleadosComponent } from './Components/gestion-empleados/gestion-empleados.component';
 import { MatCardModule } from '@angular/material/card';
@@ -20,6 +20,9 @@ import { BajaEmpleadoComponent } from './Components/baja-empleado/baja-empleado.
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { GestionClinicasComponent } from './Components/gestion-clinicas/gestion-clinicas.component';
+import { BajaClinicaComponent } from './Components/baja-clinica/baja-clinica.component';
+import { AltaClinicaComponent } from './Components/alta-clinica/alta-clinica.component';
 
 
 @NgModule({
@@ -28,12 +31,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     DatosClinicaComponent,
     GestionEmpleadosComponent,
     AltaEmpleadoComponent,
-    BajaEmpleadoComponent
+    BajaEmpleadoComponent,
+    GestionClinicasComponent,
+    AltaClinicaComponent,
+    BajaClinicaComponent
   ],
   imports: [
     CommonModule,
     ClinicaRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
@@ -45,7 +52,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSelectModule,
     MatDialogModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatIconModule
   ]
 })
 export class ClinicaModule { }

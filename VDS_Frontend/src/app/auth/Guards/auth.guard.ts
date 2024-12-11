@@ -14,16 +14,19 @@ export class AuthGuard  {
     const rolesPermitidos = route.data['roles'] as Array<string>;
     return this.authService.rolUsuario.pipe(
       map(rolUsuario => {
-        if (!rolUsuario) { // No hay usuario logueado
+        if (!rolUsuario) {
+          // Intenta recuperar el rol directamente del sessionStorage
+          rolUsuario = sessionStorage.getItem('rol') || '';
+        }
+        if (!rolUsuario) {
           this.router.navigate(['/login']);
           return false;
         }
-        if (rolesPermitidos && rolesPermitidos.length > 0 && !rolesPermitidos.includes(rolUsuario)) { // Los roles están definidos y el rol del usuario no está entre los permitidos
-          this.router.navigate(['/permiso-denegado']);
-          return false;
-
+        if (rolUsuario === 'TEMPORAL' || (rolesPermitidos && rolesPermitidos.includes(rolUsuario))) {
+          return true; // Permite acceso si el rol es TEMPORAL o está en los roles permitidos
         }
-        return true; // Si el usuario está autenticado y no hay restricciones de roles, permite el acceso
+        this.router.navigate(['/acceso-no-autorizado']); // Rol no permitido
+        return false;
       })
     );
   }

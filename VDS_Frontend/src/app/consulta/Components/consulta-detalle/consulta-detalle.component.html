@@ -67,7 +67,7 @@
                 <th>Tipo</th>
                 <th>Fecha</th>
                 <th>Descripción</th>
-                <th>Acciones</th>
+                <th *ngIf="puedeEditar">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -77,10 +77,14 @@
                 <td>{{ prueba.descripcion }}</td>
                 <td>
                   <div class="action-buttons">
-                    <button mat-icon-button color="primary" (click)="editarPrueba(prueba)">
+                    <button mat-icon-button color="primary" (click)="editarPrueba(prueba)" *ngIf="puedeEditar">
                       <mat-icon>mode_edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="eliminarPrueba(prueba)">
+
+                    <button mat-icon-button color="primary" (click)="editarPrueba(prueba)" *ngIf="!puedeEditar">
+                      <mat-icon>remove_red_eye</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="eliminarPrueba(prueba)" *ngIf="puedeEditar">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </div>                
@@ -90,7 +94,7 @@
           </table>
           <!-- Botón Nueva Prueba -->
           <div class="table-actions">
-            <button mat-raised-button class="button-primary" (click)="nuevaPrueba()">Nueva Prueba</button>
+            <button mat-raised-button class="button-primary" (click)="nuevaPrueba()" *ngIf="puedeEditar">Nueva Prueba</button>
           </div>
         </div>
 
@@ -102,7 +106,7 @@
                 <th>Nombre</th>
                 <th>Fecha</th>
                 <th>Laboratorio</th>
-                <th>Acciones</th>
+                <th *ngIf="puedeEditar">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -110,7 +114,7 @@
                 <td>{{ vacuna.nombre }}</td>
                 <td>{{ vacuna.fecha | date: 'dd/MM/yyyy' }}</td>
                 <td>{{ vacuna.laboratorio }}</td>
-                <td>
+                <td *ngIf="puedeEditar">
                   <div class="action-buttons">
                     <button mat-icon-button color="primary" (click)="editarVacuna(vacuna)">
                       <mat-icon>mode_edit</mat-icon>
@@ -125,13 +129,13 @@
           </table>
           <!-- Botón Nueva Vacuna -->
           <div class="table-actions">
-            <button mat-raised-button class="button-primary" (click)="nuevaVacuna()">Nueva Vacuna</button>
+            <button mat-raised-button class="button-primary" (click)="nuevaVacuna()" *ngIf="puedeEditar">Nueva Vacuna</button>
           </div>
         </div>
 
         <!-- Botones -->
         <div class="form-actions">
-          <button mat-raised-button class="button-primary" (click)="guardar()" [disabled]="!puedeEditar">Guardar</button>
+          <button mat-raised-button class="button-primary" (click)="guardar()" *ngIf="puedeEditar">Guardar</button>
           <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
         </div>
       </mat-card-content>

@@ -1,0 +1,47 @@
+<div class="page-container">
+    <!-- Título principal -->
+    <h1>Nueva Clínica</h1>
+  
+    <!-- Mat Card con el formulario -->
+    <mat-card class="card perfil-card">
+      <mat-card-content>
+        <!-- Contenedor con diseño en grid -->
+        <form class="perfil-form grid-form" #nuevaClinicaForm="ngForm">
+          <!-- Primera fila -->
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input matInput [(ngModel)]="clinica.nombre" name="nombre" required />
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Dirección</mat-label>
+            <input matInput [(ngModel)]="clinica.direccion" name="direccion" required />
+          </mat-form-field>
+  
+          <!-- Segunda fila -->
+          <mat-form-field appearance="fill">
+            <mat-label>Teléfono</mat-label>
+            <input matInput [(ngModel)]="clinica.telefono" name="telefono" required />
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput [(ngModel)]="clinica.email" name="email" type="email" required />
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+      <!-- Botones centrados -->
+      <mat-card-actions class="action-buttons">
+        <button
+          mat-raised-button
+          class="button-primary"
+          (click)="crearClinica()"
+          [disabled]="!nuevaClinicaForm.form.valid"
+        >
+          Crear
+        </button>
+        <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+      </mat-card-actions>
+    </mat-card>
+</div>
+  

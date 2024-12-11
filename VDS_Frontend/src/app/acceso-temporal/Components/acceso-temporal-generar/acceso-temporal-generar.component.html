@@ -8,8 +8,8 @@
 
   <!-- Botón para generar acceso -->
   <div class="action-buttons">
-    <button mat-raised-button class="button-primary" (click)="generarAcceso()">Generar</button>
-    <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+    <button mat-raised-button class="button-primary" (click)="generarAcceso()" aria-label="Generar acceso temporal">Generar</button>
+    <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver a la pantalla anterior">Volver</button>
   </div>
 
   <!-- Resultados del acceso generado -->
@@ -18,7 +18,7 @@
 
     <div class="qr-container">
       <p><strong>Código QR:</strong></p>
-      <qrcode [qrdata]="codigoGeneradoQR" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+      <qrcode [qrdata]="codigoGeneradoQR" [width]="200" [errorCorrectionLevel]="'M'" aria-label="Código QR generado para acceso temporal"></qrcode>
     </div>
 
     <div class="codigo-numerico">

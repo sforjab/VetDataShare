@@ -1,5 +1,6 @@
 package com.uoc.tfm.vds_backend.clinica.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,8 +39,11 @@ public class Clinica {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private boolean activo = true;
+
     @OneToMany(mappedBy = "clinica", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "clinica", "mascotas"})
     @ToString.Exclude
-    private List<Usuario> veterinarios;
+    private List<Usuario> veterinarios = new ArrayList<>();
 }

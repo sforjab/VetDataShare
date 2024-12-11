@@ -41,12 +41,18 @@ export class PruebaDetalleComponent implements OnInit {
   origen: string | null = null;
   columnasTabla: string[] = ['nombreArchivo', 'acciones'];
 
+  // Permisos
+  puedeEditar: boolean = false;
+  rol: string | null = null;
+  usuarioLogueado: Usuario | null = null;
+
   constructor(private pruebaService: PruebaService, private mascotaService: MascotaService, private consultaService: ConsultaService, private usuarioService: UsuarioService,
               private documentoPruebaService: DocumentoPruebaService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.pruebaId = +this.route.snapshot.paramMap.get('idPrueba')!;
     this.origen = this.route.snapshot.queryParamMap.get('origen');
+    this.rol = sessionStorage.getItem('rol');
     if (this.pruebaId) {
       this.cargarPrueba(this.pruebaId);
       this.cargarDocumentos(this.pruebaId);
@@ -62,9 +68,12 @@ export class PruebaDetalleComponent implements OnInit {
       next: (prueba) => {
         this.prueba = prueba;
 
-        // Cargar datos adicionales
+        // Cargamos datos adicionales
         this.cargarMascota(prueba.mascotaId);
         this.cargarConsulta(prueba.consultaId);
+
+        // Se evalúan los permisos
+        this.evaluarPermisos();
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error cargando prueba:', err);
@@ -76,6 +85,26 @@ export class PruebaDetalleComponent implements OnInit {
     });
   }
 
+  evaluarPermisos(): void {
+    const usuarioId = +sessionStorage.getItem('idUsuario')!;
+    this.usuarioService.getUsuarioPorId(usuarioId).subscribe({
+      next: (usuario: Usuario) => {
+        this.usuarioLogueado = usuario;
+
+        if (this.rol === 'ADMIN') {
+          this.puedeEditar = true;
+        } else if (this.rol === 'VETERINARIO' || this.rol === 'ADMIN_CLINICA') {
+          this.puedeEditar = this.prueba.consultaId === usuario.clinicaId;
+        } else {
+          this.puedeEditar = false;
+        }
+      },
+      error: (err) => {
+        console.error('Error cargando usuario logueado:', err);
+        this.puedeEditar = false;
+      }
+    });
+  }
   cargarMascota(mascotaId: number): void {
     this.isLoading = true;
     this.mascotaService.getMascotaPorId(mascotaId).subscribe({

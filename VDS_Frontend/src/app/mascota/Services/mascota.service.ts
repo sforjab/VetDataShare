@@ -110,7 +110,5 @@ export class MascotaService {
     
     // Se propaga el error original para que el componente pueda manejar el código de estado
     return throwError(() => error);
-  }
-
-  
+  }  
 }

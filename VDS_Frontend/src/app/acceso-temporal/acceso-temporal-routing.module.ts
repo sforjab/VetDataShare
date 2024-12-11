@@ -5,9 +5,20 @@ import { AccesoTemporalValidarComponent } from './Components/acceso-temporal-val
 import { NumeroColegiadoComponent } from './Components/numero-colegiado/numero-colegiado.component';
 
 const routes: Routes = [
-  { path: 'generar/:idMascota', component: AccesoTemporalGenerarComponent },
-  { path: 'validar', component: AccesoTemporalValidarComponent },
-  { path: 'numero-colegiado/:token', component: NumeroColegiadoComponent }
+  { 
+    path: 'generar/:idMascota', 
+    component: AccesoTemporalGenerarComponent,
+    canActivate: [] 
+  },
+  { path: 'validar', 
+    component: AccesoTemporalValidarComponent,
+    canActivate: [] 
+  },
+  { 
+    path: 'numero-colegiado/:token', 
+    component: NumeroColegiadoComponent,
+    canActivate: []
+  }
 ];
 
 @NgModule({

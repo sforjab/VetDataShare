@@ -99,11 +99,11 @@ public class MascotaService {
 
     @Transactional
     public List<MascotaDTO> buscarMascotas(String numChip, String nombre, String especie, String raza) {
-        Mascota probe = new Mascota();
-        probe.setNumChip(numChip);
-        probe.setNombre(nombre);
-        probe.setEspecie(especie);
-        probe.setRaza(raza);
+        Mascota mascota = new Mascota();
+        mascota.setNumChip(numChip);
+        mascota.setNombre(nombre);
+        mascota.setEspecie(especie);
+        mascota.setRaza(raza);
 
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withIgnorePaths("id", "sexo", "fechaNacimiento")
@@ -111,7 +111,7 @@ public class MascotaService {
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
 
-        Example<Mascota> example = Example.of(probe, matcher);
+        Example<Mascota> example = Example.of(mascota, matcher);
         return mascotaRepository.findAll(example).stream()
                 .map(mascotaMapper::toDTO)
                 .collect(Collectors.toList());

@@ -5,6 +5,7 @@ import { ConsultaService } from '../../Services/consulta.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { BajaConsultaComponent } from '../baja-consulta/baja-consulta.component';
+import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 
 @Component({
   selector: 'app-mascota-consultas-list',
@@ -15,15 +16,22 @@ export class MascotaConsultasListComponent {
 
   consultas: Consulta[] = [];
   idMascota: number | undefined;
-  rol: string | null = null;
+  rolUsuarioSesion: string | null = null;
   isLoading: boolean = false;
+  clinicaUsuarioSesion: number | null | undefined = null;
 
   columnasTabla: string[] = ['fecha', 'acciones'];
 
-  constructor(private consultaService: ConsultaService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {}
+  constructor(private consultaService: ConsultaService, private usuarioService: UsuarioService, 
+              private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.rol = sessionStorage.getItem('rol');
+    this.rolUsuarioSesion = sessionStorage.getItem('rol');
+    const idUsuario = sessionStorage.getItem('idUsuario');
+
+    if (idUsuario) {
+      this.obtenerClinicaUsuario(+idUsuario); // Obtenemos el 'clinicaId'
+    }
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('idMascota');
@@ -32,6 +40,19 @@ export class MascotaConsultasListComponent {
         this.cargarConsultas(this.idMascota);
       } else {
         this.router.navigate(['/acceso-no-autorizado']);
+      }
+    });
+  }
+
+  // Obtenemos el 'clinicaId' del usuario
+  obtenerClinicaUsuario(idUsuario: number): void {
+    this.usuarioService.getUsuarioPorId(idUsuario).subscribe({
+      next: (usuario) => {
+        this.clinicaUsuarioSesion = usuario.clinicaId;
+        console.log('Clinica del usuario:', this.clinicaUsuarioSesion);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al obtener la clínica del usuario:', err);
       }
     });
   }
@@ -49,6 +70,22 @@ export class MascotaConsultasListComponent {
         this.isLoading = false;
       }
     });
+  }
+
+  puedeEliminarConsulta(consulta: Consulta): boolean {
+    if (this.rolUsuarioSesion === 'ADMIN') {
+      return true; // ADMIN siempre puede eliminar
+    }
+
+    if (
+      (this.rolUsuarioSesion === 'VETERINARIO' || this.rolUsuarioSesion === 'ADMIN_CLINICA') &&
+      this.clinicaUsuarioSesion !== null &&
+      consulta.clinicaId === this.clinicaUsuarioSesion
+    ) {
+      return true; // VETERINARIO y ADMIN_CLINICA pueden eliminar si están en la misma clínica
+    }
+
+    return false; // CLIENTE y TEMPORAL no pueden eliminar
   }
 
   nuevaConsulta(): void {

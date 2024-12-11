@@ -25,34 +25,51 @@ export class VeterinarioPerfilComponent implements OnInit {
   idVeterinario: number | null = null;
   esVeterinario: boolean = false;
   isLoading: boolean = false;
+  puedeEditarRol: boolean = false;
+  rolesDisponibles: Rol[] = [Rol.VETERINARIO, Rol.ADMIN_CLINICA]; // Roles disponibles
 
   constructor(private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
 
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('idUsuario');
-      if (id) {
-        this.idVeterinario = +id;
-        const idUsuarioSesion = sessionStorage.getItem('idUsuario');
-        const rolUsuarioSesion = sessionStorage.getItem('rol');
+    ngOnInit(): void {
+      this.route.paramMap.subscribe(params => {
+        const id = params.get('idUsuario');
+        if (id) {
+          this.idVeterinario = +id;
+    
+          // Obtener información de sesión
+          const idUsuarioSesion = sessionStorage.getItem('idUsuario');
+          const rolUsuarioSesion = sessionStorage.getItem('rol');
+    
+          if (!idUsuarioSesion || !rolUsuarioSesion) {
+            // Si no hay usuario logueado o rol, se redirige a acceso no autorizado
+            this.router.navigate(['/acceso-no-autorizado']);
+            return;
+          }
 
-        if (!idUsuarioSesion || !rolUsuarioSesion) {
-          // Se redirige al usuario a la página de "Acceso No Autorizado" si no está logueado
-          this.router.navigate(['/acceso-no-autorizado']);
-          return;
-        }
-
-        this.esVeterinario = (rolUsuarioSesion === 'VETERINARIO' || rolUsuarioSesion === 'ADMIN_CLINICA');
-
-        if (this.idVeterinario && idUsuarioSesion && Number(idUsuarioSesion) !== this.idVeterinario && rolUsuarioSesion !== 'ADMIN_CLINICA') {
-          // Se redirige al usuario a una página de "Acceso No Autorizado" si no coincide el usuario logueado con el veterinario a editar
-          this.router.navigate(['/acceso-no-autorizado']);
-        } else {
+          // Controlar permisos para editar rol
+          this.puedeEditarRol = rolUsuarioSesion === 'ADMIN' || rolUsuarioSesion === 'ADMIN_CLINICA';
+    
+          // Caso 1: Si el usuario es 'ADMIN', permitimos el acceso directamente
+          if (rolUsuarioSesion === 'ADMIN') {
+            this.obtenerDatosUsuario(this.idVeterinario);
+            return;
+          }
+    
+          // Caso 2: Se validan las restricciones para 'ADMIN_CLINICA' o 'VETERINARIO'
+          this.esVeterinario = rolUsuarioSesion === 'VETERINARIO' || rolUsuarioSesion === 'ADMIN_CLINICA';
+    
+          // Si no es el propio usuario logueado y no es 'ADMIN_CLINICA', redirigimos
+          if (this.idVeterinario !== Number(idUsuarioSesion) && rolUsuarioSesion !== 'ADMIN_CLINICA') {
+            this.router.navigate(['/acceso-no-autorizado']);
+            return;
+          }
+    
+          // Si pasa todas las validaciones, se obtienen datos del veterinario
           this.obtenerDatosUsuario(this.idVeterinario);
         }
-      }
-    });
-  }
+      });
+    }
+    
 
   obtenerDatosUsuario(id: number): void {
     this.isLoading = true;
@@ -63,9 +80,6 @@ export class VeterinarioPerfilComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al obtener los datos del usuario:', err);
-        /* if (err.status === 403) {
-          this.router.navigate(['/acceso-no-autorizado']);  //REPASAR ESTO
-        } */
       },
       complete: () => {
         this.isLoading = false;
@@ -95,35 +109,35 @@ export class VeterinarioPerfilComponent implements OnInit {
   }
 
   volver(): void {
-    const idUsuarioSesion = sessionStorage.getItem('idUsuario'); // Obtener idUsuario de la sesión
-
-  if (idUsuarioSesion) {
-    // Recuperar el usuario logueado para obtener información adicional
-    this.usuarioService.getUsuarioPorId(Number(idUsuarioSesion)).subscribe({
-      next: (usuarioSesion) => {
-        const rolUsuarioSesion = usuarioSesion.rol;
-        const idClinica = usuarioSesion.clinicaId;
-
+    if (!this.idVeterinario) {
+      // Si no se obtuvo el id del veterinario, redirigimos al acceso no autorizado
+      this.router.navigate(['/acceso-no-autorizado']);
+      return;
+    }
+  
+    // Obtenemos los datos del veterinario cuyo perfil se está viendo
+    this.usuarioService.getUsuarioPorId(this.idVeterinario).subscribe({
+      next: (veterinario) => {
+        const idClinica = veterinario.clinicaId; // Clínica asociada al veterinario
+        const rolUsuarioSesion = sessionStorage.getItem('rol'); // Rol del usuario logueado
+  
         if (rolUsuarioSesion === 'VETERINARIO') {
-          // Si es veterinario, volver al dashboard del veterinario
+          // Si es veterinario, volvemos al dashboard del veterinario logueado
           this.router.navigate([`/veterinario/dashboard/${this.idVeterinario}`]);
-        } else if (rolUsuarioSesion === 'ADMIN_CLINICA' || rolUsuarioSesion === 'ADMIN' && idClinica) {
-          // Si es admin de clínica o admin general y tiene una clínica asociada
+        } else if ((rolUsuarioSesion === 'ADMIN_CLINICA' && idClinica) || rolUsuarioSesion === 'ADMIN') {
+          // Si es ADMIN_CLINICA o ADMIN, se navega a la gestión de empleados de la clínica
           this.router.navigate([`/clinica/gestion-empleados/${idClinica}`]);
         } else {
-          // Redirigir a una ruta de acceso no autorizado por defecto
+          // Si ninguna de las condiciones se cumple, redirigir al acceso no autorizado
           this.router.navigate(['/acceso-no-autorizado']);
         }
       },
       error: (err) => {
-        console.error('Error al recuperar el usuario de sesión:', err);
-        this.router.navigate(['/acceso-no-autorizado']); // Redirigir si ocurre un error
+        console.error('Error al obtener los datos del veterinario:', err);
+        // En caso de error, redirigir al acceso no autorizado
+        this.router.navigate(['/acceso-no-autorizado']);
       },
     });
-  } else {
-    // Redirigir si no hay idUsuario en la sesión
-    this.router.navigate(['/acceso-no-autorizado']);
   }
-    /* this.router.navigate([`/veterinario/dashboard/${this.idVeterinario}`]); */
-  }
+  
 }

@@ -1,5 +1,7 @@
 package com.uoc.tfm.vds_backend.clinica.controller;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,17 @@ public class ClinicaController {
         }
     }    
 
-    @PostMapping("/create")
+    @GetMapping("/buscarClinicas")
+    public ResponseEntity<List<ClinicaDTO>> buscarClinicas(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String direccion,
+            @RequestParam(required = false) String telefono,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Boolean activo) {
+        return ResponseEntity.ok(clinicaService.buscarClinicas(nombre, direccion, telefono, email, activo));
+    }
+
+    /* @PostMapping("/create")
     public ResponseEntity<Object> createClinica(@RequestBody ClinicaDTO clinicaDTO) {
         Optional<ClinicaDTO> clinicaCreada = clinicaService.createClinica(clinicaDTO);
 
@@ -50,6 +62,23 @@ public class ClinicaController {
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new ApiError("Error al crear la clínica. Nombre ya en uso."));
+        }
+    } */
+
+    @PostMapping("/create")
+    public ResponseEntity<Object> createClinica(@RequestBody ClinicaDTO clinicaDTO) {
+        try {
+            Optional<ClinicaDTO> clinicaCreada = clinicaService.createClinica(clinicaDTO);
+
+            if (clinicaCreada.isPresent()) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(clinicaCreada.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(new ApiError("El nombre de la clínica ya está en uso. Intente con otro nombre."));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiError("Error interno al crear la clínica: " + e.getMessage()));
         }
     }
 
@@ -74,6 +103,17 @@ public class ClinicaController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiError("Clínica no encontrada con ID: " + id));
+        }
+    }
+
+    @PutMapping("/darBajaClinica/{idClinica}")
+    public ResponseEntity<Map<String, String>> darBajaClinica(@PathVariable Long idClinica) {
+        try {
+            clinicaService.darBajaClinica(idClinica);
+            return ResponseEntity.ok(Map.of("message", "Clínica dada de baja con éxito"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 }
