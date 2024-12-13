@@ -1,5 +1,6 @@
 package com.uoc.tfm.vds_backend.auth.controller;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uoc.tfm.vds_backend.auth.model.AuthResponse;
 import com.uoc.tfm.vds_backend.auth.model.LoginRequest;
+import com.uoc.tfm.vds_backend.auth.model.RestablecerPasswordRequest;
 import com.uoc.tfm.vds_backend.jwt.JwtService;
 import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
@@ -53,5 +55,26 @@ public class AuthController {
 
         System.out.println("Fallo en la autenticación para usuario: " + loginRequest.getUsername());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @PostMapping("/olvidar-password")
+    public ResponseEntity<?> olvidarPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        try {
+            usuarioService.enviarEmailRestablecimiento(email);
+            return ResponseEntity.ok(Map.of("message", "Correo enviado correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/restablecer-password")
+    public ResponseEntity<?> restablecerPassword(@RequestBody RestablecerPasswordRequest request) {
+        try {
+            usuarioService.restablecerPassword(request.getToken(), request.getPassword());
+            return ResponseEntity.ok(Map.of("message", "Contraseña restablecida correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
     }
 }

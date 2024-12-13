@@ -3,13 +3,19 @@ package com.uoc.tfm.vds_backend.usuario.service;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +47,14 @@ public class UsuarioService {
 
     @Autowired
     ClinicaRepository clinicaRepository;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    private final Map<String, String> tokenStorage = new HashMap<>();
 
     public Optional<UsuarioDTO> getUsuarioPorId(Long id) {
         return usuarioRepository.findById(id).map(usuarioMapper::toDTO);
@@ -264,16 +278,17 @@ public class UsuarioService {
                 usuario.setNumColegiado(null);
             }
 
-            System.out.println("Guardando usuario actualizado...");
+            // Actualizamos la contraseña solo si está presente en el DTO
+            if (usuarioDTO.getPassword() != null && !usuarioDTO.getPassword().isEmpty()) {
+                usuario.setPassword(passwordEncoder.encode(usuarioDTO.getPassword()));
+            }
+
             Usuario usuarioActualizado = usuarioRepository.save(usuario);
-            System.out.println("Usuario actualizado correctamente: " + usuarioActualizado);
             return Optional.of(usuarioMapper.toDTO(usuarioActualizado));
         } catch (Exception e) {
-            System.out.println("Error al actualizar usuario: " + e.getMessage());
             return Optional.empty();
         }
     }
-
 
     @Transactional
     public boolean deleteUsuario(Long id) {
@@ -300,6 +315,52 @@ public class UsuarioService {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    public void enviarEmailRestablecimiento(String email) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
+        if (usuarioOpt.isEmpty()) {
+            throw new RuntimeException("El email no está registrado.");
+        }
+    
+        Usuario usuario = usuarioOpt.get();
+        String token = UUID.randomUUID().toString(); // Se genera un token único
+        tokenStorage.put(token, usuario.getUsername()); // Se guarda token en almacenamiento en memoria
+
+        // Obtenemos la URL del frontend desde las propiedades de entorno
+        String frontendUrl = environment.getProperty("FRONTEND_URL");
+    
+        // Creamos el enlace para restablecimiento de contraseña
+        String restablecerLink = String.format("%s/auth/restablecer-password?token=%s", frontendUrl, token);
+    
+        // Enviar correo
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(usuario.getEmail());
+        message.setSubject("Restablecimiento de contraseña - VetDataShare");
+        message.setText("Hola, " + usuario.getNombre() + ".\n\n"
+                + "Para restablecer tu contraseña, haz clic en el siguiente enlace:\n"
+                + restablecerLink + "\n\n"
+                + "Si no solicitaste este cambio, ignora este mensaje.");
+        mailSender.send(message);
+    }
+
+    public void restablecerPassword(String token, String nuevaPassword) {
+        String username = tokenStorage.get(token);
+        if (username == null) {
+            throw new RuntimeException("Token inválido o expirado.");
+        }
+
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+        if (usuarioOpt.isEmpty()) {
+            throw new RuntimeException("Usuario no encontrado para el token proporcionado.");
+        }
+
+        Usuario usuario = usuarioOpt.get();
+        usuario.setPassword(passwordEncoder.encode(nuevaPassword));
+        usuarioRepository.save(usuario);
+
+        // Eliminar token una vez utilizado
+        tokenStorage.remove(token);
     }
 
 }

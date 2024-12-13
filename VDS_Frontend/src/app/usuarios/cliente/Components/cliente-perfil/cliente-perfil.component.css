@@ -3,39 +3,24 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%; /* Asegura que los botones estén abajo */
+    height: 100%;
     padding-bottom: 20px;
   }
   
   /* Diseño en grid para el formulario */
   .grid-form {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
-    gap: 20px; /* Espaciado entre columnas y filas */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px;
   }
   
   /* Ajuste de columnas para cada fila */
-  .grid-form mat-form-field:nth-child(1),
-  .grid-form mat-form-field:nth-child(2) {
-    grid-column: span 1; /* Primera fila: Num Ident y Nombre */
-  }
-  
-  .grid-form mat-form-field:nth-child(3),
-  .grid-form mat-form-field:nth-child(4) {
-    grid-column: span 1; /* Segunda fila: Apellido 1 y Apellido 2 */
-  }
-  
-  .grid-form mat-form-field:nth-child(5) {
-    grid-column: span 2; /* Tercera fila: Dirección ocupa toda la fila */
-  }
-  
-  .grid-form mat-form-field:nth-child(6),
-  .grid-form mat-form-field:nth-child(7) {
-    grid-column: span 1; /* Cuarta fila: Teléfono y Email */
-  }
-  
-  /* Clase para campos que ocupan todo el ancho */
-  .full-width {
-    grid-column: span 2 !important;
-  }
+.grid-form mat-form-field {
+    grid-column: span 1;
+}
+
+/* Ajuste general */
+.grid-form .full-width {
+    grid-column: span 1 !important;
+}
   

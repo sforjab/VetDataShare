@@ -90,6 +90,13 @@ export class VeterinarioPerfilComponent implements OnInit {
   guardarCambios(): void {
     if (this.usuario) {
       this.isLoading = true;
+
+      // Si el campo de contraseña está vacío, eliminamos el atributo para evitar actualizarlo
+      const usuarioCopia = { ...this.usuario };
+      if (!usuarioCopia.password) {
+        delete usuarioCopia.password;
+      }
+
       this.usuarioService.updateUsuario(this.idVeterinario!, this.usuario).subscribe({
         next: () => {
           // Mostramos el snackbar al guardar con éxito

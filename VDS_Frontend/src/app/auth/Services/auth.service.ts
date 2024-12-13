@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-  private authUrl = `${environment.APIHost}api/auth/login`;  // URL del backend para el login
+  private authUrl = `${environment.APIHost}api/auth`;  // URL del backend
   usuarioActualLogin: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   usuarioActualRol: BehaviorSubject<string> = new BehaviorSubject<string>('');
   usuarioActualId: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
@@ -21,7 +21,7 @@ export class AuthService {
   }
 
   login(credenciales: LoginRequestDTO): Observable<AuthResponseDTO> {
-    return this.http.post<AuthResponseDTO>(this.authUrl, credenciales).pipe(
+    return this.http.post<AuthResponseDTO>(`${this.authUrl}/login`, credenciales).pipe(
       tap((response: AuthResponseDTO) => {
         sessionStorage.setItem("token", response.token);
         sessionStorage.setItem("rol", response.rol);
@@ -34,12 +34,24 @@ export class AuthService {
     );
   }
 
-  /* logout(): void {
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("rol");
-    this.usuarioActualLogin.next(false);
-    this.usuarioActualRol.next('');
-  } */
+  solicitarRestablecimiento(email: string): Observable<void> {
+    return this.http.post<void>(`${this.authUrl}/olvidar-password`, { email }).pipe(
+      tap(() => {
+        console.log('Solicitud de restablecimiento enviada con éxito.');
+      }),
+      catchError(this.handleError)
+    );
+  }
+  
+  restablecerPassword(token: string, password: string): Observable<void> {
+    return this.http.post<void>(`${this.authUrl}/restablecer-password`, { token, password }).pipe(
+      tap(() => {
+        console.log('Contraseña restablecida con éxito.');
+      }),
+      catchError(this.handleError)
+    );
+  }
+  
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let mensajeError = '¡Ha ocurrido un error desconocido!';

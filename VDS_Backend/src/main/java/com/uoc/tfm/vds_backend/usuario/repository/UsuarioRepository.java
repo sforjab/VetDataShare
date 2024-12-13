@@ -12,5 +12,6 @@ import com.uoc.tfm.vds_backend.usuario.model.Usuario;
 public interface UsuarioRepository extends JpaRepository <Usuario, Long> {
     Optional<Usuario> findByNumIdent(String numIdent);
     Optional<Usuario> findByUsername(String username);
+    Optional<Usuario> findByEmail(String email);
     List<Usuario> findByClinicaId(Long clinicaId);
 }

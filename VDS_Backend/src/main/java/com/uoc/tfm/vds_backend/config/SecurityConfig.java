@@ -34,7 +34,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // Configuración de CORS
                 .authorizeHttpRequests(authRequest -> authRequest
                         // Rutas públicas (accesibles sin autenticación)
-                        .requestMatchers("/api/auth/**", "/api/usuarios/create", "/api/accesos-temporales/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/auth/olvidar-password", "/api/auth/restablecer-password", 
+                                                     "/api/usuarios/create", "/api/accesos-temporales/**").permitAll()
 
                         // Rutas accesibles para el rol TEMPORAL y otros roles autenticados
                         .requestMatchers("/mascota/**", "/consulta/**", "/prueba/**", "/vacuna/**")

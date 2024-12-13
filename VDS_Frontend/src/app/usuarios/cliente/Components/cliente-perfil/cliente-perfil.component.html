@@ -42,19 +42,24 @@
             <input matInput [(ngModel)]="usuario.direccion" name="direccion" />
           </mat-form-field>
 
-          <!-- Cuarta fila -->
           <mat-form-field appearance="fill">
             <mat-label>Teléfono</mat-label>
             <input matInput [(ngModel)]="usuario.telefono" name="telefono" />
           </mat-form-field>
 
+          <!-- Cuarta fila -->
           <mat-form-field appearance="fill">
             <mat-label>Email</mat-label>
             <input matInput [(ngModel)]="usuario.email" name="email" />
           </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Nueva Contraseña</mat-label>
+            <input matInput [(ngModel)]="usuario.password" name="password" type="password" placeholder="Dejar vacío para no modificar" />
+          </mat-form-field>
         </form>
       </mat-card-content>
-      <!-- Botones centrados -->
+
       <mat-card-actions class="action-buttons">
         <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="!perfilForm.form.valid">
           Guardar

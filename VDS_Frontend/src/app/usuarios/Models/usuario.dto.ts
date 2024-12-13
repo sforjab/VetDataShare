@@ -13,7 +13,7 @@ export interface Usuario {
     email?: string;
     rol: Rol;
     username: string;
-    password: string;
+    password?: string;
     clinicaId?: number; // Clínica asociada (solo para veterinarios o admin de clínica)
   }
   

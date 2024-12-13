@@ -11,10 +11,14 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { OlvidarPasswordComponent } from './Components/olvidar-password/olvidar-password.component';
+import { RestablecerPasswordComponent } from './Components/restablecer-password/restablecer-password.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
+    OlvidarPasswordComponent,
+    RestablecerPasswordComponent
   ],
   imports: [
     CommonModule,
