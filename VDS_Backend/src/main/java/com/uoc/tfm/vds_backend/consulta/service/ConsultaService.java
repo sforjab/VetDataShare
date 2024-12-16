@@ -124,19 +124,21 @@ public class ConsultaService {
 
     @Transactional
     public Optional<ConsultaDTO> updateConsulta(Long id, ConsultaDTO consultaDTO) {
+        System.out.println("Service - ID recibido: " + id);
+        System.out.println("Service - DTO recibido: " + consultaDTO);
         return consultaRepository.findById(id).map(consultaExistente -> {
-            // Recuperar la entidad Mascota gestionada por Hibernate
+            System.out.println("Service - Consulta existente encontrada: " + consultaExistente);
+            // Recuperamos la entidad Mascota
             Mascota mascota = mascotaRepository.findById(consultaDTO.getMascotaId())
                     .orElseThrow(() -> new IllegalArgumentException("Mascota no encontrada"));
 
-            // Actualizar los campos de la consulta existente
-            consultaExistente.setFechaConsulta(consultaDTO.getFechaConsulta());
+            // Actualizamos los campos de la consulta existente
             consultaExistente.setMotivo(consultaDTO.getMotivo());
             consultaExistente.setNotas(consultaDTO.getNotas());
             consultaExistente.setMedicacion(consultaDTO.getMedicacion());
             consultaExistente.setMascota(mascota); // Asignar la mascota gestionada
 
-            // Guardar y devolver
+            // Guardamos y devolvemos
             Consulta consultaActualizada = consultaRepository.save(consultaExistente);
             return consultaMapper.toDTO(consultaActualizada);
         });

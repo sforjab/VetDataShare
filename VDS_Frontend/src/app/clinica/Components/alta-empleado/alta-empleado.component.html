@@ -1,56 +1,76 @@
 <div class="page-container">
   <h1>Nuevo Empleado</h1>
 
-  <!-- Mat Card con el formulario -->
   <mat-card class="card perfil-card">
     <mat-card-content>
-      <!-- Contenedor con diseño en grid -->
-      <form class="perfil-form grid-form" #nuevoEmpleadoForm="ngForm">
-        <!-- Primera fila -->
-        <mat-form-field appearance="fill">
+      <form [formGroup]="empleadoForm" class="perfil-form grid-form">
+        <!-- Número de Identificación -->
+        <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('numIdent')">
           <mat-label>Número de Identificación</mat-label>
-          <input matInput [(ngModel)]="empleado.numIdent" name="numIdent" required />
+          <input matInput formControlName="numIdent" />
+          <mat-error *ngIf="campoEsInvalido('numIdent')">
+            <ng-container *ngIf="empleadoForm.get('numIdent')?.hasError('required')">El número de identificación es obligatorio.</ng-container>
+            <ng-container *ngIf="empleadoForm.get('numIdent')?.hasError('maxlength')">No puede exceder los 15 caracteres.</ng-container>
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <!-- Número de Colegiado -->
+        <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('numColegiado')">
           <mat-label>Número de Colegiado</mat-label>
-          <input matInput [(ngModel)]="empleado.numColegiado" name="numColegiado" required />
+          <input matInput formControlName="numColegiado" />
+          <mat-error *ngIf="campoEsInvalido('numColegiado')">
+            <ng-container *ngIf="empleadoForm.get('numColegiado')?.hasError('required')">El número de colegiado es obligatorio.</ng-container>
+            <ng-container *ngIf="empleadoForm.get('numColegiado')?.hasError('maxlength')">No puede exceder los 8 caracteres.</ng-container>
+            <ng-container *ngIf="empleadoForm.get('numColegiado')?.hasError('pattern')">Solo se permiten números.</ng-container>
+          </mat-error>
         </mat-form-field>
 
-        <!-- Segunda fila -->
-        <mat-form-field appearance="fill">
+        <!-- Nombre -->
+        <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('nombre')">
           <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="empleado.nombre" name="nombre" required />
+          <input matInput formControlName="nombre" />
+          <mat-error *ngIf="campoEsInvalido('nombre')">
+            <ng-container *ngIf="empleadoForm.get('nombre')?.hasError('required')">El nombre es obligatorio.</ng-container>
+            <ng-container *ngIf="empleadoForm.get('nombre')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <!-- Primer Apellido -->
+        <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('apellido1')">
           <mat-label>Primer Apellido</mat-label>
-          <input matInput [(ngModel)]="empleado.apellido1" name="apellido1" required />
+          <input matInput formControlName="apellido1" />
+          <mat-error *ngIf="campoEsInvalido('apellido1')">
+            <ng-container *ngIf="empleadoForm.get('apellido1')?.hasError('required')">El primer apellido es obligatorio.</ng-container>
+            <ng-container *ngIf="empleadoForm.get('apellido1')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
+          </mat-error>
         </mat-form-field>
 
-        <!-- Tercera fila -->
-        <mat-form-field appearance="fill">
+        <!-- Segundo Apellido -->
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('apellido2')">
           <mat-label>Segundo Apellido</mat-label>
-          <input matInput [(ngModel)]="empleado.apellido2" name="apellido2" />
+          <input matInput formControlName="apellido2" />
+          <mat-error *ngIf="campoEsInvalido('apellido2')">
+            <ng-container *ngIf="empleadoForm.get('apellido2')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <!-- Rol -->
+        <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('rol')">
           <mat-label>Rol</mat-label>
-          <mat-select [(ngModel)]="empleado.rol" name="rol" required>
+          <mat-select formControlName="rol">
+            <mat-option value="">Seleccione el rol</mat-option>
             <mat-option *ngFor="let rol of roles" [value]="rol">{{ rol }}</mat-option>
           </mat-select>
+          <mat-error *ngIf="campoEsInvalido('rol')">Seleccione un rol válido.</mat-error>
         </mat-form-field>
       </form>
     </mat-card-content>
 
-    <!-- Botones centrados -->
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="crearEmpleado()" [disabled]="!nuevoEmpleadoForm.form.valid">
+      <button mat-raised-button class="button-primary" (click)="crearEmpleado()" [disabled]="empleadoForm.invalid">
         Crear
       </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">
-        Volver
-      </button>
+      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
     </mat-card-actions>
   </mat-card>
 </div>

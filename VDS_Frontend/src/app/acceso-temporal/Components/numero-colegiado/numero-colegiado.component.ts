@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AccesoTemporalService } from '../../Services/acceso-temporal.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-numero-colegiado',
@@ -8,13 +9,15 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./numero-colegiado.component.css']
 })
 export class NumeroColegiadoComponent {
-  numColegiado: string = '';
+  colegiadoForm!: FormGroup;
   accesoToken!: string;  // Token de acceso temporal que viene de la URL
   mensaje: string = '';
 
-  constructor(private accesoTemporalService: AccesoTemporalService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private accesoTemporalService: AccesoTemporalService, private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
+    this.inicializarFormulario();
+    
     this.route.paramMap.subscribe(params => {
       const token = params.get('token'); // Recuperamos el token desde la URL
       if (token) {
@@ -37,18 +40,32 @@ export class NumeroColegiadoComponent {
       }
     });
   }
+
+  inicializarFormulario(): void {
+    this.colegiadoForm = this.fb.group({
+      numColegiado: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(8), // Tamaño máximo de 8 caracteres
+          Validators.pattern(/^\d+$/) // Solo números
+        ]
+      ]
+    });
+  }
     
 
   validarColegiado(): void {
-    if (!this.numColegiado) {
+    if (this.colegiadoForm.invalid) {
       this.mensaje = 'Por favor, introduce un número de colegiado válido.';
       return;
     }
 
-    // Crear el objeto requestData con el accesoToken y los datos adicionales
+    const numColegiado = this.colegiadoForm.value.numColegiado;
+
     const requestData = {
       token: this.accesoToken,
-      numColegiado: this.numColegiado,
+      numColegiado: numColegiado,
       fechaExpiracion: new Date(new Date().getTime() + 60 * 60 * 1000).toISOString() // Una hora desde ahora
     };
 
@@ -57,11 +74,11 @@ export class NumeroColegiadoComponent {
         console.log('Acceso temporal registrado correctamente.');
 
         // Se guarda el JWT temporal en el 'sessionStorage'
-        const jwtTemporal = res.jwtTemporal; 
+        const jwtTemporal = res.jwtTemporal;
         sessionStorage.setItem('jwtTemporal', jwtTemporal);
 
         // Guardamos el rol temporal en sesión
-        sessionStorage.setItem('rol', 'TEMPORAL'); 
+        sessionStorage.setItem('rol', 'TEMPORAL');
 
         // Recuperamos el id de la mascota
         const idMascota = res.idMascota;
@@ -76,5 +93,10 @@ export class NumeroColegiadoComponent {
         this.mensaje = 'Error al registrar el acceso temporal. Por favor, inténtalo de nuevo.';
       }
     });
+  }
+
+  campoEsInvalido(campo: string): boolean {
+    const control = this.colegiadoForm.get(campo);
+    return !!(control?.invalid && (control.dirty || control.touched));
   }
 }

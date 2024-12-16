@@ -38,7 +38,7 @@ public class Consulta {
     @Column(nullable = false)
     private LocalDateTime fechaConsulta;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String motivo;
 
     @Column(length = 500)

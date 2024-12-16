@@ -1,34 +1,46 @@
 <div class="page-container">
     <h1>{{ idMascota ? 'Transferir Mascota' : 'Transferir Mascotas' }}</h1>
   
-    <!-- Propietario Origen -->
     <div class="info-container">
       <p><strong>Propietario origen:</strong> {{ propietarioOrigen }}</p>
     </div>
   
-    <!-- Mensaje si no tiene mascotas -->
     <p *ngIf="!tieneMascotas" class="error">{{ mensajeSinMascotas }}</p>
   
     <!-- Formulario de búsqueda -->
     <mat-card class="card search-card" *ngIf="tieneMascotas">
       <mat-card-content>
-        <form class="search-form">
-          <mat-form-field appearance="fill">
+        <form [formGroup]="propietarioForm" class="search-form">
+          <!-- Campo Identificador del propietario destino -->
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('propietarioDestino')">
             <mat-label>Identificador del propietario destino</mat-label>
-            <input matInput [(ngModel)]="propietarioDestino" name="propietarioDestino" />
+            <input matInput formControlName="propietarioDestino" />
+            <mat-error *ngIf="campoEsInvalido('propietarioDestino')">
+                <ng-container *ngIf="propietarioForm.get('propietarioDestino')?.hasError('required')">
+                  Este campo es obligatorio.
+                </ng-container>
+                <ng-container *ngIf="propietarioForm.get('propietarioDestino')?.hasError('sameAsOrigin')">
+                  El identificador de destino debe ser distinto al de origen.
+                </ng-container>
+                <ng-container *ngIf="propietarioForm.get('propietarioDestino')?.hasError('notFound')">
+                  Cliente no encontrado.
+                </ng-container>
+                <ng-container *ngIf="propietarioForm.get('propietarioDestino')?.hasError('serverError')">
+                  Ocurrió un error al buscar el cliente.
+                </ng-container>
+            </mat-error>            
           </mat-form-field>
   
-          <!-- Botones -->
+          <!-- Botones de acción -->
           <div class="action-buttons">
-            <button mat-raised-button class="button-primary" (click)="buscarPropietarioDestino()">Buscar</button>
+            <button mat-raised-button class="button-primary" (click)="buscarPropietarioDestino()" [disabled]="propietarioForm.invalid">
+              Buscar
+            </button>
             <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
           </div>
         </form>
       </mat-card-content>
     </mat-card>
-  
-    <!-- Mensaje de error de búsqueda -->
-    <p *ngIf="errorBusqueda" class="error">{{ errorBusqueda }}</p>
   
     <!-- Información del cliente destino -->
     <mat-card *ngIf="datosDestino" class="card cliente-destino-card">

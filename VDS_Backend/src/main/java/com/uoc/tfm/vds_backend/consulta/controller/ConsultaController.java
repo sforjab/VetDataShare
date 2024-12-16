@@ -174,6 +174,8 @@ public class ConsultaController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateConsulta(@PathVariable Long id, @RequestBody ConsultaDTO consultaDTO) {
+        System.out.println("Controller - ID recibido: " + id);
+        System.out.println("Controller - DTO recibido: " + consultaDTO);
         // Actualizar la consulta
         Optional<ConsultaDTO> consultaActualizada = consultaService.updateConsulta(id, consultaDTO);
 

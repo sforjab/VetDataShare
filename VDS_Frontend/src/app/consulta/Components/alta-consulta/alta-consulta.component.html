@@ -1,55 +1,49 @@
 <div class="page-container">
-  <!-- Título principal -->
   <h1>Alta de Consulta</h1>
 
-  <!-- Mat Card con el formulario -->
   <mat-card class="card perfil-card">
     <mat-card-content>
-      <!-- Contenedor con diseño en grid -->
-      <form class="perfil-form grid-form" #altaConsultaForm="ngForm">
-        <!-- Primera fila -->
-        <mat-form-field appearance="fill" class="full-width">
+      <form [formGroup]="altaConsultaForm" class="perfil-form grid-form">
+        <!-- Motivo -->
+        <mat-form-field appearance="fill" class="full-width" [class.error]="campoEsInvalido('motivo')">
           <mat-label>Motivo de la consulta</mat-label>
-          <textarea
-            matInput
-            [(ngModel)]="consulta.motivo"
-            name="motivo"
-            rows="4"
-            required
-          ></textarea>
+          <textarea matInput formControlName="motivo" rows="4"></textarea>
+          <mat-error *ngIf="altaConsultaForm.get('motivo')?.hasError('required')">El motivo es obligatorio.</mat-error>
+          <mat-error *ngIf="altaConsultaForm.get('motivo')?.hasError('maxlength')">
+            No puede exceder los 500 caracteres.
+          </mat-error>
         </mat-form-field>
 
-        <!-- Segunda fila (solo visible si el rol no es CLIENTE) -->
-        <mat-form-field appearance="fill" class="full-width" *ngIf="rol !== 'CLIENTE'">
+        <!-- Notas -->
+        <mat-form-field
+          appearance="fill"
+          class="full-width"
+          [class.error]="campoEsInvalido('notas')"
+          *ngIf="rol !== 'CLIENTE'"
+        >
           <mat-label>Notas</mat-label>
-          <textarea
-            matInput
-            [(ngModel)]="consulta.notas"
-            name="notas"
-            rows="4"
-          ></textarea>
+          <textarea matInput formControlName="notas" rows="4"></textarea>
+          <mat-error *ngIf="altaConsultaForm.get('notas')?.hasError('maxlength')">
+            No puede exceder los 500 caracteres.
+          </mat-error>
         </mat-form-field>
 
-        <!-- Tercera fila -->
-        <mat-form-field appearance="fill" class="full-width">
+        <!-- Medicación -->
+        <mat-form-field appearance="fill" class="full-width" [class.error]="campoEsInvalido('medicacion')">
           <mat-label>Medicación</mat-label>
-          <textarea
-            matInput
-            [(ngModel)]="consulta.medicacion"
-            name="medicacion"
-            rows="4"
-          ></textarea>
+          <textarea matInput formControlName="medicacion" rows="4"></textarea>
+          <mat-error *ngIf="altaConsultaForm.get('medicacion')?.hasError('maxlength')">
+            No puede exceder los 500 caracteres.
+          </mat-error>
         </mat-form-field>
       </form>
     </mat-card-content>
-    <!-- Botones centrados -->
+
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="crearConsulta()" [disabled]="!altaConsultaForm.form.valid">
+      <button mat-raised-button class="button-primary" (click)="crearConsulta()" [disabled]="altaConsultaForm.invalid">
         Guardar
       </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">
-        Volver
-      </button>
+      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
     </mat-card-actions>
   </mat-card>
 </div>

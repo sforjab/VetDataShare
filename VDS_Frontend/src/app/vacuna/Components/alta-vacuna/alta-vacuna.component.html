@@ -5,32 +5,41 @@
   <!-- Mat Card con el formulario -->
   <mat-card class="card perfil-card">
     <mat-card-content>
-      <!-- Contenedor con diseño en grid -->
-      <form class="perfil-form grid-form" #altaVacunaForm="ngForm">
-        <!-- Primera fila: Nombre -->
-        <mat-form-field appearance="fill">
+      <form [formGroup]="altaVacunaForm" class="perfil-form grid-form">
+        <!-- Nombre -->
+        <mat-form-field appearance="fill" class="grid-span">
           <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="vacuna.nombre" name="nombre" required />
+          <input matInput formControlName="nombre" />
+          <mat-error *ngIf="altaVacunaForm.get('nombre')?.hasError('required')">
+            El nombre es obligatorio.
+          </mat-error>
+          <mat-error *ngIf="altaVacunaForm.get('nombre')?.hasError('maxlength')">
+            No puede exceder los 250 caracteres.
+          </mat-error>
         </mat-form-field>
 
-        <!-- Segunda fila: Laboratorio -->
-        <mat-form-field appearance="fill">
+        <!-- Laboratorio -->
+        <mat-form-field appearance="fill" class="grid-span">
           <mat-label>Laboratorio</mat-label>
-          <input matInput [(ngModel)]="vacuna.laboratorio" name="laboratorio" required />
+          <input matInput formControlName="laboratorio" />
+          <mat-error *ngIf="altaVacunaForm.get('laboratorio')?.hasError('required')">
+            El laboratorio es obligatorio.
+          </mat-error>
+          <mat-error *ngIf="altaVacunaForm.get('laboratorio')?.hasError('maxlength')">
+            No puede exceder los 250 caracteres.
+          </mat-error>
         </mat-form-field>
       </form>
     </mat-card-content>
-    <!-- Botones centrados -->
+
+    <!-- Botones -->
     <mat-card-actions class="action-buttons">
-      <button
-        mat-raised-button
-        class="button-primary"
-        (click)="crearVacuna()"
-        [disabled]="!altaVacunaForm.form.valid"
-      >
+      <button mat-raised-button class="button-primary" (click)="crearVacuna()" [disabled]="altaVacunaForm.invalid">
         Crear
       </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+      <button mat-raised-button class="button-secondary" (click)="volver()">
+        Volver
+      </button>
     </mat-card-actions>
   </mat-card>
 </div>

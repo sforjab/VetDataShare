@@ -25,7 +25,7 @@ export class MascotaDashboardComponent implements OnInit {
           this.origin = queryParams['origin'] || null;
         });
 
-        this.rolUsuario = sessionStorage.getItem('rol'); // Obtener
+        this.rolUsuario = sessionStorage.getItem('rol');
   
         this.mascotaService.verificarPropietario(this.idMascota).subscribe({
           next: () => {
@@ -55,7 +55,7 @@ export class MascotaDashboardComponent implements OnInit {
     }
   }
   
-  navegarConsultas() { // Este routing hay que verlo porque habrá que cambiarlo a consulta cuando esté creado
+  navegarConsultas() {
     if (this.idMascota !== null) {
       this.router.navigate([`/consulta/mascota-consultas-list/${this.idMascota}`]);
     } else {
@@ -90,39 +90,46 @@ export class MascotaDashboardComponent implements OnInit {
   volver(): void {
     const idUsuarioSesion = sessionStorage.getItem('idUsuario');
     const rolUsuarioSesion = sessionStorage.getItem('rol');
-  
+
     if (!idUsuarioSesion || !rolUsuarioSesion) {
-      console.error('No se encontraron datos de sesión. Redirigiendo a acceso no autorizado.');
-      this.router.navigate(['/acceso-no-autorizado']);
-      return;
+        console.error('No se encontraron datos de sesión. Redirigiendo a acceso no autorizado.');
+        this.router.navigate(['/acceso-no-autorizado']);
+        return;
     }
-  
+
     if (rolUsuarioSesion === 'CLIENTE') {
-      // Navegar al listado de mascotas del cliente
-      this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
-    } else {
-      // Navegar a la gestión de mascotas
-      /* this.router.navigate(['/mascota/gestion-mascotas']); */
-      if (this.origin === 'cliente-mascotas-list') {
-        if (this.idMascota !== undefined) {
-          this.mascotaService.getMascotaPorId(this.idMascota).subscribe({
-            next: (mascota) => {
-              if (mascota && mascota.propietarioId) {
-                this.router.navigate([`/mascota/cliente-mascotas-list/${mascota.propietarioId}`]);
-              } else {
-                console.error('No se encontró el propietario de la mascota. Redirigiendo a acceso no autorizado.');
-                this.router.navigate(['/acceso-no-autorizado']);
-              }
-            },
-            error: (err) => {
-              console.error('Error obteniendo el propietario de la mascota:', err);
-              this.router.navigate(['/acceso-no-autorizado']);
-            }
-          });
-        }
-      } else {
-        this.router.navigate(['/mascota/gestion-mascotas']);
-      }
+        // Si es cliente, se navega al listado de sus mascotas
+        this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
+        return;
     }
-  }
+
+    // Si no es cliente, determinamos el origen
+    if (this.origin === 'cliente-mascotas-list') {
+        // Navegamos al listado de mascotas del cliente según el propietario
+        if (this.idMascota !== undefined) {
+            this.mascotaService.getMascotaPorId(this.idMascota).subscribe({
+                next: (mascota) => {
+                    if (mascota && mascota.propietarioId) {
+                        // Redirigimos al listado del propietario
+                        this.router.navigate([`/mascota/cliente-mascotas-list/${mascota.propietarioId}`]);
+                    } else {
+                        console.error('No se encontró el propietario de la mascota. Redirigiendo a acceso no autorizado.');
+                        this.router.navigate(['/acceso-no-autorizado']);
+                    }
+                },
+                error: (err) => {
+                    console.error('Error obteniendo el propietario de la mascota:', err);
+                    this.router.navigate(['/acceso-no-autorizado']);
+                }
+            });
+        } else {
+            console.error('ID de la mascota no está definido. Redirigiendo a gestión de mascotas.');
+            this.router.navigate(['/mascota/gestion-mascotas']);
+        }
+    } else {
+        // Si el origen no es 'cliente-mascotas-list', se navega a gestión de mascotas
+        this.router.navigate(['/mascota/gestion-mascotas']);
+    }
+}
+
 }

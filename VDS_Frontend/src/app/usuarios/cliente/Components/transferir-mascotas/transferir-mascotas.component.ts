@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { ConfirmarTransferenciaComponent } from '../confirmar-transferencia/confirmar-transferencia.component';
 import { MascotaService } from 'src/app/mascota/Services/mascota.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-transferir-mascotas',
@@ -11,6 +12,7 @@ import { MascotaService } from 'src/app/mascota/Services/mascota.service';
   styleUrl: './transferir-mascotas.component.css'
 })
 export class TransferirMascotasComponent implements OnInit {
+  propietarioForm!: FormGroup;
   propietarioOrigen: string = '';
   propietarioDestino: string = '';
   datosDestino: any = null; 
@@ -19,9 +21,12 @@ export class TransferirMascotasComponent implements OnInit {
   tieneMascotas: boolean = true; 
   idMascota: number | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router, private usuarioService: UsuarioService, private mascotaService: MascotaService, private dialog: MatDialog) {}
+  constructor(private usuarioService: UsuarioService, private mascotaService: MascotaService, private fb: FormBuilder, 
+              private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.inicializarFormulario();
+
     this.route.paramMap.subscribe(params => {
       const idMascota = params.get('idMascota'); 
   
@@ -37,6 +42,13 @@ export class TransferirMascotasComponent implements OnInit {
       }
     });
   }
+
+  inicializarFormulario(): void {
+    this.propietarioForm = this.fb.group({
+      propietarioDestino: ['', Validators.required] // Campo obligatorio
+    });
+  }
+
 
   obtenerPropietarioDesdeMascota(idMascota: number): void {
     this.mascotaService.getMascotaPorId(idMascota).subscribe({
@@ -80,7 +92,7 @@ export class TransferirMascotasComponent implements OnInit {
             },
           });
         } else {
-          this.mensajeSinMascotas = 'No se encontró el cliente con el número de identificación proporcionado.';
+          this.mensajeSinMascotas = 'El identificador no pertenece a ningún cliente.';
           this.tieneMascotas = false; 
         }
       },
@@ -92,32 +104,48 @@ export class TransferirMascotasComponent implements OnInit {
     });
   }
   
-
   buscarPropietarioDestino(): void {
-    this.errorBusqueda = ''; 
-    this.datosDestino = null; 
+    if (this.propietarioForm.invalid) {
+      this.propietarioForm.markAllAsTouched(); // Se marcan los campos para mostrar errores
+      return;
+    }
   
-    this.usuarioService.getUsuarioPorNumIdent(this.propietarioDestino).subscribe({
-      next: usuario => {
-        this.datosDestino = usuario; 
+    const propietarioDestino = this.propietarioForm.value.propietarioDestino;
+  
+    // Comprobar si el ID de destino es igual al ID de origen
+    if (propietarioDestino === this.propietarioOrigen) {
+      this.propietarioForm.get('propietarioDestino')?.setErrors({ sameAsOrigin: true });
+      this.datosDestino = null;
+      return;
+    }
+  
+    this.usuarioService.getUsuarioPorNumIdent(propietarioDestino).subscribe({
+      next: (usuario) => {
+        if (usuario.rol === 'CLIENTE') {
+          this.datosDestino = usuario; // Asignamos datos del propietario destino
+          this.propietarioForm.get('propietarioDestino')?.setErrors(null); // Para asegurar que no hay errores en el control
+        } else {
+          this.propietarioForm.get('propietarioDestino')?.setErrors({ notFound: true });
+          this.datosDestino = null;
+        }
       },
       error: (error) => {
-        if (error.status === 404) { 
-          this.errorBusqueda = 'No se encontró ningún cliente con el número de identificación proporcionado.';
+        if (error.status === 404) {
+          this.propietarioForm.get('propietarioDestino')?.setErrors({ notFound: true });
         } else {
-          this.errorBusqueda = 'Ocurrió un error al buscar el cliente.';
+          this.propietarioForm.get('propietarioDestino')?.setErrors({ serverError: true });
         }
-        this.datosDestino = null; 
+        this.datosDestino = null;
       }
     });
-  }
-
+  }  
+  
   transferirMascotas(): void {
     const dialogRef = this.dialog.open(ConfirmarTransferenciaComponent, {
       width: '400px',
       data: {
         idOrigen: this.propietarioOrigen,
-        idDestino: this.propietarioDestino,
+        idDestino: this.propietarioForm.value.propietarioDestino,
         idMascota: this.idMascota // Null si es una transferencia masiva
       }
     });
@@ -131,6 +159,11 @@ export class TransferirMascotasComponent implements OnInit {
       }
     });
   }
+
+  campoEsInvalido(campo: string): boolean {
+    const control = this.propietarioForm.get(campo);
+    return !!(control?.invalid && (control.dirty || control.touched));
+  }  
 
   volver(): void {
     if (this.idMascota) {

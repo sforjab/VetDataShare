@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ConsultaService } from '../../Services/consulta.service';
 import { Consulta } from '../../Models/consulta.dto';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-alta-consulta',
@@ -11,57 +12,63 @@ import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
   styleUrl: './alta-consulta.component.css'
 })
 export class AltaConsultaComponent implements OnInit {
-  consulta: Consulta = {
-    motivo: '',
-    notas: '',
-    medicacion: '',
-    fechaConsulta: '',
-    mascotaId: 0,
-    veterinarioId: 0,
-    clinicaId: 0,
-    pruebaIds: [],
-    vacunaIds: [] 
-  };
-
+  altaConsultaForm!: FormGroup;
   usuarioId: number | null = null;
   rol: string | null = null;
 
-  constructor(private consultaService: ConsultaService, private usuarioService: UsuarioService, 
+  constructor(private consultaService: ConsultaService, private usuarioService: UsuarioService, private fb: FormBuilder, 
               private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     const idMascota = this.route.snapshot.paramMap.get('idMascota');
-    if (idMascota) {
-      this.consulta.mascotaId = +idMascota;
-    } else {
+    if (!idMascota) {
       console.error('ID de la mascota no encontrado en la ruta.');
       this.router.navigate(['/acceso-no-autorizado']);
       return;
     }
 
-    // Obtener datos de sesión
     this.usuarioId = +sessionStorage.getItem('idUsuario')!;
     this.rol = sessionStorage.getItem('rol');
-    this.consulta.veterinarioId = this.usuarioId!;
 
-    // Obtener el clinicaId del usuario logueado
-    this.usuarioService.getUsuarioPorId(this.usuarioId).subscribe({
-      next: (usuario) => {
-        this.consulta.clinicaId = usuario.clinicaId; // Asignar la clínica del usuario logueado
-      },
-      error: (err: any) => {
-        console.error('Error al obtener datos del usuario:', err);
-        this.snackBar.open('Error al cargar los datos del usuario', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/acceso-no-autorizado']);
-      }
+    this.inicializarFormulario(+idMascota);
+    this.cargarClinica();
+  }
+
+  inicializarFormulario(idMascota: number): void {
+    this.altaConsultaForm = this.fb.group({
+      motivo: ['', [Validators.required, Validators.maxLength(500)]],
+      notas: ['', [Validators.maxLength(500)]],
+      medicacion: ['', [Validators.maxLength(500)]],
+      mascotaId: [idMascota, Validators.required],
+      veterinarioId: [this.usuarioId, Validators.required],
+      clinicaId: [null, Validators.required],
     });
   }
 
-  crearConsulta(): void {
-    // Asignar la fecha de la consulta al momento actual
-    this.consulta.fechaConsulta = new Date().toISOString();
+  cargarClinica(): void {
+    if (this.usuarioId) {
+      this.usuarioService.getUsuarioPorId(this.usuarioId).subscribe({
+        next: (usuario) => {
+          this.altaConsultaForm.patchValue({ clinicaId: usuario.clinicaId });
+        },
+        error: (err: any) => {
+          console.error('Error al obtener datos del usuario:', err);
+          this.snackBar.open('Error al cargar los datos del usuario', 'Cerrar', { duration: 3000 });
+          this.router.navigate(['/acceso-no-autorizado']);
+        }
+      });
+    }
+  }
 
-    this.consultaService.createConsulta(this.consulta).subscribe({
+  crearConsulta(): void {
+    if (this.altaConsultaForm.invalid) {
+      this.snackBar.open('Por favor, corrija los errores en el formulario.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    const consulta = { ...this.altaConsultaForm.value, fechaConsulta: new Date().toISOString() };
+
+    this.consultaService.createConsulta(consulta).subscribe({
       next: (consulta) => {
         this.snackBar.open('Consulta creada con éxito', 'Cerrar', { duration: 3000 });
         this.router.navigate([`/consulta/detalle/${consulta.id}`]);
@@ -73,7 +80,12 @@ export class AltaConsultaComponent implements OnInit {
     });
   }
 
+  campoEsInvalido(campo: string): boolean {
+    const control = this.altaConsultaForm.get(campo);
+    return !!(control?.invalid && (control.dirty || control.touched));
+  }
+
   volver(): void {
-    this.router.navigate([`/consulta/mascota-consultas-list/${this.consulta.mascotaId}`]);
+    this.router.navigate([`/consulta/mascota-consultas-list/${this.altaConsultaForm.get('mascotaId')?.value}`]);
   }
 }

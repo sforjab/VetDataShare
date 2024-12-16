@@ -23,41 +23,50 @@
         </div>
 
         <!-- Campos editables -->
-        <div class="details-body">
-          <div class="form-group">
-            <label for="motivo">Motivo de consulta:</label>
-            <textarea
-              id="motivo"
-              [(ngModel)]="motivo"
-              rows="4"
-              class="form-control full-width"
-              [disabled]="!puedeEditar">
-            </textarea>
+        <form [formGroup]="consultaForm" class="details-body">
+          <div class="form-group" [ngClass]="{'error': campoEsInvalido('motivo')}">
+            <mat-form-field class="full-width">
+              <mat-label>Motivo de consulta</mat-label>
+              <textarea matInput id="motivo" formControlName="motivo" rows="4" [readOnly]="!puedeEditar"></textarea>
+              <mat-error *ngIf="campoEsInvalido('motivo')">
+                Motivo es obligatorio y debe tener un máximo de 500 caracteres.
+              </mat-error>
+            </mat-form-field>
           </div>
-
-          <div class="form-group" *ngIf="mostrarNotas">
-            <label for="notas">Notas:</label>
-            <textarea
-              id="notas"
-              [(ngModel)]="notas"
-              rows="4"
-              class="form-control full-width"
-              [disabled]="!puedeEditar">
-            </textarea>
+        
+          <div class="form-group" *ngIf="mostrarNotas" [ngClass]="{'error': campoEsInvalido('notas')}">
+            <mat-form-field class="full-width">
+              <mat-label>Notas</mat-label>
+              <textarea
+                matInput
+                id="notas"
+                formControlName="notas"
+                rows="4"
+                [readOnly]="!puedeEditar">
+              </textarea>
+              <mat-error *ngIf="campoEsInvalido('notas')">
+                Notas deben tener un máximo de 500 caracteres.
+              </mat-error>
+            </mat-form-field>
           </div>
-
-          <div class="form-group">
-            <label for="medicacion">Medicación:</label>
-            <textarea
-              id="medicacion"
-              [(ngModel)]="medicacion"
-              rows="4"
-              class="form-control full-width"
-              [disabled]="!puedeEditar">
-            </textarea>
+        
+          <div class="form-group" [ngClass]="{'error': campoEsInvalido('medicacion')}">
+            <mat-form-field class="full-width">
+              <mat-label>Medicación</mat-label>
+              <textarea
+                matInput
+                id="medicacion"
+                formControlName="medicacion"
+                rows="4"
+                [readOnly]="!puedeEditar">
+              </textarea>
+              <mat-error *ngIf="campoEsInvalido('medicacion')">
+                Medicación debe tener un máximo de 500 caracteres.
+              </mat-error>
+            </mat-form-field>
           </div>
-        </div>
-
+        </form>
+        
         <!-- Tablas -->
         <div class="data-table">
           <h3>Pruebas:</h3>

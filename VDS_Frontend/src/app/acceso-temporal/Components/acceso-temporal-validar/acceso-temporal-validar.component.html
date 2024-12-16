@@ -4,21 +4,27 @@
   <!-- Formulario de validación -->
   <mat-card class="card validation-card">
     <mat-card-content>
-      <form class="validation-form">
+      <form [formGroup]="accesoTemporalForm" class="validation-form" (ngSubmit)="validarCodigo()">
         <!-- Campo para introducir el código -->
-        <mat-form-field appearance="fill" class="full-width">
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('codigoNumerico')">
           <mat-label>Introduce el código numérico</mat-label>
-          <input matInput [(ngModel)]="codigoNumerico" maxlength="6" name="codigoNumerico" required />
+          <input matInput formControlName="codigoNumerico" maxlength="6" />
+          <mat-error *ngIf="accesoTemporalForm.get('codigoNumerico')?.hasError('required')">
+            El código es obligatorio.
+          </mat-error>
+          <mat-error *ngIf="accesoTemporalForm.get('codigoNumerico')?.hasError('pattern')">
+            El código debe tener exactamente 6 dígitos.
+          </mat-error>
         </mat-form-field>
+
+        <!-- Mensaje general -->
+        <p *ngIf="mensaje" class="mensaje-validacion">{{ mensaje }}</p>
       </form>
     </mat-card-content>
 
     <!-- Botón de validar -->
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="validarCodigo()">Validar</button>
+      <button mat-raised-button class="button-primary" type="submit" [disabled]="accesoTemporalForm.invalid" (click)="validarCodigo()">Validar</button>
     </mat-card-actions>
   </mat-card>
-
-  <!-- Mensaje de resultado -->
-  <p *ngIf="mensaje" class="mensaje-validacion">{{ mensaje }}</p>
 </div>

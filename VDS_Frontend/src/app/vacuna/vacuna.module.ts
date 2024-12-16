@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { AltaVacunaComponent } from './Components/alta-vacuna/alta-vacuna.component';
 import { BajaVacunaComponent } from './Components/baja-vacuna/baja-vacuna.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -26,6 +26,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     VacunaRoutingModule,
+    ReactiveFormsModule,
     FormsModule,
     MatFormFieldModule,
     MatCardModule,

@@ -13,60 +13,77 @@
     <mat-card class="card perfil-card">
       <mat-card-content>
         <!-- Contenedor con diseño en grid -->
-        <form class="perfil-form grid-form">
+        <form [formGroup]="mascotaForm" class="perfil-form grid-form">
           <!-- Primera fila -->
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numChip')">
             <mat-label>Número de Chip</mat-label>
-            <input matInput [(ngModel)]="mascota.numChip" name="numChip" [readonly]="!puedeEditar" />
+            <input matInput formControlName="numChip" />
+            <mat-error *ngIf="mascotaForm.get('numChip')?.hasError('required')">El número de chip es obligatorio.</mat-error>
+            <mat-error *ngIf="mascotaForm.get('numChip')?.hasError('pattern')">Debe contener exactamente 15 dígitos.</mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('nombre')">
             <mat-label>Nombre</mat-label>
-            <input matInput [(ngModel)]="mascota.nombre" name="nombre" [readonly]="!puedeEditar" />
+            <input matInput formControlName="nombre" />
+            <mat-error *ngIf="mascotaForm.get('nombre')?.hasError('required')">El nombre es obligatorio.</mat-error>
           </mat-form-field>
 
           <!-- Segunda fila -->
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('especie')">
             <mat-label>Especie</mat-label>
-            <input matInput [(ngModel)]="mascota.especie" name="especie" [readonly]="!puedeEditar" />
+            <input matInput formControlName="especie" />
+            <mat-error *ngIf="mascotaForm.get('especie')?.hasError('required')">La especie es obligatoria.</mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('raza')">
             <mat-label>Raza</mat-label>
-            <input matInput [(ngModel)]="mascota.raza" name="raza" [readonly]="!puedeEditar" />
+            <input matInput formControlName="raza" />
+            <mat-error *ngIf="mascotaForm.get('raza')?.hasError('required')">La raza es obligatoria.</mat-error>
           </mat-form-field>
 
           <!-- Tercera fila -->
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('sexo')">
             <mat-label>Sexo</mat-label>
-            <input matInput [(ngModel)]="mascota.sexo" name="sexo" [readonly]="!puedeEditar" />
+            <mat-select formControlName="sexo">
+              <mat-option value="" disabled>Seleccione el sexo de la mascota</mat-option>
+              <mat-option value="Macho">Macho</mat-option>
+              <mat-option value="Hembra">Hembra</mat-option>
+            </mat-select>
+            <mat-error *ngIf="mascotaForm.get('sexo')?.hasError('required')">El sexo es obligatorio.</mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('fechaNacimiento')">
             <mat-label>Fecha de nacimiento</mat-label>
-            <input matInput [matDatepicker]="picker" [(ngModel)]="mascota.fechaNacimiento" name="fechaNacimiento" [readonly]="!puedeEditar" />
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="fechaNacimiento"
+            />
             <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="!puedeEditar"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="mascotaForm.get('fechaNacimiento')?.hasError('required')">
+              La fecha de nacimiento es obligatoria.
+            </mat-error>
+            <mat-error *ngIf="mascotaForm.get('fechaNacimiento')?.hasError('fechaInvalida')">
+              La fecha debe ser anterior o igual a hoy.
+            </mat-error>
           </mat-form-field>
 
           <!-- Cuarta fila -->
           <mat-form-field appearance="fill">
             <mat-label>Edad</mat-label>
-            <input
-              matInput
-              [value]="mascota ? (mascota.fechaNacimiento | calcularEdad:'años') + ' años ' + (mascota.fechaNacimiento | calcularEdad:'meses') + ' meses' : 'No disponible'"
-              readonly />
+            <input matInput [value]="mascotaForm.get('fechaNacimiento')?.value ? (mascotaForm.get('fechaNacimiento')?.value | calcularEdad:'años') + ' años ' + (mascotaForm.get('fechaNacimiento')?.value | calcularEdad:'meses') + ' meses' : 'No disponible'" disabled />
           </mat-form-field>
 
           <mat-form-field *ngIf="propietario" appearance="fill">
             <mat-label>Propietario</mat-label>
-            <input matInput [value]="propietario.nombre + ' ' + propietario.apellido1 + ' ' + propietario.apellido2" readonly />
-          </mat-form-field>
+            <input matInput [value]="propietario.nombre + ' ' + propietario.apellido1 + ' ' + propietario.apellido2" disabled/></mat-form-field>
         </form>
       </mat-card-content>
+
       <!-- Botones centrados -->
       <mat-card-actions class="action-buttons">
-        <button mat-raised-button class="button-primary" (click)="guardarCambios()" *ngIf="puedeEditar">Guardar</button>
+        <button mat-raised-button class="button-primary" (click)="guardarCambios()" *ngIf="puedeEditar" [disabled]="mascotaForm.invalid">Guardar</button>
         <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
       </mat-card-actions>
     </mat-card>

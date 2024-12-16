@@ -1,51 +1,52 @@
 <div class="page-container">
-  <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
     <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
   </div>
 
-  <!-- Contenido principal -->
   <div *ngIf="!isLoading">
-    <!-- Título principal -->
     <h1>Datos de la Clínica</h1>
 
-    <!-- Mat Card con el formulario -->
     <mat-card class="card perfil-card">
       <mat-card-content>
-        <!-- Contenedor con diseño en grid -->
-        <form class="perfil-form grid-form" #datosClinicaForm="ngForm">
-          <!-- Primera fila -->
-          <mat-form-field appearance="fill">
+        <form [formGroup]="datosClinicaForm" class="perfil-form grid-form">
+          <!-- Campo Nombre -->
+          <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('nombre')">
             <mat-label>Nombre</mat-label>
-            <input matInput [(ngModel)]="clinica.nombre" name="nombre" required />
+            <input matInput formControlName="nombre" />
+            <mat-error *ngIf="campoEsInvalido('nombre')">El nombre es obligatorio.</mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <!-- Campo Dirección -->
+          <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('direccion')">
             <mat-label>Dirección</mat-label>
-            <input matInput [(ngModel)]="clinica.direccion" name="direccion" required />
+            <input matInput formControlName="direccion" />
+            <mat-error *ngIf="campoEsInvalido('direccion')">La dirección es obligatoria.</mat-error>
           </mat-form-field>
 
-          <!-- Segunda fila -->
-          <mat-form-field appearance="fill">
+          <!-- Campo Teléfono -->
+          <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('telefono')">
             <mat-label>Teléfono</mat-label>
-            <input matInput [(ngModel)]="clinica.telefono" name="telefono" required />
+            <input matInput formControlName="telefono" />
+            <mat-error *ngIf="campoEsInvalido('telefono')">El teléfono es obligatorio.</mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <!-- Campo Email -->
+          <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('email')">
             <mat-label>Email</mat-label>
-            <input matInput [(ngModel)]="clinica.email" name="email" required />
+            <input matInput formControlName="email" />
+            <mat-error *ngIf="campoEsInvalido('email')">
+              <span *ngIf="datosClinicaForm.get('email')?.hasError('required')">El email es obligatorio.</span>
+              <span *ngIf="datosClinicaForm.get('email')?.hasError('email')">El formato del email es incorrecto.</span>
+            </mat-error>
           </mat-form-field>
         </form>
       </mat-card-content>
 
-      <!-- Botones centrados -->
       <mat-card-actions class="action-buttons">
-        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="!datosClinicaForm.form.valid">
+        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="datosClinicaForm.invalid">
           Guardar
         </button>
-        <button mat-raised-button class="button-secondary" (click)="volver()">
-          Volver
-        </button>
+        <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
       </mat-card-actions>
     </mat-card>
   </div>

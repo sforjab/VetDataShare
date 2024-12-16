@@ -7,7 +7,7 @@ import { PruebaRoutingModule } from './prueba-routing.module';
 import { MatIconModule } from '@angular/material/icon';
 import { PruebaDetalleComponent } from './Components/prueba-detalle/prueba-detalle.component';
 import { MatFormField, MatSelectModule } from '@angular/material/select';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { AltaPruebaComponent } from './Components/alta-prueba/alta-prueba.component';
 import { BajaPruebaComponent } from './Components/baja-prueba/baja-prueba.component';
@@ -29,6 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     PruebaRoutingModule,
+    ReactiveFormsModule,
     FormsModule,
     MatFormField,
     MatInputModule,

@@ -5,6 +5,7 @@ import { MascotaService } from '../../Services/mascota.service';
 import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-mascota-detalle',
@@ -12,7 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./mascota-detalle.component.css']
 })
 export class MascotaDetalleComponent implements OnInit {
-  mascota: Mascota = {
+  /* mascota: Mascota = {
     numChip: '',
     nombre: '',
     especie: '',
@@ -20,28 +21,55 @@ export class MascotaDetalleComponent implements OnInit {
     sexo: '',
     fechaNacimiento: '',
     propietarioId: 0
-  };
+  }; */
+  mascotaForm!: FormGroup;
   propietario: Usuario | null = null;
   idMascota: number | null = null;
   isLoading: boolean = false;
   puedeEditar: boolean = false;
 
-  constructor(private mascotaService: MascotaService, private usuarioService: UsuarioService, 
+  constructor(private mascotaService: MascotaService, private usuarioService: UsuarioService, private fb: FormBuilder,
               private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('idMascota');
-      if (id) {
-        this.idMascota = +id;
-        this.cargarMascotaDetalle(this.idMascota);
+    this.inicializarFormulario();
 
-        const rolUsuarioSesion = sessionStorage.getItem('rol');
-        this.puedeEditar = this.evaluarPermisos(rolUsuarioSesion);
-      } else {
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('idMascota');
+      if (!id) {
         console.error('ID de la mascota no disponible en la URL');
         this.router.navigate(['/acceso-no-autorizado']);
+        return;
       }
+
+      this.idMascota = +id;
+      this.cargarMascotaDetalle(this.idMascota);
+
+      const rolUsuarioSesion = sessionStorage.getItem('rol');
+      this.puedeEditar = this.evaluarPermisos(rolUsuarioSesion);
+
+      if (this.puedeEditar) {
+        this.mascotaForm.enable();
+      } else {
+        this.mascotaForm.disable();
+      }
+    });
+  }
+
+  inicializarFormulario(): void {
+    this.mascotaForm = this.fb.group({
+      numChip: [
+        '',
+        [Validators.required, Validators.pattern(/^\d{15}$/)] // 15 dígitos exactos
+      ],
+      nombre: ['', Validators.required],
+      especie: ['', Validators.required],
+      raza: ['', Validators.required],
+      sexo: ['', Validators.required],
+      fechaNacimiento: [
+        '',
+        [Validators.required, this.validarFechaNacimiento]
+      ]
     });
   }
   
@@ -49,7 +77,15 @@ export class MascotaDetalleComponent implements OnInit {
     this.isLoading = true;
     this.mascotaService.getMascotaPorId(id).subscribe({
       next: (mascota) => {
-        this.mascota = mascota;
+        this.mascotaForm.patchValue({
+          numChip: mascota.numChip,
+          nombre: mascota.nombre,
+          especie: mascota.especie,
+          raza: mascota.raza,
+          sexo: mascota.sexo,
+          fechaNacimiento: mascota.fechaNacimiento
+        });
+
         if (mascota.propietarioId) {
           this.cargarPropietario(mascota.propietarioId);
         }
@@ -91,32 +127,43 @@ export class MascotaDetalleComponent implements OnInit {
   }
 
   guardarCambios(): void {
-    if (this.mascota && this.idMascota) {
-        const fechaNacimiento = this.mascota.fechaNacimiento 
-            ? new Date(this.mascota.fechaNacimiento).toLocaleDateString('en-CA')
-            : '';
+    if (this.mascotaForm.invalid) {
+      this.snackBar.open('Por favor, corrija los errores en el formulario.', 'Cerrar', { duration: 3000 });
+      return;
+    }
 
-        const mascotaActualizada: Mascota = {
-            ...this.mascota,
-            fechaNacimiento
-        };
+    const mascotaActualizada: Mascota = {
+      ...this.mascotaForm.value,
+      fechaNacimiento: new Date(this.mascotaForm.value.fechaNacimiento).toISOString().split('T')[0]
+    };
 
-        this.isLoading = true;
-        this.mascotaService.updateMascota(this.idMascota, mascotaActualizada).subscribe({
-            next: () => {
-                this.snackBar.open('Mascota actualizada con éxito', 'Cerrar', {
-                    duration: 3000,
-                });
-            },
-            error: (err) => {
-                console.error('Error al actualizar la mascota:', err);
-            },
-            complete: () => {
-                this.isLoading = false;
-            }
-        });
+    if (this.idMascota) {
+      this.isLoading = true;
+      this.mascotaService.updateMascota(this.idMascota, mascotaActualizada).subscribe({
+        next: () => {
+          this.snackBar.open('Mascota actualizada con éxito', 'Cerrar', { duration: 3000 });
+        },
+        error: (err) => {
+          console.error('Error al actualizar la mascota:', err);
+        },
+        complete: () => {
+          this.isLoading = false;
+        }
+      });
     }
   }
+
+  campoEsInvalido(campo: string): boolean {
+    const control = this.mascotaForm.get(campo);
+    return !!(control?.invalid && (control.dirty || control.touched));
+  }
+
+  validarFechaNacimiento(control: any) {
+    const fechaSeleccionada = new Date(control.value);
+    const fechaActual = new Date();
+    return fechaSeleccionada > fechaActual ? { fechaInvalida: true } : null;
+  }
+  
 
   volver(): void {
     this.router.navigate([`/mascota/dashboard/${this.idMascota}`]);

@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { BajaVacunaComponent } from 'src/app/vacuna/Components/baja-vacuna/baja-vacuna.component';
 import { BajaPruebaComponent } from 'src/app/prueba/Components/baja-prueba/baja-prueba.component';
 import { forkJoin, Observable } from 'rxjs';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-consulta-detalle',
@@ -23,6 +24,7 @@ import { forkJoin, Observable } from 'rxjs';
   styleUrls: ['./consulta-detalle.component.css'],
 })
 export class ConsultaDetalleComponent implements OnInit {
+  consultaForm!: FormGroup;
   consulta: Consulta | null = null;
   mascota: Mascota | null = null;
   veterinario: Usuario | null = null;
@@ -39,10 +41,12 @@ export class ConsultaDetalleComponent implements OnInit {
   idConsulta: number | null = null;
   isLoading: boolean = false;
 
-  constructor(private consultaService: ConsultaService, private mascotaService: MascotaService, private usuarioService: UsuarioService, private clinicaService: ClinicaService,
-              private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
+  constructor(private consultaService: ConsultaService, private usuarioService: UsuarioService, private clinicaService: ClinicaService,
+              private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.inicializarFormulario();
+
     const usuarioId = +sessionStorage.getItem('idUsuario')!;
     this.idConsulta = +this.route.snapshot.paramMap.get('idConsulta')!;
     this.rol = sessionStorage.getItem('rol'); // Recuperamos el rol del usuario logueado
@@ -53,8 +57,16 @@ export class ConsultaDetalleComponent implements OnInit {
       return;
     }
   
-    this.isLoading = true; // Activar spinner
+    this.isLoading = true; // Activamos spinner
     this.cargarDatos(usuarioId, this.idConsulta);
+  }
+
+  inicializarFormulario(): void {
+    this.consultaForm = this.fb.group({
+      motivo: ['', [Validators.required, Validators.maxLength(500)]],
+      notas: ['', [Validators.maxLength(500)]],
+      medicacion: ['', [Validators.maxLength(500)]],
+    });
   }
   
   cargarDatos(usuarioId: number, consultaId: number): void {
@@ -71,6 +83,12 @@ export class ConsultaDetalleComponent implements OnInit {
       next: (responses) => {
         // Extraemos 'consultaDetalle' directamente
       const consultaDetalle = responses['consultaDetalle'];
+
+      this.consultaForm.patchValue({
+        motivo: consultaDetalle.consulta.motivo || '',
+        notas: consultaDetalle.consulta.notas || '',
+        medicacion: consultaDetalle.consulta.medicacion || '',
+      });
   
       // Datos de la consulta
       this.consulta = consultaDetalle.consulta;
@@ -79,9 +97,6 @@ export class ConsultaDetalleComponent implements OnInit {
       this.clinica = consultaDetalle.clinica;
       this.pruebas = consultaDetalle.pruebas;
       this.vacunas = consultaDetalle.vacunas;
-      this.motivo = consultaDetalle.consulta.motivo || '';
-      this.notas = consultaDetalle.consulta.notas || '';
-      this.medicacion = consultaDetalle.consulta.medicacion || '';
 
       // Asignamos el usuario si está disponible en las respuestas
       if ('usuario' in responses) {
@@ -90,7 +105,6 @@ export class ConsultaDetalleComponent implements OnInit {
   
       // Evaluar permisos
       this.evaluarPermisos();
-      this.evaluarPermisosConsulta();
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar los datos:', err);
@@ -105,50 +119,61 @@ export class ConsultaDetalleComponent implements OnInit {
   }
 
   evaluarPermisos(): void {
+    this.puedeEditar = false; // Por defecto, no editable
+
+    if (this.rol === 'ADMIN') {
+        this.puedeEditar = true; // Los ADMIN siempre pueden editar
+    } else if (this.rol === 'VETERINARIO' || this.rol === 'ADMIN_CLINICA') {
+        this.puedeEditar = this.consulta?.clinicaId === this.usuarioLogueado?.clinicaId;
+    } else if (this.rol === 'CLIENTE' || this.rol === 'TEMPORAL') {
+        this.puedeEditar = false; // Los CLIENTE no pueden editar
+    }
+
+    if (this.puedeEditar) {
+        this.consultaForm.enable();
+    } else {
+        this.consultaForm.disable();
+    }
+
     this.mostrarNotas = this.rol !== 'CLIENTE';
   }
 
-  evaluarPermisosConsulta(): void {
-    if (this.rol === 'ADMIN') {
-      this.puedeEditar = true; // ADMIN siempre puede editar
+
+  guardar(): void {
+    if (this.consultaForm.invalid) {
+      this.snackBar.open('Por favor, corrija los errores en el formulario.', 'Cerrar', { duration: 3000 });
       return;
     }
   
-    if (this.rol === 'CLIENTE' || this.rol === 'TEMPORAL') {
-      this.puedeEditar = false;
-    } else if (this.rol === 'VETERINARIO' || this.rol === 'ADMIN_CLINICA') {
-      this.puedeEditar = this.consulta?.clinicaId === this.usuarioLogueado?.clinicaId;
-    } else {
-      this.puedeEditar = false;
+    if (!this.idConsulta || !this.consulta) { // Validamos que consulta e idConsulta existen
+      this.snackBar.open('Datos incompletos para actualizar la consulta.', 'Cerrar', { duration: 3000 });
+      return;
     }
-  }
-
-  guardar(): void {
-    if (!this.puedeEditar || !this.consulta) return;
-
-    // Se actualizan los campos antes de enviar
-    this.consulta.motivo = this.motivo;
-    this.consulta.notas = this.notas;
-    this.consulta.medicacion = this.medicacion;
-
+  
+    const consultaActualizada: Consulta = {
+      ...this.consultaForm.value,
+      id: this.idConsulta,
+      mascotaId: this.consulta.mascotaId, // Aseguramos incluir el `mascotaId`
+      veterinarioId: this.consulta.veterinarioId, // Incluimos otros campos relacionados
+      clinicaId: this.consulta.clinicaId,
+      pruebaIds: this.consulta.pruebaIds,
+      vacunaIds: this.consulta.vacunaIds,
+    };
+  
     this.isLoading = true;
-    this.consultaService.updateConsulta(this.consulta.id!, this.consulta).subscribe({
+    this.consultaService.updateConsulta(this.idConsulta, consultaActualizada).subscribe({
       next: () => {
-        this.snackBar.open('Consulta actualizada correctamente', 'Cerrar', {
-          duration: 3000,
-        });
+        this.snackBar.open('Consulta actualizada correctamente', 'Cerrar', { duration: 3000 });
       },
       error: (err) => {
         console.error('Error al guardar la consulta:', err);
-        this.snackBar.open('Error al actualizar la consulta', 'Cerrar', {
-          duration: 3000,
-        });
+        this.snackBar.open('Error al actualizar la consulta', 'Cerrar', { duration: 3000 });
       },
       complete: () => {
         this.isLoading = false;
-      }
+      },
     });
-  }
+  }  
 
   nuevaPrueba(): void {
     if (this.idConsulta) {
@@ -223,6 +248,11 @@ export class ConsultaDetalleComponent implements OnInit {
     }
   }
 
+  campoEsInvalido(campo: string): boolean {
+    const control = this.consultaForm.get(campo);
+    return !!(control?.invalid && (control.dirty || control.touched));
+  }
+  
   volver(): void {
     this.router.navigate([`/consulta/mascota-consultas-list/${this.mascota?.id}`]);
   }

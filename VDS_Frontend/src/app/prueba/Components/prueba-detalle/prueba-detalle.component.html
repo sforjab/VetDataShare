@@ -26,19 +26,28 @@
       <!-- Tarjeta de detalles y documentos -->
       <mat-card class="card form-card">
         <mat-card-content>
-          <form class="detalle-form grid-form" #detallePruebaForm="ngForm">
+          <form [formGroup]="detallePruebaForm" class="detalle-form grid-form">
             <!-- Tipo de Prueba -->
             <mat-form-field appearance="fill">
               <mat-label>Tipo de Prueba</mat-label>
-              <mat-select [(ngModel)]="prueba.tipo" name="tipo" required [disabled]="!puedeEditar">
+              <mat-select formControlName="tipo" >
                 <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
               </mat-select>
+              <mat-error *ngIf="campoEsInvalido('tipo')">
+                El tipo de prueba es obligatorio.
+              </mat-error>
             </mat-form-field>
 
             <!-- Descripción -->
             <mat-form-field appearance="fill">
               <mat-label>Descripción</mat-label>
-              <textarea matInput [(ngModel)]="prueba.descripcion" name="descripcion" [disabled]="!puedeEditar"></textarea>
+              <textarea matInput formControlName="descripcion" rows="4" ></textarea>
+              <mat-error *ngIf="campoEsInvalido('descripcion') && detallePruebaForm.get('descripcion')?.hasError('required')">
+                La descripción es obligatoria.
+              </mat-error>
+              <mat-error *ngIf="campoEsInvalido('descripcion') && detallePruebaForm.get('descripcion')?.hasError('maxlength')">
+                No puede exceder los 500 caracteres.
+              </mat-error>
             </mat-form-field>
 
             <!-- Documentos -->
@@ -74,15 +83,19 @@
 
             <!-- Botón para añadir documentos -->
             <div class="botones-documento">
-              <button mat-raised-button class="button-primary" (click)="abrirDialogSubirDocumento()" *ngIf="puedeEditar">Añadir Documento</button>
+              <button mat-raised-button class="button-primary" (click)="abrirDialogSubirDocumento()" *ngIf="puedeEditar">
+                Añadir Documento
+              </button>
             </div>
 
             <!-- Botones de guardar y volver -->
             <mat-card-actions class="action-buttons">
-              <button mat-raised-button class="button-primary" (click)="guardarPrueba()" [disabled]="!detallePruebaForm.form.valid" *ngIf="puedeEditar">
+              <button mat-raised-button class="button-primary" (click)="guardarPrueba()" [disabled]="detallePruebaForm.invalid" *ngIf="puedeEditar">
                 Guardar
               </button>
-              <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+              <button mat-raised-button class="button-secondary" (click)="volver()">
+                Volver
+              </button>
             </mat-card-actions>
           </form>
         </mat-card-content>

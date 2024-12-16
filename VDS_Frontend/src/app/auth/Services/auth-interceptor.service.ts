@@ -50,17 +50,22 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     console.log('Token enviado en el request:', token);
+
     // Manejo de errores
     return next.handle(modifiedReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
+          // Distinción entre solicitudes de login y otras solicitudes
+          if (req.url.includes('/login')) {
+            // Propagamos el error al componente para manejar credenciales incorrectas
+            return throwError(() => error);
+          }
+
           const backendMessage = error.error;
           if (typeof backendMessage === 'string' && backendMessage.includes('El token ha expirado')) {
             console.log('El token ha expirado. Redirigiendo a acceso restringido.');
             sessionStorage.removeItem('jwtTemporal');
             this.snackBar.open('El acceso temporal ha expirado.', 'Cerrar', { duration: 3000 });
-
-            // Redirige a acceso restringido
             this.router.navigate(['/acceso-no-autorizado']);
           } else {
             this.snackBar.open('Acceso no autorizado. Inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });

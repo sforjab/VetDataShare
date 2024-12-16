@@ -1,72 +1,128 @@
 <div class="page-container">
-  <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
     <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
   </div>
 
-  <!-- Contenido principal -->
   <div *ngIf="!isLoading">
-    <!-- Título principal -->
     <h1>Perfil de Cliente</h1>
 
-    <!-- Mat Card con el formulario -->
     <mat-card class="card perfil-card">
       <mat-card-content>
-        <!-- Contenedor con diseño en grid -->
-        <form class="perfil-form grid-form" #perfilForm="ngForm">
-          <!-- Primera fila -->
-          <mat-form-field appearance="fill">
+        <form [formGroup]="perfilForm" class="perfil-form grid-form">
+          <!-- Número de Identificación -->
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numIdent')">
             <mat-label>Número de Identificación</mat-label>
-            <input matInput [(ngModel)]="usuario.numIdent" name="numIdent" [readonly]="esCliente" required />
+            <input matInput formControlName="numIdent" [readonly]="esCliente" />
+            <mat-error *ngIf="campoEsInvalido('numIdent')">
+              <ng-container *ngIf="perfilForm.get('numIdent')?.hasError('required')">
+                Este campo es obligatorio.
+              </ng-container>
+              <ng-container *ngIf="perfilForm.get('numIdent')?.hasError('maxlength')">
+                No puede exceder los 15 caracteres.
+              </ng-container>
+            </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <!-- Nombre -->
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('nombre')">
             <mat-label>Nombre</mat-label>
-            <input matInput [(ngModel)]="usuario.nombre" name="nombre" [readonly]="esCliente" required />
+            <input matInput formControlName="nombre" [readonly]="esCliente" />
+            <mat-error *ngIf="campoEsInvalido('nombre')">
+              <ng-container *ngIf="perfilForm.get('nombre')?.hasError('required')">
+                Este campo es obligatorio.
+              </ng-container>
+              <ng-container *ngIf="perfilForm.get('nombre')?.hasError('maxlength')">
+                No puede exceder los 50 caracteres.
+              </ng-container>
+            </mat-error>
           </mat-form-field>
 
-          <!-- Segunda fila -->
-          <mat-form-field appearance="fill">
+          <!-- Primer Apellido -->
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('apellido1')">
             <mat-label>Primer Apellido</mat-label>
-            <input matInput [(ngModel)]="usuario.apellido1" name="apellido1" [readonly]="esCliente" required />
+            <input matInput formControlName="apellido1" [readonly]="esCliente" />
+            <mat-error *ngIf="campoEsInvalido('apellido1')">
+              <ng-container *ngIf="perfilForm.get('apellido1')?.hasError('required')">
+                Este campo es obligatorio.
+              </ng-container>
+              <ng-container *ngIf="perfilForm.get('apellido1')?.hasError('maxlength')">
+                No puede exceder los 50 caracteres.
+              </ng-container>
+            </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <!-- Segundo Apellido -->
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('apellido2')">
             <mat-label>Segundo Apellido</mat-label>
-            <input matInput [(ngModel)]="usuario.apellido2" name="apellido2" [readonly]="esCliente" />
+            <input matInput formControlName="apellido2" [readonly]="esCliente" />
+            <mat-error *ngIf="campoEsInvalido('apellido2')">
+              <ng-container *ngIf="perfilForm.get('apellido2')?.hasError('maxlength')">
+                No puede exceder los 50 caracteres.
+              </ng-container>
+            </mat-error>
           </mat-form-field>
 
-          <!-- Tercera fila -->
-          <mat-form-field appearance="fill" class="full-width">
+          <!-- Dirección -->
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('direccion')">
             <mat-label>Dirección</mat-label>
-            <input matInput [(ngModel)]="usuario.direccion" name="direccion" />
+            <input matInput formControlName="direccion" />
+            <mat-error *ngIf="perfilForm.get('direccion')?.hasError('maxlength')">
+              No puede exceder los 250 caracteres.
+            </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <!-- Teléfono -->
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('telefono')">
             <mat-label>Teléfono</mat-label>
-            <input matInput [(ngModel)]="usuario.telefono" name="telefono" />
+            <input matInput formControlName="telefono" />
+            <mat-error *ngIf="campoEsInvalido('telefono')">
+              <ng-container *ngIf="perfilForm.get('telefono')?.hasError('required')">
+                Este campo es obligatorio.
+              </ng-container>
+              <ng-container *ngIf="perfilForm.get('telefono')?.hasError('pattern')">
+                Debe contener exactamente 9 dígitos.
+              </ng-container>
+            </mat-error>
           </mat-form-field>
 
-          <!-- Cuarta fila -->
-          <mat-form-field appearance="fill">
+          <!-- Email -->
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('email')">
             <mat-label>Email</mat-label>
-            <input matInput [(ngModel)]="usuario.email" name="email" />
+            <input matInput formControlName="email" />
+            <mat-error *ngIf="perfilForm.get('email')?.hasError('email')">
+              <ng-container *ngIf="perfilForm.get('email')?.hasError('required')">
+                Este campo es obligatorio.
+              </ng-container>
+              <ng-container *ngIf="perfilForm.get('email')?.hasError('maxlength')">
+                No puede exceder los 50 caracteres.
+              </ng-container>
+              <ng-container *ngIf="perfilForm.get('email')?.hasError('email')">
+                Debe ser un email válido.
+              </ng-container>
+            </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <!-- Contraseña -->
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('password')">
             <mat-label>Nueva Contraseña</mat-label>
-            <input matInput [(ngModel)]="usuario.password" name="password" type="password" placeholder="Dejar vacío para no modificar" />
+            <input matInput formControlName="password" type="password" placeholder="Dejar vacío para no modificar" />
+            <mat-error *ngIf="campoEsInvalido('password')">
+              <ng-container *ngIf="perfilForm.get('password')?.hasError('minlength')">
+                Debe tener al menos 8 caracteres.
+              </ng-container>
+              <ng-container *ngIf="perfilForm.get('password')?.hasError('maxlength')">
+                No puede exceder los 16 caracteres.
+              </ng-container>
+            </mat-error>
           </mat-form-field>
         </form>
       </mat-card-content>
 
       <mat-card-actions class="action-buttons">
-        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="!perfilForm.form.valid">
+        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="perfilForm.invalid">
           Guardar
         </button>
-        <button mat-raised-button class="button-secondary" (click)="volver()">
-          Volver
-        </button>
+        <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
       </mat-card-actions>
     </mat-card>
   </div>

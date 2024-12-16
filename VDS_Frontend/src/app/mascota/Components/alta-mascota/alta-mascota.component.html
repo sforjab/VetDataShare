@@ -1,60 +1,66 @@
 <div class="page-container">
-  <!-- Título principal -->
   <h1>Nueva Mascota</h1>
 
-  <!-- Mat Card con el formulario -->
   <mat-card class="card perfil-card">
     <mat-card-content>
-      <!-- Contenedor con diseño en grid -->
-      <form class="perfil-form grid-form" #altaMascotaForm="ngForm">
-        <!-- Primera fila -->
-        <mat-form-field appearance="fill">
-          <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="mascota.nombre" name="nombre" required />
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
+      <form [formGroup]="altaMascotaForm" class="perfil-form grid-form">
+        <!-- Número de Chip -->
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numChip')">
           <mat-label>Número de Chip</mat-label>
-          <input matInput [(ngModel)]="mascota.numChip" name="numChip" required />
+          <input matInput formControlName="numChip" />
+          <mat-error *ngIf="altaMascotaForm.get('numChip')?.hasError('required')">El número de chip es obligatorio.</mat-error>
+          <mat-error *ngIf="altaMascotaForm.get('numChip')?.hasError('pattern')">Debe tener exactamente 15 dígitos.</mat-error>
         </mat-form-field>
 
-        <!-- Segunda fila -->
-        <mat-form-field appearance="fill">
+        <!-- Nombre -->
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('nombre')">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="nombre" />
+          <mat-error *ngIf="altaMascotaForm.get('nombre')?.hasError('required')">El nombre es obligatorio.</mat-error>
+        </mat-form-field>
+
+        <!-- Especie -->
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('especie')">
           <mat-label>Especie</mat-label>
-          <input matInput [(ngModel)]="mascota.especie" name="especie" required />
+          <input matInput formControlName="especie" />
+          <mat-error *ngIf="altaMascotaForm.get('especie')?.hasError('required')">La especie es obligatoria.</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <!-- Raza -->
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('raza')">
           <mat-label>Raza</mat-label>
-          <input matInput [(ngModel)]="mascota.raza" name="raza" required />
+          <input matInput formControlName="raza" />
+          <mat-error *ngIf="altaMascotaForm.get('raza')?.hasError('required')">La raza es obligatoria.</mat-error>
         </mat-form-field>
 
-        <!-- Tercera fila -->
-        <mat-form-field appearance="fill">
+        <!-- Sexo -->
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('sexo')">
           <mat-label>Sexo</mat-label>
-          <mat-select [(ngModel)]="mascota.sexo" name="sexo" required>
+          <mat-select formControlName="sexo">
+            <mat-option value="" disabled>Seleccione el sexo de la mascota</mat-option>
             <mat-option value="Macho">Macho</mat-option>
             <mat-option value="Hembra">Hembra</mat-option>
           </mat-select>
+          <mat-error *ngIf="altaMascotaForm.get('sexo')?.hasError('required')">Debe seleccionar el sexo.</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <!-- Fecha de Nacimiento -->
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('fechaNacimiento')">
           <mat-label>Fecha de Nacimiento</mat-label>
-          <input matInput [matDatepicker]="picker" [(ngModel)]="mascota.fechaNacimiento" name="fechaNacimiento" required />
+          <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento" />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="altaMascotaForm.get('fechaNacimiento')?.hasError('required')">La fecha de nacimiento es obligatoria.</mat-error>
+          <mat-error *ngIf="altaMascotaForm.get('fechaNacimiento')?.hasError('fechaInvalida')">La fecha debe ser anterior o igual a hoy.</mat-error>
         </mat-form-field>
       </form>
     </mat-card-content>
 
-    <!-- Botones centrados -->
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="crearMascota()" [disabled]="!altaMascotaForm.form.valid">
+      <button mat-raised-button class="button-primary" (click)="crearMascota()" [disabled]="altaMascotaForm.invalid">
         Crear
       </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">
-        Volver
-      </button>
+      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
     </mat-card-actions>
   </mat-card>
 </div>

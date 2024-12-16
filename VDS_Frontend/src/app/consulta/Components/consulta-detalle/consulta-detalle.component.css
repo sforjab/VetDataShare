@@ -81,6 +81,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px; /* Espacio suficiente para el spinner */
+  height: 100px;
 }
 
+textarea {
+  color: #000000 !important;
+}

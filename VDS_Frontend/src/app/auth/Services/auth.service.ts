@@ -54,13 +54,7 @@ export class AuthService {
   
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let mensajeError = '¡Ha ocurrido un error desconocido!';
-    if (error.error instanceof ErrorEvent) {
-        mensajeError = `Error: ${error.error.message}`;
-    } else {
-        mensajeError = `Código de error: ${error.status}\nMensaje: ${error.message}`;
-    }
-    return throwError(() => new Error(mensajeError));
+    return throwError(() => error);
   }
 
   get isUsuarioLogin(): Observable<boolean> {

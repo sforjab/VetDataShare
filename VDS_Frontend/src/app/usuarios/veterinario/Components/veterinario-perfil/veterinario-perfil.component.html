@@ -1,65 +1,81 @@
 <div class="page-container">
-  <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
     <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
   </div>
 
-  <!-- Contenido principal -->
   <div *ngIf="!isLoading">
-    <!-- Título principal -->
     <h1>Editar Perfil</h1>
-  
-    <!-- Mat Card con el formulario -->
+
     <mat-card class="card perfil-card">
       <mat-card-content>
-        <!-- Contenedor con diseño en grid -->
-        <form class="perfil-form grid-form" #perfilForm="ngForm">
-          <!-- Primera fila -->
-          <mat-form-field appearance="fill">
+        <form [formGroup]="perfilForm" class="perfil-form grid-form">
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numIdent')">
             <mat-label>Número de Identificación</mat-label>
-            <input matInput [(ngModel)]="usuario.numIdent" name="numIdent" required />
+            <input matInput formControlName="numIdent" />
+            <mat-error *ngIf="campoEsInvalido('numIdent')">
+              <ng-container *ngIf="perfilForm.get('numIdent')?.hasError('required')">El número de identificación es obligatorio.</ng-container>
+              <ng-container *ngIf="perfilForm.get('numIdent')?.hasError('maxlength')">No puede exceder los 15 caracteres.</ng-container>
+            </mat-error>
           </mat-form-field>
-  
-          <mat-form-field appearance="fill">
+          
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numColegiado')">
             <mat-label>Número de Colegiado</mat-label>
-            <input matInput [(ngModel)]="usuario.numColegiado" name="numColegiado" required />
+            <input matInput formControlName="numColegiado" />
+            <mat-error *ngIf="campoEsInvalido('numColegiado')">
+              <ng-container *ngIf="perfilForm.get('numColegiado')?.hasError('required')">El número de colegiado es obligatorio.</ng-container>
+              <ng-container *ngIf="perfilForm.get('numColegiado')?.hasError('maxlength')">No puede exceder los 8 caracteres.</ng-container>
+              <ng-container *ngIf="perfilForm.get('numColegiado')?.hasError('pattern')">Solo se permiten números.</ng-container>
+            </mat-error>
           </mat-form-field>
-  
-          <!-- Segunda fila -->
-          <mat-form-field appearance="fill">
+          
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('nombre')">
             <mat-label>Nombre</mat-label>
-            <input matInput [(ngModel)]="usuario.nombre" name="nombre" required />
+            <input matInput formControlName="nombre" />
+            <mat-error *ngIf="campoEsInvalido('nombre')">
+              <ng-container *ngIf="perfilForm.get('nombre')?.hasError('required')">El nombre es obligatorio.</ng-container>
+              <ng-container *ngIf="perfilForm.get('nombre')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
+            </mat-error>
           </mat-form-field>
-  
-          <mat-form-field appearance="fill">
+          
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('apellido1')">
             <mat-label>Primer Apellido</mat-label>
-            <input matInput [(ngModel)]="usuario.apellido1" name="apellido1" required />
+            <input matInput formControlName="apellido1" />
+            <mat-error *ngIf="campoEsInvalido('apellido1')">
+              <ng-container *ngIf="perfilForm.get('apellido1')?.hasError('required')">El primer apellido es obligatorio.</ng-container>
+              <ng-container *ngIf="perfilForm.get('apellido1')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
+            </mat-error>
           </mat-form-field>
-  
-          <mat-form-field appearance="fill">
+          
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('apellido2')">
             <mat-label>Segundo Apellido</mat-label>
-            <input matInput [(ngModel)]="usuario.apellido2" name="apellido2" />
+            <input matInput formControlName="apellido2" />
+            <mat-error *ngIf="campoEsInvalido('apellido2')">
+              <ng-container *ngIf="perfilForm.get('apellido2')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
+            </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('password')">
             <mat-label>Nueva Contraseña</mat-label>
-            <input matInput [(ngModel)]="usuario.password" name="password" type="password" placeholder="Dejar vacío para no modificar" />
+            <input matInput formControlName="password" type="password" placeholder="Dejar vacío para no modificar" />
+            <mat-error *ngIf="campoEsInvalido('password')">
+              La contraseña debe tener entre 8 y 16 caracteres.
+            </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" [class.error]="campoEsInvalido('rol')">
             <mat-label>Rol</mat-label>
-            <mat-select [(ngModel)]="usuario.rol" name="rol" [disabled]="!puedeEditarRol">
+            <mat-select formControlName="rol">
               <mat-option *ngFor="let rol of rolesDisponibles" [value]="rol">
                 {{ rol }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="campoEsInvalido('rol')">El rol es obligatorio.</mat-error>
           </mat-form-field>
-          
         </form>
       </mat-card-content>
-      <!-- Botones centrados -->
+      
       <mat-card-actions class="action-buttons">
-        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="!perfilForm.form.valid">
+        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="perfilForm.invalid">
           Guardar
         </button>
         <button mat-raised-button class="button-secondary" (click)="volver()">

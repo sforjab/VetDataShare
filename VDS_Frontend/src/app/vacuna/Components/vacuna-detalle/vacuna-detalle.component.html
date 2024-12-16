@@ -6,36 +6,39 @@
   
     <!-- Contenido principal -->
     <div *ngIf="!isLoading">
-      <!-- Título principal -->
       <h1>Editar Vacuna</h1>
   
-      <!-- Mat Card con el formulario -->
       <mat-card class="card perfil-card">
         <mat-card-content>
-          <!-- Contenedor con diseño en grid -->
-          <form class="perfil-form grid-form" #detalleVacunaForm="ngForm">
-            <!-- Primera fila: Nombre -->
+          <form [formGroup]="detalleVacunaForm" class="perfil-form grid-form">
+            <!-- Nombre -->
             <mat-form-field appearance="fill">
               <mat-label>Nombre</mat-label>
-              <input matInput [(ngModel)]="vacuna.nombre" name="nombre" required />
+              <input matInput formControlName="nombre" />
+              <mat-error *ngIf="campoEsInvalido('nombre') && detalleVacunaForm.get('nombre')?.hasError('required')">
+                El nombre es obligatorio.
+              </mat-error>
+              <mat-error *ngIf="campoEsInvalido('nombre') && detalleVacunaForm.get('nombre')?.hasError('maxlength')">
+                No puede exceder los 250 caracteres.
+              </mat-error>
             </mat-form-field>
   
-            <!-- Segunda fila: Laboratorio -->
+            <!-- Laboratorio -->
             <mat-form-field appearance="fill">
               <mat-label>Laboratorio</mat-label>
-              <input matInput [(ngModel)]="vacuna.laboratorio" name="laboratorio" required />
+              <input matInput formControlName="laboratorio" />
+              <mat-error *ngIf="campoEsInvalido('laboratorio') && detalleVacunaForm.get('laboratorio')?.hasError('required')">
+                El laboratorio es obligatorio.
+              </mat-error>
+              <mat-error *ngIf="campoEsInvalido('laboratorio') && detalleVacunaForm.get('laboratorio')?.hasError('maxlength')">
+                No puede exceder los 250 caracteres.
+              </mat-error>
             </mat-form-field>
           </form>
         </mat-card-content>
   
-        <!-- Botones centrados -->
         <mat-card-actions class="action-buttons">
-          <button
-            mat-raised-button
-            class="button-primary"
-            (click)="guardarVacuna()"
-            [disabled]="!detalleVacunaForm.form.valid"
-          >
+          <button mat-raised-button class="button-primary" (click)="guardarVacuna()" [disabled]="detalleVacunaForm.invalid">
             Guardar
           </button>
           <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>

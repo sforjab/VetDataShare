@@ -4,18 +4,27 @@
   <!-- Formulario para número de colegiado -->
   <mat-card class="card colegiado-card">
     <mat-card-content>
-      <form class="colegiado-form">
+      <form [formGroup]="colegiadoForm" class="colegiado-form" (ngSubmit)="validarColegiado()">
         <!-- Campo para introducir el número de colegiado -->
-        <mat-form-field appearance="fill" class="full-width">
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numColegiado')">
           <mat-label>Introduce el número de colegiado</mat-label>
-          <input matInput [(ngModel)]="numColegiado" name="numColegiado" required />
+          <input matInput formControlName="numColegiado" maxlength="8" />
+          <mat-error *ngIf="colegiadoForm.get('numColegiado')?.hasError('required')">
+            El número de colegiado es obligatorio.
+          </mat-error>
+          <mat-error *ngIf="colegiadoForm.get('numColegiado')?.hasError('pattern')">
+            Solo se permiten números.
+          </mat-error>
+          <mat-error *ngIf="colegiadoForm.get('numColegiado')?.hasError('maxLength')">
+            El número de colegiado no puede tener más de 8 dígitos.
+          </mat-error>
         </mat-form-field>
       </form>
     </mat-card-content>
 
     <!-- Botón de validar y registrar -->
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="validarColegiado()">Validar y Registrar</button>
+      <button mat-raised-button class="button-primary" type="submit" [disabled]="colegiadoForm.invalid" (click)="validarColegiado()">Validar y Registrar</button>
     </mat-card-actions>
   </mat-card>
 

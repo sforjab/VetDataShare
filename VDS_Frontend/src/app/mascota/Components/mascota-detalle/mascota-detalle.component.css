@@ -40,3 +40,7 @@
   align-items: center;
   height: 100px; /* Espacio suficiente para el spinner */
 }
+
+input, mat-select {
+  color: #000000 !important;
+}

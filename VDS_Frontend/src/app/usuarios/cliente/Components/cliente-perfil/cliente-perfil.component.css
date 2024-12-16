@@ -24,3 +24,6 @@
     grid-column: span 1 !important;
 }
   
+input {
+  color: #000000 !important;
+}

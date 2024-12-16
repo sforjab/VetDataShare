@@ -58,13 +58,20 @@ public class AuthController {
     }
 
     @PostMapping("/olvidar-password")
-    public ResponseEntity<?> olvidarPassword(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, String>> olvidarPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         try {
             usuarioService.enviarEmailRestablecimiento(email);
-            return ResponseEntity.ok(Map.of("message", "Correo enviado correctamente"));
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "message", "Se ha enviado un enlace a tu correo"
+            ));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+            // Devuelve una respuesta 200 con un estado "error" en el cuerpo
+            return ResponseEntity.ok(Map.of(
+                "status", "error",
+                "message", e.getMessage()
+            ));
         }
     }
 

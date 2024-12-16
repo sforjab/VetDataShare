@@ -15,6 +15,7 @@ import { DocumentoPruebaService } from '../../Services/documento-prueba.service'
 import { MatDialog } from '@angular/material/dialog';
 import { SubirDocumentoComponent } from '../subir-documento/subir-documento.component';
 import { EliminarDocumentoComponent } from '../eliminar-documento/eliminar-documento.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-prueba-detalle',
@@ -22,6 +23,7 @@ import { EliminarDocumentoComponent } from '../eliminar-documento/eliminar-docum
   styleUrls: ['./prueba-detalle.component.css']
 })
 export class PruebaDetalleComponent implements OnInit {
+  detallePruebaForm!: FormGroup;
   prueba: Prueba = {
     tipo: TipoPrueba.IMAGEN,
     descripcion: '',
@@ -46,13 +48,16 @@ export class PruebaDetalleComponent implements OnInit {
   rol: string | null = null;
   usuarioLogueado: Usuario | null = null;
 
-  constructor(private pruebaService: PruebaService, private mascotaService: MascotaService, private consultaService: ConsultaService, private usuarioService: UsuarioService,
-              private documentoPruebaService: DocumentoPruebaService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
+  constructor(private pruebaService: PruebaService, private mascotaService: MascotaService, private consultaService: ConsultaService, private usuarioService: UsuarioService, private documentoPruebaService: DocumentoPruebaService, 
+              private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.pruebaId = +this.route.snapshot.paramMap.get('idPrueba')!;
     this.origen = this.route.snapshot.queryParamMap.get('origen');
     this.rol = sessionStorage.getItem('rol');
+
+    this.inicializarFormulario();
+
     if (this.pruebaId) {
       this.cargarPrueba(this.pruebaId);
       this.cargarDocumentos(this.pruebaId);
@@ -62,17 +67,26 @@ export class PruebaDetalleComponent implements OnInit {
     }
   }
 
+  inicializarFormulario(): void {
+    this.detallePruebaForm = this.fb.group({
+      tipo: [this.prueba.tipo, Validators.required],
+      descripcion: [this.prueba.descripcion, [Validators.required, Validators.maxLength(500)]]
+    });
+  }
+
   cargarPrueba(id: number): void {
     this.isLoading = true;
     this.pruebaService.getPruebaPorId(id).subscribe({
       next: (prueba) => {
         this.prueba = prueba;
 
-        // Cargamos datos adicionales
+        this.detallePruebaForm.patchValue({
+          tipo: prueba.tipo,
+          descripcion: prueba.descripcion
+        });
+
         this.cargarMascota(prueba.mascotaId);
         this.cargarConsulta(prueba.consultaId);
-
-        // Se evalúan los permisos
         this.evaluarPermisos();
       },
       error: (err: HttpErrorResponse) => {
@@ -95,13 +109,22 @@ export class PruebaDetalleComponent implements OnInit {
           this.puedeEditar = true;
         } else if (this.rol === 'VETERINARIO' || this.rol === 'ADMIN_CLINICA') {
           this.puedeEditar = this.prueba.consultaId === usuario.clinicaId;
+        } else if (this.rol === 'TEMPORAL') {
+          this.puedeEditar = false;
         } else {
           this.puedeEditar = false;
+        }
+
+        if (this.puedeEditar) {
+          this.detallePruebaForm.enable();
+        } else {
+            this.detallePruebaForm.disable();
         }
       },
       error: (err) => {
         console.error('Error cargando usuario logueado:', err);
         this.puedeEditar = false;
+        this.detallePruebaForm.disable();
       }
     });
   }
@@ -199,7 +222,6 @@ export class PruebaDetalleComponent implements OnInit {
       }
     });
   }
-  
 
   eliminarDocumento(documento: DocumentoPrueba): void {
     const dialogRef = this.dialog.open(EliminarDocumentoComponent, {
@@ -215,8 +237,18 @@ export class PruebaDetalleComponent implements OnInit {
   }
 
   guardarPrueba(): void {
+    if (this.detallePruebaForm.invalid) {
+      this.snackBar.open('Por favor, corrija los errores en el formulario.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    const datosActualizados = {
+      ...this.prueba,
+      ...this.detallePruebaForm.value
+    };
+
     this.isLoading = true;
-    this.pruebaService.updatePrueba(this.prueba.id!, this.prueba).subscribe({
+    this.pruebaService.updatePrueba(this.prueba.id!, datosActualizados).subscribe({
       next: () => {
         this.snackBar.open('Prueba actualizada con éxito', 'Cerrar', { duration: 3000 });
         this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`]);
@@ -229,6 +261,11 @@ export class PruebaDetalleComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  campoEsInvalido(campo: string): boolean {
+    const control = this.detallePruebaForm.get(campo);
+    return !!(control?.invalid && (control.dirty || control.touched));
   }
 
   volver(): void {

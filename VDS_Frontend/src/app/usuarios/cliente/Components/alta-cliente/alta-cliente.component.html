@@ -1,60 +1,55 @@
 <div class="page-container">
-  <!-- Título principal -->
   <h1>Nuevo Cliente</h1>
 
-  <!-- Mat Card con el formulario -->
   <mat-card class="card perfil-card">
     <mat-card-content>
-      <!-- Contenedor con diseño en grid -->
-      <form class="perfil-form grid-form" #nuevoClienteForm="ngForm">
-        <!-- Primera fila -->
-        <mat-form-field appearance="fill">
+      <form [formGroup]="clienteForm" class="perfil-form grid-form">
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numIdent')">
           <mat-label>Número de Identificación</mat-label>
-          <input matInput [(ngModel)]="cliente.numIdent" name="numIdent" required />
+          <input matInput formControlName="numIdent" />
+          <mat-error *ngIf="campoEsInvalido('numIdent')">El número de identificación es obligatorio.</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('nombre')">
           <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="cliente.nombre" name="nombre" required />
+          <input matInput formControlName="nombre" />
+          <mat-error *ngIf="campoEsInvalido('nombre')">El nombre es obligatorio.</mat-error>
         </mat-form-field>
 
-        <!-- Segunda fila -->
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('apellido1')">
           <mat-label>Primer Apellido</mat-label>
-          <input matInput [(ngModel)]="cliente.apellido1" name="apellido1" required />
+          <input matInput formControlName="apellido1" />
+          <mat-error *ngIf="campoEsInvalido('apellido1')">El primer apellido es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Segundo Apellido</mat-label>
-          <input matInput [(ngModel)]="cliente.apellido2" name="apellido2" />
+          <input matInput formControlName="apellido2" />
         </mat-form-field>
 
-        <!-- Tercera fila -->
-        <mat-form-field appearance="fill" class="full-width">
+        <mat-form-field appearance="fill">
           <mat-label>Dirección</mat-label>
-          <input matInput [(ngModel)]="cliente.direccion" name="direccion" />
+          <input matInput formControlName="direccion" />
         </mat-form-field>
 
-        <!-- Cuarta fila -->
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('telefono')">
           <mat-label>Teléfono</mat-label>
-          <input matInput [(ngModel)]="cliente.telefono" name="telefono" />
+          <input matInput formControlName="telefono" />
+          <mat-error *ngIf="campoEsInvalido('telefono')">El teléfono es obligatorio.</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" [class.error]="campoEsInvalido('email')">
           <mat-label>Email</mat-label>
-          <input matInput [(ngModel)]="cliente.email" name="email" />
+          <input matInput formControlName="email" />
+          <mat-error *ngIf="campoEsInvalido('email')">
+            El email es obligatorio y debe tener un formato válido.
+          </mat-error>
         </mat-form-field>
       </form>
     </mat-card-content>
-    <!-- Botones centrados -->
+
     <mat-card-actions class="action-buttons">
-      <button
-        mat-raised-button
-        class="button-primary"
-        (click)="crearCliente()"
-        [disabled]="!nuevoClienteForm.form.valid"
-      >
+      <button mat-raised-button class="button-primary" (click)="crearCliente()" [disabled]="clienteForm.invalid">
         Crear
       </button>
       <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>

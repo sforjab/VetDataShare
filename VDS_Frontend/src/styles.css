@@ -62,7 +62,7 @@ button:disabled {
 /* Centrado de botones con espaciado */
 .action-buttons {
     display: flex;
-    justify-content: center; /* Centra los botones horizontalmente */
+    justify-content: center !important; /* Centra los botones horizontalmente */
     gap: 20px; /* Espaciado entre botones */
     margin-top: 20px;
 }
@@ -75,3 +75,20 @@ mat-icon {
     color: #159ab7 !important;
 }
 
+/* Estilos para validación de formularios */
+.form-field.error .mat-form-field-underline {
+    background-color: red !important;
+}
+
+.mat-error {
+    color: red;
+    font-size: 12px;
+}
+
+input, textarea, mat-select {
+    color: #000000 !important;
+}
+
+h2 {
+    text-align: center !important;
+}

@@ -3,7 +3,7 @@
   <p>¿Estás seguro de que deseas dar de baja la clínica <strong>{{ data.nombre }}</strong>?</p>
   <p>Esta acción desvinculará a todos los empleados asociados a esta clínica.</p>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-raised-button color="warn" (click)="confirmarBaja()">Dar de Baja</button>
-  <button mat-raised-button (click)="cancelar()">Cancelar</button>
+<mat-dialog-actions class="action-buttons">
+  <button mat-raised-button class="button-primary" (click)="confirmarBaja()">Dar de Baja</button>
+  <button mat-raised-button class="button-secondary" (click)="cancelar()">Cancelar</button>
 </mat-dialog-actions>

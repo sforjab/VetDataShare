@@ -12,7 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AltaConsultaComponent } from './Components/alta-consulta/alta-consulta.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BajaConsultaComponent } from './Components/baja-consulta/baja-consulta.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,6 +30,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     ConsultaRoutingModule,
+    ReactiveFormsModule ,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
