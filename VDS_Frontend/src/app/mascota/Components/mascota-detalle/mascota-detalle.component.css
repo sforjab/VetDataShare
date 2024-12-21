@@ -1,46 +1,63 @@
-/* Estilos específicos para el mat-card */
-.perfil-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%; /* Asegura que los botones estén abajo */
-  padding-bottom: 20px;
-}
-
-/* Diseño en grid para el formulario */
-.grid-form {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
-  gap: 20px; /* Espaciado entre columnas y filas */
+/* .grid-form {
+  grid-template-columns: repeat(2, 1fr); 
 }
 
 .grid-form mat-form-field:nth-child(1),
 .grid-form mat-form-field:nth-child(2) {
-  grid-column: span 1; /* Cada campo ocupa una columna */
+  grid-column: span 1; 
 }
 
 .grid-form mat-form-field:nth-child(3),
 .grid-form mat-form-field:nth-child(4) {
-  grid-column: span 1; /* Cada campo ocupa una columna en la segunda fila */
+  grid-column: span 1; 
 }
 
 .grid-form mat-form-field:nth-child(5),
 .grid-form mat-form-field:nth-child(6) {
-  grid-column: span 1; /* Cada campo ocupa una columna en la tercera fila */
+  grid-column: span 1; 
 }
 
 .grid-form mat-form-field:nth-child(7),
 .grid-form mat-form-field:nth-child(8) {
-  grid-column: span 1; /* Los dos últimos campos comparten una fila */
+  grid-column: span 1; 
 }
 
-.spinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px; /* Espacio suficiente para el spinner */
+input, mat-select {
+  color: #000000 !important;
+} */
+
+/* Diseño en grid: por defecto, dos columnas */
+.grid-form {
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
 }
 
+/* Campos de formulario individuales */
+.grid-form mat-form-field {
+  grid-column: span 1; /* Cada campo ocupa una columna */
+}
+
+/* Clase para campos de ancho completo */
+.grid-form .full-width {
+  grid-column: span 2 !important; /* Ocupar toda la fila */
+}
+
+/* Responsive: Una columna a 480px */
+@media (max-width: 480px) {
+  .grid-form {
+      grid-template-columns: 1fr; /* Una columna */
+  }
+
+  /* Ajuste de campos para ocupar toda la fila */
+  .grid-form mat-form-field {
+      grid-column: span 1; /* Cada campo ocupa una columna completa */
+  }
+
+  .grid-form .full-width {
+      grid-column: span 1; /* Ya está en una sola columna */
+  }
+}
+
+/* Color de entrada para todos los campos */
 input, mat-select {
   color: #000000 !important;
 }

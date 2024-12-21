@@ -78,7 +78,6 @@ public class ConsultaController {
         }
     }
 
-
     // Obtener consulta por ID
     @GetMapping("/getConsultaPorId/{id}")
     public ResponseEntity<Object> getConsultaPorId(@PathVariable Long id) {
@@ -90,6 +89,17 @@ public class ConsultaController {
                     .body(new ApiError("Consulta no encontrada con ID: " + id));
         }
     }
+
+    @GetMapping("/getUltimasConsultas/{idMascota}")
+    public ResponseEntity<Object> getUltimasConsultasPorIdMascota(@PathVariable Long idMascota) {
+        List<ConsultaDTO> ultimasConsultas = consultaService.getUltimasConsultas(idMascota);
+        if (ultimasConsultas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("No se encontraron consultas recientes para la mascota con ID: " + idMascota));
+        }
+        return ResponseEntity.ok(ultimasConsultas);
+    }
+
 
     // Obtener consultas por fecha
     @GetMapping("/getConsultasPorFecha/{fecha}")

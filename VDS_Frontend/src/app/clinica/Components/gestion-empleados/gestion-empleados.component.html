@@ -1,7 +1,10 @@
 <div class="page-container">
   <h1>Gestión de Empleados</h1>
 
-  <mat-card class="search-container">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Búsqueda avanzada</mat-panel-title>
+    </mat-expansion-panel-header>
     <mat-card-content>
       <!-- Formulario de búsqueda -->
       <form (ngSubmit)="buscarEmpleados()" class="formulario-busqueda">
@@ -26,18 +29,18 @@
           <mat-form-field class="form-field">
             <mat-label>Rol</mat-label>
             <mat-select [(ngModel)]="filtros.rol" name="rol">
+              
               <mat-option *ngFor="let rol of roles" [value]="rol.valor">{{ rol.nombre }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
 
         <div class="form-row" style="justify-content: center;">
-          <button mat-raised-button class="button-primary" (click)="nuevoEmpleado()">Nuevo Empleado</button>
           <button mat-raised-button class="button-primary" type="submit">Buscar</button>
         </div>
       </form>
     </mat-card-content>
-  </mat-card>
+  </mat-expansion-panel>
 
   <mat-divider *ngIf="busquedaRealizada"></mat-divider>
 
@@ -47,7 +50,7 @@
   </div>
 
   <!-- Tabla de resultados -->
-  <div class="table-container">
+  <div class="tabla-container">
     <table
       *ngIf="!isLoading && busquedaRealizada && dataSource.data.length > 0"
       mat-table
@@ -57,7 +60,7 @@
       <!-- Definición de columnas -->
       <ng-container matColumnDef="numIdent">
         <th mat-header-cell *matHeaderCellDef>Num Ident</th>
-        <td mat-cell *matCellDef="let empleado">{{ empleado.numIdent }}</td>
+        <td mat-cell *matCellDef="let empleado" class="breakCell">{{ empleado.numIdent }}</td>
       </ng-container>
 
       <ng-container matColumnDef="nombre">
@@ -75,33 +78,27 @@
         <td mat-cell *matCellDef="let empleado">{{ empleado.apellido2 }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="rol">
+      <!-- <ng-container matColumnDef="rol">
         <th mat-header-cell *matHeaderCellDef>Rol</th>
         <td mat-cell *matCellDef="let empleado">{{ empleado.rol }}</td>
-      </ng-container>
+      </ng-container> -->
 
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef>Acciones</th>
         <td mat-cell *matCellDef="let empleado">
-          <div class="action-buttons">
-            <button mat-icon-button color="primary" (click)="navegarPerfilEmpleado(empleado.id)">
-              <mat-icon title="Acceder">remove_red_eye</mat-icon>
-            </button>
-            <button mat-icon-button color="warn" (click)="bajaEmpleado(empleado)">
-              <mat-icon title="Dar de Baja">delete</mat-icon>
-            </button>
-          </div>
+          <button mat-icon-button color="primary" (click)="navegarPerfilEmpleado(empleado.id)">
+            <mat-icon title="Acceder">remove_red_eye</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="bajaEmpleado(empleado)">
+            <mat-icon title="Dar de Baja">delete</mat-icon>
+          </button>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
       <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
     </table>
-  </div>
-
-  <!-- Contenedor del paginador -->
-  <div class="paginator-container" *ngIf="!isLoading && busquedaRealizada && dataSource.data.length > 0">
-    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    <mat-paginator *ngIf="!isLoading && busquedaRealizada && dataSource.data.length > 0" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 
   <!-- Mensaje de "No se encontraron empleados" -->
@@ -110,7 +107,8 @@
   </p>
 
   <!-- Botón Volver -->
-  <div class="boton-volver">
+  <div class="action-buttons">
+    <button mat-raised-button class="button-primary" (click)="nuevoEmpleado()">Nuevo Empleado</button>
     <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
   </div>
 </div>

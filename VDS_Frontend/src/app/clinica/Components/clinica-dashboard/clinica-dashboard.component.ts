@@ -1,21 +1,41 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Clinica } from '../../Models/clinica.dto';
+import { ClinicaService } from '../../Services/clinica.service';
 
 @Component({
   selector: 'app-clinica-dashboard',
   templateUrl: './clinica-dashboard.component.html',
-  styleUrl: './clinica-dashboard.component.css'
+  styleUrls: ['./clinica-dashboard.component.css']
 })
 export class ClinicaDashboardComponent {
   idClinica: number | null = null;
+  clinica: Clinica | null = null;
+  isLoading: boolean = false; // Propiedad para controlar el estado de carga
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(private clinicaService: ClinicaService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const id = params.get('idClinica');
       if (id) {
         this.idClinica = +id;
+        this.obtenerClinica(this.idClinica);
+      }
+    });
+  }
+
+  obtenerClinica(idClinica: number): void {
+    this.isLoading = true; // Activa el spinner
+    this.clinicaService.getClinicaPorId(idClinica).subscribe({
+      next: (clinica) => {
+        this.clinica = clinica;
+      },
+      error: (err) => {
+        console.error('Error al obtener la clínica:', err);
+      },
+      complete: () => {
+        this.isLoading = false; // Desactiva el spinner
       }
     });
   }

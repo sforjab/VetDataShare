@@ -22,6 +22,13 @@ export class VacunaService {
     return this.http.get<Vacuna[]>(`${this.vacunaUrl}/getVacunasPorIdMascota/${idMascota}`);
   }
 
+  // Obtener las 3 últimas vacunas de la mascota
+  getUltimasVacunas(idMascota: number): Observable<Vacuna[]> {
+    return this.http.get<Vacuna[]>(`${this.vacunaUrl}/getUltimasVacunas/${idMascota}`).pipe(
+      tap(vacunas => console.log('Vacunas recibidas del backend:', vacunas))
+    );
+  }
+
   // Crear una nueva vacuna
   createVacuna(vacuna: Vacuna): Observable<Vacuna> {
     return this.http.post<Vacuna>(`${this.vacunaUrl}/create`, vacuna).pipe(

@@ -1,15 +1,5 @@
-.perfil-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%; /* Asegura que los botones estén abajo */
-  padding-bottom: 20px;
-}
-
 .grid-form {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
-  gap: 20px; /* Espaciado entre columnas y filas */
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .grid-form mat-form-field:nth-child(1),
@@ -24,4 +14,18 @@
 
 .grid-form mat-form-field:nth-child(5) {
   grid-column: span 1; /* Ocupa toda la fila */
+}
+
+@media (max-width: 480px) {
+  .card {
+      max-width: 100%; /* Ajuste completo */
+  }
+
+  .grid-form {
+      grid-template-columns: 1fr; /* Una columna en móviles */
+  }
+
+  .grid-form mat-form-field {
+      grid-column: span 1; /* Cada campo ocupa toda la fila */
+  }
 }

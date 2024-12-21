@@ -21,16 +21,7 @@ export class DocumentoPruebaService {
   getDocumentosPorPruebaId(pruebaId: number): Observable<DocumentoPrueba[]> {
     return this.http.get<DocumentoPrueba[]>(`${this.docsPruebaUrl}/getDocumentosPorPruebaId/${pruebaId}`);
   }
-
-  /* // Subir un nuevo documento
-  subirDocumento(formData: FormData): Observable<void> {
-    return this.http.post<void>(`${this.docsPruebaUrl}/subirDocumento`, formData, {
-      headers: {
-        'enctype': 'multipart/form-data'
-      }
-    });
-  } */
-
+  
   subirDocumento(file: File, pruebaId: number): Observable<void> {
     const formData = new FormData();
     formData.append('file', file);

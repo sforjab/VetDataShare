@@ -1,32 +1,39 @@
 <div class="dashboard-container">
-  <h1>Panel de Control del Cliente</h1>
+  <ng-container *ngIf="cargando; else contenidoCargado">
+    <mat-spinner></mat-spinner> <!-- Spinner de Angular Material -->
+  </ng-container>
 
-  <div class="dashboard-buttons-container">
-    <div class="dashboard-buttons">
-      <!-- Botón "Mi Perfil" -->
-      <div 
-        class="dashboard-button"
-        (click)="navegarPerfil()">
-        <i class="fa-solid fa-user"></i>
-        <span>Mi Perfil</span>
-      </div>
+  <ng-template #contenidoCargado>
+    <h1>Panel de Cliente</h1>
+    <h3>{{ cliente?.nombre }} {{ cliente?.apellido1 }} {{ cliente?.apellido2 }} ({{ cliente?.numIdent }})</h3>
 
-      <!-- Botón "Mis Mascotas" -->
-      <div 
-        class="dashboard-button"
-        (click)="navegarMascotas()">
-        <i class="fa-solid fa-paw"></i>
-        <span>Mis Mascotas</span>
+    <div class="dashboard-buttons-container">
+      <div class="dashboard-buttons">
+        <!-- Botón "Mi Perfil" -->
+        <div 
+          class="dashboard-button"
+          (click)="navegarPerfil()">
+          <i class="fa-solid fa-user"></i>
+          <span>Mi Perfil</span>
+        </div>
+
+        <!-- Botón "Mis Mascotas" -->
+        <div 
+          class="dashboard-button"
+          (click)="navegarMascotas()">
+          <i class="fa-solid fa-paw"></i>
+          <span>Mis Mascotas</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Botón de Volver para roles distintos a CLIENTE -->
-  <button 
-    *ngIf="mostrarBotonVolver()" 
-    mat-raised-button 
-    class="button-secondary" 
-    (click)="navegarGestionClientes()">
-    Volver
-  </button>
+    <!-- Botón de Volver para roles distintos a CLIENTE -->
+    <button 
+      *ngIf="mostrarBotonVolver()" 
+      mat-raised-button 
+      class="button-secondary" 
+      (click)="navegarGestionClientes()">
+      Volver
+    </button>
+  </ng-template>
 </div>

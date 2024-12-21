@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Prueba } from '../../Models/prueba.dto';
 import { PruebaService } from '../../Services/prueba.service';
+import { MascotaService } from 'src/app/mascota/Services/mascota.service';
+import { Mascota } from 'src/app/mascota/Models/mascota.dto';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-mascota-pruebas-list',
@@ -10,12 +14,20 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./mascota-pruebas-list.component.css']
 })
 export class MascotaPruebasListComponent implements OnInit {
-  pruebas: Prueba[] = [];
+  dataSource = new MatTableDataSource<Prueba>();
   idMascota: number | undefined;
+  mascota: Mascota | null = null; // Datos de la mascota
   columnasTabla: string[] = ['tipo', 'fecha', 'acciones'];
   isLoading: boolean = false;
 
-  constructor(private pruebaService: PruebaService, private route: ActivatedRoute, private router: Router) {}
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+
+  constructor(
+    private pruebaService: PruebaService,
+    private mascotaService: MascotaService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -23,8 +35,27 @@ export class MascotaPruebasListComponent implements OnInit {
       const id = params.get('idMascota');
       if (id) {
         this.idMascota = +id;
+        this.cargarMascota(this.idMascota);
         this.cargarPruebas(this.idMascota);
       } else {
+        this.router.navigate(['/acceso-no-autorizado']);
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.paginator) {
+      this.dataSource.paginator = this.paginator;
+    }
+  }
+
+  cargarMascota(idMascota: number): void {
+    this.mascotaService.getMascotaPorId(idMascota).subscribe({
+      next: (mascota) => {
+        this.mascota = mascota;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al cargar los datos de la mascota:', err);
         this.router.navigate(['/acceso-no-autorizado']);
       }
     });
@@ -33,7 +64,7 @@ export class MascotaPruebasListComponent implements OnInit {
   cargarPruebas(idMascota: number): void {
     this.pruebaService.getPruebasPorIdMascota(idMascota).subscribe({
       next: (pruebas) => {
-        this.pruebas = pruebas;
+        this.dataSource.data = pruebas || [];
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar las pruebas:', err);

@@ -1,12 +1,22 @@
 .upload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.upload-container input[type="file"] {
+  margin: 10px 0;
+}
+
+@media (max-width: 480px) {
+  input[type="file"] {
+    display: block; /* Hace que ocupe todo el ancho */
+    width: 100%; /* Ajusta el ancho al contenedor */
+    white-space: normal; /* Permite saltos de línea */
+    overflow: hidden; /* Evita el desbordamiento */
+    text-overflow: ellipsis; /* Opcional, para cortar texto */
   }
-  
-  .upload-container input[type="file"] {
-    margin: 10px 0;
-  }
+}
   

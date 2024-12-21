@@ -1,42 +1,51 @@
+/* Contenedor principal */
 .dashboard-container {
-  display: grid;
-  gap: 20px; /* Separación entre botones */
-  justify-content: center; /* Centra horizontalmente los botones */
   text-align: center;
   margin: 40px auto;
-}
-
-.dashboard-buttons-container {
-  margin: 20px auto;
   padding: var(--padding);
-  max-width: 900px; /* Ajuste del ancho máximo del contenedor */
 }
 
-.cliente-layout {
-  grid-template-columns: repeat(3, 1fr); /* Tres botones en la primera fila */
-}
-
-.default-layout {
-  grid-template-columns: repeat(2, 1fr); /* Dos botones por fila */
-}
-
+/* Contenedor de botones (para TODOS) */
 .dashboard-buttons {
   display: grid;
-  gap: 20px; /* Espaciado entre botones */
-  justify-content: center; /* Centra los botones */
+  gap: 15px; /* Espaciado entre botones */
+  margin: 0 auto 2rem; /* Centrado y margen */
+  justify-items: center;
 }
 
+/* Diseño específico para CLIENTE */
+.cliente-layout {
+  grid-template-columns: repeat(3, 1fr); /* 3 botones en escritorio */
+  max-width: 550px; /* Máximo ancho */
+}
+
+/* Diseño específico para NO CLIENTE */
+.default-layout {
+  grid-template-columns: repeat(2, 1fr); /* 2 botones por fila */
+  max-width: 400px;
+}
+
+/* Tablas de últimos registros */
+mat-tab-group {
+  margin: 2rem 0;
+}
+
+th, td {
+  text-align: center;
+}
+
+/* Botón individual */
 .dashboard-button {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 150px; /* Tamaño del botón */
+  width: 150px;
   height: 150px;
-  background-color: #cbd8df; /* Fondo del botón */
-  color: #1e5067; /* Color del texto */
+  background-color: #cbd8df;
+  color: #1e5067;
   border-radius: var(--border-radius);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px var(--card-shadow);
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -47,21 +56,44 @@
 }
 
 .dashboard-button i {
-  font-size: 48px; /* Tamaño del icono */
+  font-size: 48px;
   margin-bottom: 10px;
-  color: #1e5067; /* Color del icono */
+  color: #1e5067;
 }
 
 .dashboard-button span {
-  font-size: 16px; /* Tamaño del texto */
+  font-size: 16px;
   font-weight: bold;
   text-align: center;
-  color: #1e5067; /* Color del texto */
+  color: #1e5067;
 }
 
-.button-volver {
-  width: auto; /* Evita que ocupe todo el ancho */
-  margin: 20px auto; /* Centrado y separación superior */
-  display: inline-block; /* Ajusta el tamaño al contenido */
-  text-align: center; /* Centra el texto dentro del botón */
+/* Media Query para 768px */
+@media (max-width: 768px) {
+  .cliente-layout {
+      grid-template-columns: repeat(2, 1fr); /* 2 botones por fila */
+      max-width: 400px;
+  }
+
+  .default-layout {
+      grid-template-columns: repeat(2, 1fr); /* Mantiene 2 filas de 2 botones */
+      max-width: 400px;
+  }
 }
+
+/* Media Query para 580px */
+@media (max-width: 580px) {
+  .cliente-layout,
+  .default-layout {
+      grid-template-columns: 1fr; /* Columna única */
+      gap: 10px;
+  }
+
+  .dashboard-button {
+      width: 100%;
+      max-width: 300px;
+  }
+}
+
+
+

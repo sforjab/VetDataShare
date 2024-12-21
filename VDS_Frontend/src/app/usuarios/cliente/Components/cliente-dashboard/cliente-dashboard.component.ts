@@ -12,6 +12,8 @@ export class ClienteDashboardComponent implements OnInit {
 
   idCliente: number | null = null;
   rolUsuarioSesion: string | null = null; // Guardamos el rol del usuario logueado
+  cliente: any = null; // Datos del cliente
+  cargando: boolean = true; // Estado del spinner
 
   constructor(private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router) {}
 
@@ -24,22 +26,23 @@ export class ClienteDashboardComponent implements OnInit {
         this.rolUsuarioSesion = sessionStorage.getItem('rol');
 
         if (!idUsuarioSesion || !this.rolUsuarioSesion) {
-          // Redirigir si no está logueado
           this.router.navigate(['/acceso-no-autorizado']);
           return;
         }
 
         if (this.rolUsuarioSesion === 'CLIENTE' && Number(idUsuarioSesion) !== this.idCliente) {
-          // Redirigir si el cliente intenta acceder a otro perfil
           this.router.navigate(['/acceso-no-autorizado']);
+          return;
         }
 
-        this.usuarioService.verificarIdentidadCliente(this.idCliente).subscribe({
-          next: () => {
-            console.log('Acceso autorizado para el cliente.');
+        this.usuarioService.getUsuarioPorId(this.idCliente).subscribe({
+          next: (data) => {
+            this.cliente = data; // Asignamos los datos del cliente
+            this.cargando = false; // Ocultamos el spinner
           },
           error: (err: HttpErrorResponse) => {
-            console.error('Error de acceso desde backend:', err);
+            console.error('Error al obtener datos del cliente:', err);
+            this.cargando = false; // Ocultamos el spinner en caso de error
             if (err.status === 403) {
               this.router.navigate(['/acceso-no-autorizado']);
             } else {

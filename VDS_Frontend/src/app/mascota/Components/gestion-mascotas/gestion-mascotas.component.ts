@@ -23,20 +23,19 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Mascota>();
   isLoading: boolean = false;
   busquedaRealizada: boolean = false;
-  columnasTabla: string[] = ['numChip', 'nombre', 'especie', 'raza', 'fechaNacimiento', 'acciones'];
+  columnasTabla: string[] = ['numChip', 'nombre', 'especie', 'raza',/*  'fechaNacimiento', */ 'acciones'];
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
   constructor(private mascotaService: MascotaService, private router: Router, private dialog: MatDialog) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.buscarMascotas();
+  }
 
   ngAfterViewInit(): void {
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
-      console.log('Paginador asignado en ngAfterViewInit:', this.dataSource.paginator);
-    } else {
-      console.warn('Paginador no disponible en ngAfterViewInit. Intentando asignar después.');
     }
   }
 
@@ -82,7 +81,7 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
 
   navegarDashboardMascota(idMascota: number): void {
     this.router.navigate([`/mascota/dashboard/${idMascota}`], {
-      queryParams: { origin: 'gestion-mascotas' },
+      queryParams: { origen: 'gestion-mascotas' },
     });
   }
 

@@ -1,37 +1,146 @@
 <div class="dashboard-container">
-  <h1>Dashboard de Mascota</h1>
+  <!-- Spinner de carga -->
+  <ng-container *ngIf="isLoading; else contenidoMascota">
+    <mat-spinner></mat-spinner>
+  </ng-container>
 
-  <div
-  class="dashboard-buttons"
-  [ngClass]="{'cliente-layout': rolUsuario === 'CLIENTE', 'default-layout': rolUsuario !== 'CLIENTE'}"
->
-  <div class="dashboard-button" (click)="navegarDetalle()">
-    <i class="fa-solid fa-circle-info"></i>
-    <span>Consultar datos</span>
-  </div>
-  <div class="dashboard-button" (click)="navegarConsultas()">
-    <i class="fa-solid fa-notes-medical"></i>
-    <span>Histórico de consultas</span>
-  </div>
-  <div class="dashboard-button" (click)="navegarPruebas()">
-    <i class="fa-solid fa-vial"></i>
-    <span>Pruebas</span>
-  </div>
-  <div class="dashboard-button" (click)="navegarVacunas()">
-    <i class="fa-solid fa-syringe"></i>
-    <span>Vacunas</span>
-  </div>
-  <div
-    class="dashboard-button"
-    *ngIf="rolUsuario === 'CLIENTE'"
-    (click)="navegarAccesoTemporal()"
-  >
-    <i class="fa-solid fa-hourglass-half"></i>
-    <span>Generar Acceso Temporal</span>
-  </div>
-</div>
+  <!-- Contenido de la mascota -->
+  <ng-template #contenidoMascota>
+    <h1>Panel de Mascota</h1>
+    <h3>{{ mascota?.nombre }} ({{ mascota?.numChip }})</h3>
 
+    <!-- Tabs para actividad reciente -->
+    <mat-tab-group>
+      <mat-tab label="Últimas Consultas">
+        <div *ngIf="ultimasConsultas.length > 0; else noConsultas">
+          <table mat-table [dataSource]="ultimasConsultas" class="mat-elevation-z8">
+            <!-- Fecha de Consulta -->
+            <ng-container matColumnDef="fecha">
+              <th mat-header-cell *matHeaderCellDef class="text-center">Fecha</th>
+              <td mat-cell *matCellDef="let consulta" class="text-center">{{ consulta.fechaConsulta | date:'dd/MM/yyyy' }}</td>
+            </ng-container>
+            
+            <!-- Motivo -->
+            <ng-container matColumnDef="motivo">
+              <th mat-header-cell *matHeaderCellDef class="text-center">Motivo</th>
+              <td mat-cell *matCellDef="let consulta" class="text-center">{{ consulta.motivo }}</td>
+            </ng-container>
+      
+            <!-- Botón Acceder -->
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef class="text-center">Acceder</th>
+              <td mat-cell *matCellDef="let consulta" class="text-center">
+                <button mat-icon-button color="primary" (click)="verDetalleConsulta(consulta.id)">
+                  <mat-icon>remove_red_eye</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+      
+            <tr mat-header-row *matHeaderRowDef="['fecha', 'motivo', 'acciones']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['fecha', 'motivo', 'acciones'];"></tr>
+          </table>
+        </div>
+      
+        <!-- Mensaje si no hay consultas -->
+        <ng-template #noConsultas>
+          <p>No se encontraron consultas recientes para esta mascota.</p>
+        </ng-template>
+      </mat-tab>
 
-  <!-- Botón Volver -->
-  <button mat-raised-button class="button-secondary button-volver" (click)="volver()">Volver</button>
+      <mat-tab label="Últimas Pruebas">
+        <div *ngIf="ultimasPruebas.length > 0; else noPruebas">
+          <table mat-table [dataSource]="ultimasPruebas" class="mat-elevation-z8">
+            <!-- Fecha de Prueba -->
+            <ng-container matColumnDef="fecha">
+              <th mat-header-cell *matHeaderCellDef class="text-center"> Fecha </th>
+              <td mat-cell *matCellDef="let prueba" class="text-center"> {{ prueba.fecha | date:'dd/MM/yyyy' }} </td>
+            </ng-container>
+            
+            <!-- Tipo de Prueba -->
+            <ng-container matColumnDef="tipo">
+              <th mat-header-cell *matHeaderCellDef class="text-center"> Tipo </th>
+              <td mat-cell *matCellDef="let prueba" class="text-center"> {{ prueba.tipo }} </td>
+            </ng-container>
+      
+            <!-- Botón Acceder -->
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef class="text-center"> Acceder </th>
+              <td mat-cell *matCellDef="let prueba" class="text-center">
+                <button mat-icon-button color="primary" (click)="verDetallePrueba(prueba.id)">
+                  <mat-icon>remove_red_eye</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+      
+            <tr mat-header-row *matHeaderRowDef="['fecha', 'tipo', 'acciones']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['fecha', 'tipo', 'acciones'];"></tr>
+          </table>
+        </div>
+      
+        <!-- Mensaje si no hay pruebas -->
+        <ng-template #noPruebas>
+          <p>No se encontraron pruebas recientes para esta mascota.</p>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Últimas Vacunas">
+        <div *ngIf="ultimasPruebas.length > 0; else noVacunas">
+          <table mat-table [dataSource]="ultimasVacunas" class="mat-elevation-z8">
+            <ng-container matColumnDef="fecha">
+              <th mat-header-cell *matHeaderCellDef>Fecha</th>
+              <td mat-cell *matCellDef="let vacuna">{{ vacuna.fecha | date:'dd/MM/yyyy' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let vacuna">{{ vacuna.nombre }}</td>
+            </ng-container>
+            <ng-container matColumnDef="laboratorio">
+              <th mat-header-cell *matHeaderCellDef>Laboratorio</th>
+              <td mat-cell *matCellDef="let vacuna">{{ vacuna.laboratorio }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['fecha', 'nombre', 'laboratorio']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['fecha', 'nombre', 'laboratorio'];"></tr>
+          </table>
+        </div>
+
+        <!-- Mensaje si no hay vacunas -->
+        <ng-template #noVacunas>
+          <p>No se encontraron vacunas recientes para esta mascota.</p>
+        </ng-template>
+      </mat-tab>    
+    </mat-tab-group>
+
+    <div
+      class="dashboard-buttons"
+      [ngClass]="{'cliente-layout': rolUsuario === 'CLIENTE', 'default-layout': rolUsuario !== 'CLIENTE'}"
+    >
+      <div class="dashboard-button" (click)="navegarDetalle()">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Consultar datos</span>
+      </div>
+      <div class="dashboard-button" (click)="navegarConsultas()">
+        <i class="fa-solid fa-notes-medical"></i>
+        <span>Histórico de consultas</span>
+      </div>
+      <div class="dashboard-button" (click)="navegarPruebas()">
+        <i class="fa-solid fa-vial"></i>
+        <span>Pruebas</span>
+      </div>
+      <div class="dashboard-button" (click)="navegarVacunas()">
+        <i class="fa-solid fa-syringe"></i>
+        <span>Vacunas</span>
+      </div>
+      <div
+        class="dashboard-button"
+        *ngIf="rolUsuario === 'CLIENTE'"
+        (click)="navegarAccesoTemporal()"
+      >
+        <i class="fa-solid fa-hourglass-half"></i>
+        <span>Generar Acceso Temporal</span>
+      </div>
+    </div>
+
+    <!-- Botón Volver -->
+    <button mat-raised-button class="button-secondary button-volver" (click)="volver()" *ngIf="rolUsuario !== 'TEMPORAL'">Volver</button>
+  </ng-template>
 </div>

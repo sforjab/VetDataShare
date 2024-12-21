@@ -22,6 +22,12 @@ export class PruebaService {
         return this.http.get<Prueba>(`${this.pruebaUrl}/getPruebaPorId/${idPrueba}`);
     }
 
+    getUltimasPruebas(idMascota: number): Observable<Prueba[]> {
+        return this.http.get<Prueba[]>(`${this.pruebaUrl}/getUltimasPruebas/${idMascota}`).pipe(
+            tap(pruebas => console.log('Últimas pruebas cargadas:', pruebas))
+        );
+    }
+
     // Crear una nueva prueba
     createPrueba(prueba: Prueba): Observable<Prueba> {
         return this.http.post<Prueba>(`${this.pruebaUrl}/create`, prueba);

@@ -22,6 +22,7 @@ import { BajaClienteComponent } from './Components/baja-cliente/baja-cliente.com
 import { TransferirMascotasComponent } from './Components/transferir-mascotas/transferir-mascotas.component';
 import { ConfirmarTransferenciaComponent } from './Components/confirmar-transferencia/confirmar-transferencia.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatDialogModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    RouterModule
+    RouterModule,
+    MatExpansionModule
   ]
 })
 export class ClienteModule { }

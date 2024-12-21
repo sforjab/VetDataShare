@@ -31,7 +31,9 @@ export class GestionClinicasComponent implements OnInit, AfterViewInit {
 
   constructor(private clinicaService: ClinicaService, private router: Router, private dialog: MatDialog) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.buscarClinicas();
+  }
 
   ngAfterViewInit(): void {
     if (this.paginator) {

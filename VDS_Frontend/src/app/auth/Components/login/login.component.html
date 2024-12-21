@@ -6,20 +6,20 @@
       <form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
         <!-- Campo Username -->
         <mat-form-field appearance="fill">
-          <mat-label>Username</mat-label>
+          <mat-label>Nombre de usuario</mat-label>
           <input
             matInput
             formControlName="username"
             required
           />
           <mat-error *ngIf="campoEsInvalido('username')">
-            El username es obligatorio.
+            Campo obligatorio
           </mat-error>
         </mat-form-field>
 
         <!-- Campo Password -->
         <mat-form-field appearance="fill">
-          <mat-label>Password</mat-label>
+          <mat-label>Contraseña</mat-label>
           <input
             matInput
             formControlName="password"
@@ -27,10 +27,10 @@
             required
           />
           <mat-error *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">
-            La contraseña es obligatoria.
+            Campo obligatorio
           </mat-error>
           <mat-error *ngIf="loginForm.get('password')?.hasError('minlength') || loginForm.get('password')?.hasError('maxlength')">
-            La contraseña debe tener entre 8 y 16 caracteres.
+            Debe tener entre 8 y 16 caracteres.
           </mat-error>
         </mat-form-field>
 
@@ -42,7 +42,7 @@
         <!-- Botones -->
         <div class="action-buttons">
           <button mat-raised-button class="button-primary" type="submit" [disabled]="loginForm.invalid">
-            Login
+            Acceder
           </button>
         </div>
       </form>

@@ -37,6 +37,15 @@ public class PruebaController {
         return ResponseEntity.ok(pruebas);
     }
 
+    @GetMapping("/getUltimasPruebas/{idMascota}")
+    public ResponseEntity<List<PruebaDTO>> getUltimasPruebas(@PathVariable Long idMascota) {
+        List<PruebaDTO> ultimasPruebas = pruebaService.getUltimasPruebas(idMascota);
+        if (ultimasPruebas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(ultimasPruebas);
+    }
+
     @GetMapping("/getPruebasPorConsultaId/{idConsulta}")
     public ResponseEntity<List<PruebaDTO>> getPruebasPorConsultaId(@PathVariable Long idConsulta) {
         List<PruebaDTO> pruebas = pruebaService.getPruebasPorConsultaId(idConsulta);

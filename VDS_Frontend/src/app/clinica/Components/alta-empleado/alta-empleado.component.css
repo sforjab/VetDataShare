@@ -1,32 +1,10 @@
-/* Estilo general para el card del formulario */
-.perfil-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%; /* Asegura que los botones estén alineados */
-  padding-bottom: 20px;
-  margin-top: 20px;
-}
-
-/* Diseño en grid para los campos del formulario */
 .grid-form {
-  display: grid;
   grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
-  gap: 20px; /* Espaciado entre filas y columnas */
 }
 
-/* Campos específicos que ocupan toda la fila */
 .grid-form mat-form-field:nth-child(5),
 .grid-form mat-form-field:nth-child(6) {
   grid-column: span 1; /* Segunda fila: Rol */
-}
-
-/* Botones del formulario */
-.action-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px; /* Separación entre botones */
-  margin-top: 20px;
 }
 
 button.button-primary {
@@ -47,4 +25,19 @@ button.button-secondary:hover {
 .page-container h1 {
   text-align: center;
   margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+  .card {
+      max-width: 100%; /* Ajuste completo */
+      margin: 5px; /* Reduce los márgenes */
+  }
+
+  .grid-form {
+      grid-template-columns: 1fr; /* Una columna en móviles */
+  }
+
+  .grid-form mat-form-field {
+      grid-column: span 1; /* Cada campo ocupa toda la fila */
+  }
 }

@@ -40,6 +40,7 @@ export class PruebaDetalleComponent implements OnInit {
   numeroChip: string = '';
   numColegiado: string = '';
   documentos: DocumentoPrueba[] = [];
+  origenPrevio: string | null = null;
   origen: string | null = null;
   columnasTabla: string[] = ['nombreArchivo', 'acciones'];
 
@@ -53,6 +54,7 @@ export class PruebaDetalleComponent implements OnInit {
 
   ngOnInit(): void {
     this.pruebaId = +this.route.snapshot.paramMap.get('idPrueba')!;
+    this.origenPrevio = this.route.snapshot.queryParamMap.get('origenPrevio');
     this.origen = this.route.snapshot.queryParamMap.get('origen');
     this.rol = sessionStorage.getItem('rol');
 
@@ -269,10 +271,18 @@ export class PruebaDetalleComponent implements OnInit {
   }
 
   volver(): void {
-    if (this.origen === 'consulta-detalle') {
-      this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`]);
-    } else if (this.origen === 'mascota-pruebas-list') {
-      this.router.navigate([`/prueba/mascota-pruebas-list/${this.prueba.mascotaId}`]);
+    if(this.origen) {
+      if (this.origen === 'mascota-pruebas-list') {
+        this.router.navigate([`/prueba/mascota-pruebas-list/${this.prueba.mascotaId}`]);
+      } else if (this.origen === 'mascota-dashboard') {
+        this.router.navigate([`/mascota/dashboard/${this.prueba.mascotaId}`]);
+      } else {
+        this.router.navigate(['/']);
+      }
+    } else {
+        this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`], {
+            queryParams: { origen: this.origenPrevio }
+        });
     }
   }
 }

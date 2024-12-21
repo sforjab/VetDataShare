@@ -43,6 +43,13 @@ public class PruebaService {
     }
 
     @Transactional(readOnly = true)
+    public List<PruebaDTO> getUltimasPruebas(Long idMascota) {
+        return pruebaRepository.findTop3ByMascotaIdOrderByFechaDesc(idMascota).stream()
+                .map(pruebaMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<PruebaDTO> getPruebasPorConsultaId(Long consultaId) {
         return pruebaRepository.findByConsultaId(consultaId).stream()
                 .map(pruebaMapper::toDTO)

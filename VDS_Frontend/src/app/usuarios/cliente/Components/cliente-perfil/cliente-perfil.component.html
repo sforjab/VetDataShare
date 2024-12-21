@@ -5,6 +5,7 @@
 
   <div *ngIf="!isLoading">
     <h1>Perfil de Cliente</h1>
+    <h3>{{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }} ({{ usuario.numIdent }})</h3>
 
     <mat-card class="card perfil-card">
       <mat-card-content>

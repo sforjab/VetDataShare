@@ -1,4 +1,4 @@
-.transferir-container {
+/* .transferir-container {
     max-width: 600px;
     margin: 0 auto;
   }
@@ -12,4 +12,53 @@
   .destino-card {
     margin-top: 20px;
   }
-  
+   */
+
+   /* Estilo general para el contenedor */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Card con mayor ancho */
+.search-card {
+  width: 100%; /* Ocupa todo el ancho disponible */
+  max-width: 800px; /* Ancho máximo del card */
+  margin: 20px auto; /* Centrado con margen */
+  box-sizing: border-box;
+  padding: 20px; /* Espaciado interno */
+}
+
+/* Ajustar campo de entrada */
+mat-form-field {
+  width: 100%; /* El campo ocupa todo el ancho del card */
+}
+
+/* Acciones centradas */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.button-primary, .button-secondary {
+  min-width: 120px; /* Botones con ancho mínimo */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .search-card {
+    max-width: 100%; /* En pantallas pequeñas ocupa todo el ancho */
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  mat-label {
+    font-size: 0.8rem;
+  }
+}

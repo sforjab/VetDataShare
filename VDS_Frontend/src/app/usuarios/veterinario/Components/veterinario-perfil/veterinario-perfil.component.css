@@ -1,17 +1,5 @@
-/* Estilos para el mat-card */
-.perfil-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%; /* Asegura que los botones estén abajo */
-  padding-bottom: 20px;
-}
-
-/* Diseño en grid para el formulario */
 .grid-form {
-  display: grid;
   grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
-  gap: 20px; /* Espaciado entre columnas y filas */
 }
 
 .grid-form mat-form-field:nth-child(1),
@@ -23,4 +11,20 @@
 .grid-form mat-form-field:nth-child(4),
 .grid-form mat-form-field:nth-child(5) {
   grid-column: span 1; /* Cada campo ocupa una columna en la segunda fila */
+}
+
+@media (max-width: 768px) {
+  .card {
+      max-width: 100%; /* Permite que se ajuste completamente en pantallas pequeñas */
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-form {
+      grid-template-columns: 1fr; /* Una columna en móviles */
+  }
+
+  .grid-form mat-form-field {
+      grid-column: span 1; /* Cada campo ocupa toda la fila */
+  }
 }

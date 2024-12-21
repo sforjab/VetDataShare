@@ -52,7 +52,6 @@ public class MascotaController {
         return ResponseEntity.ok(mascotas); // Siempre responde con 200 OK
     }
 
-
     @GetMapping("/verificarPropietario/{idMascota}")
     public ResponseEntity<Object> verificarPropietario(@PathVariable Long idMascota) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

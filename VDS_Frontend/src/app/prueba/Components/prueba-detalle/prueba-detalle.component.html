@@ -6,7 +6,8 @@
 
   <!-- Contenido principal -->
   <div *ngIf="!isLoading">
-    <h1>Detalle de Prueba</h1>
+    <h1>Datos de la Prueba</h1>
+    <h3>{{ nombreMascota }} ({{ numeroChip }})</h3>
 
     <div class="detalle-prueba-container">
       <!-- Tarjeta de información general -->
@@ -14,11 +15,9 @@
         <mat-card-content>
           <div class="info-row">
             <p><strong>Fecha:</strong> {{ prueba.fecha | date: 'dd/MM/yyyy' }}</p>
-            <p><strong>Número de chip:</strong> {{ numeroChip }}</p>
           </div>
           <div class="info-row">
             <p><strong>Veterinario:</strong> {{ numColegiado }}</p>
-            <p><strong>Nombre de mascota:</strong> {{ nombreMascota }}</p>
           </div>
         </mat-card-content>
       </mat-card>
@@ -52,29 +51,29 @@
 
             <!-- Documentos -->
             <h3>Documentos Adjuntos</h3>
-            <ng-container *ngIf="documentos.length > 0; else noDocumentos">
-              <mat-table [dataSource]="documentos" class="documentos-table" matSort>
+            <div class="tabla-container" *ngIf="documentos.length > 0; else noDocumentos">
+              <table mat-table [dataSource]="documentos" class="mat-elevation-z8">
                 <ng-container matColumnDef="nombreArchivo">
-                  <mat-header-cell *matHeaderCellDef> Nombre Archivo </mat-header-cell>
-                  <mat-cell *matCellDef="let documento"> {{ documento.nombreArchivo }} </mat-cell>
+                  <th mat-header-cell *matHeaderCellDef class="text-center"> Nombre Archivo </th>
+                  <td mat-cell *matCellDef="let documento" class="text-center"> {{ documento.nombreArchivo }} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="acciones">
-                  <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
-                  <mat-cell *matCellDef="let documento">
+                  <th mat-header-cell *matHeaderCellDef class="text-center"> Acciones </th>
+                  <td mat-cell *matCellDef="let documento" class="text-center">
                     <button mat-icon-button color="primary" (click)="descargarDocumento(documento)">
                       <mat-icon>file_download</mat-icon>
                     </button>
                     <button mat-icon-button color="warn" (click)="eliminarDocumento(documento)" *ngIf="puedeEditar">
                       <mat-icon>delete</mat-icon>
                     </button>
-                  </mat-cell>
+                  </td>
                 </ng-container>
 
-                <mat-header-row *matHeaderRowDef="columnasTabla"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: columnasTabla;"></mat-row>
-              </mat-table>
-            </ng-container>
+                <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
+                <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
+              </table>
+            </div>
 
             <!-- Mensaje cuando no hay documentos -->
             <ng-template #noDocumentos>

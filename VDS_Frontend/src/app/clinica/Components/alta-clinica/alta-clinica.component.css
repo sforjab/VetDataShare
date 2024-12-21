@@ -1,31 +1,27 @@
-.perfil-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%; /* Asegura que los botones estén abajo */
-    padding-bottom: 20px;
-  }
+.grid-form {
+    grid-template-columns: repeat(2, 1fr);
+}
   
+.grid-form mat-form-field:nth-child(1),
+.grid-form mat-form-field:nth-child(2) {
+  grid-column: span 1; /* Primera fila: Nombre y Dirección */
+}
+  
+.grid-form mat-form-field:nth-child(3),
+.grid-form mat-form-field:nth-child(4) {
+  grid-column: span 1; /* Segunda fila: Teléfono y Email */
+}
+  
+@media (max-width: 480px) {
+  .card {
+      max-width: 100%; /* Ajuste completo */
+  }
+
   .grid-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
-    gap: 20px; /* Espaciado entre columnas y filas */
+      grid-template-columns: 1fr; /* Una columna en móviles */
   }
-  
-  .grid-form mat-form-field:nth-child(1),
-  .grid-form mat-form-field:nth-child(2) {
-    grid-column: span 1; /* Primera fila: Nombre y Dirección */
+
+  .grid-form mat-form-field {
+      grid-column: span 1; /* Cada campo ocupa toda la fila */
   }
-  
-  .grid-form mat-form-field:nth-child(3),
-  .grid-form mat-form-field:nth-child(4) {
-    grid-column: span 1; /* Segunda fila: Teléfono y Email */
-  }
-  
-  .action-buttons {
-    display: flex;
-    justify-content: center; /* Centra los botones horizontalmente */
-    gap: 20px; /* Espaciado entre botones */
-    margin-top: 20px;
-  }
-  
+}

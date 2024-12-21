@@ -4,10 +4,10 @@
   <!-- Formulario de validación -->
   <mat-card class="card validation-card">
     <mat-card-content>
-      <form [formGroup]="accesoTemporalForm" class="validation-form" (ngSubmit)="validarCodigo()">
+      <form [formGroup]="accesoTemporalForm" class="validation-form grid-form" (ngSubmit)="validarCodigo()">
         <!-- Campo para introducir el código -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('codigoNumerico')">
-          <mat-label>Introduce el código numérico</mat-label>
+          <mat-label>Código numérico</mat-label>
           <input matInput formControlName="codigoNumerico" maxlength="6" />
           <mat-error *ngIf="accesoTemporalForm.get('codigoNumerico')?.hasError('required')">
             El código es obligatorio.
@@ -17,8 +17,10 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Mensaje general -->
-        <p *ngIf="mensaje" class="mensaje-validacion">{{ mensaje }}</p>
+        <!-- Mensaje de error general -->
+        <div *ngIf="mensaje" class="error-message">
+          {{ mensaje }}
+        </div>
       </form>
     </mat-card-content>
 

@@ -22,6 +22,7 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
   };
 
   roles = [
+    { valor: '', nombre: 'Todos' },
     { valor: 'VETERINARIO', nombre: 'Veterinario' },
     { valor: 'ADMIN_CLINICA', nombre: 'Administrador de Clínica' }
   ];
@@ -29,7 +30,7 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Usuario>();
   isLoading: boolean = false;
   busquedaRealizada: boolean = false;
-  columnasTabla: string[] = ['numIdent', 'nombre', 'apellido1', 'apellido2', 'rol', 'acciones'];
+  columnasTabla: string[] = ['numIdent', 'nombre', 'apellido1', 'apellido2', /* 'rol',  */'acciones'];
   idClinica: number | null = null;
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -43,6 +44,8 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
         this.idClinica = +idClinica;
       }
     });
+
+    this.buscarEmpleados();
   }
 
   ngAfterViewInit(): void {

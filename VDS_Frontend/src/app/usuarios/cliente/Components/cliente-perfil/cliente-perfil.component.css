@@ -1,29 +1,29 @@
-/* Mat-card para perfil */
-.perfil-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    padding-bottom: 20px;
-  }
+.grid-form {
+  grid-template-columns: repeat(2, 1fr); 
+}
   
-  /* Diseño en grid para el formulario */
-  .grid-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 20px;
-  }
-  
-  /* Ajuste de columnas para cada fila */
 .grid-form mat-form-field {
     grid-column: span 1;
 }
 
-/* Ajuste general */
 .grid-form .full-width {
-    grid-column: span 1 !important;
+    grid-column: span 2 !important;
 }
   
 input {
   color: #000000 !important;
+}
+
+@media (max-width: 480px) {
+  .card {
+      max-width: 100%; /* Ajuste completo */
+  }
+
+  .grid-form {
+      grid-template-columns: 1fr; /* Una columna en móviles */
+  }
+
+  .grid-form mat-form-field {
+      grid-column: span 1; /* Cada campo ocupa toda la fila */
+  }
 }

@@ -1,10 +1,21 @@
-.container {
+/* .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+} */
+
+.detalle-consulta-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
 }
 
+/* .container h1 {
+  text-align: center;
+}
+ */
 .details-header {
   display: flex;
   justify-content: space-between;
@@ -15,8 +26,34 @@
   width: 45%;
 }
 
-.details-body {
-  padding: 20px 0;
+.info-box {
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-row p {
+  margin: 0;
+  width: 100%; /* Asegura que los textos ocupen el espacio adecuado */
+}
+
+.info-row:first-child p {
+  text-align: start; /* Alinea a la izquierda */
+}
+
+.info-row:last-child p {
+  text-align: end; /* Alinea a la derecha */
+}
+
+@media (max-width: 480px) {
+  .details-header, form {
+    width: 80%;
+    margin: 0 auto;
+  }
 }
 
 .form-group {
@@ -46,22 +83,32 @@
   margin-top: 20px;
 }
 
-.data-table table {
+table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* Columnas fijas */
+  font-size: 14px;
+  background-color: #ffffff;
 }
 
-.data-table th,
-.data-table td {
+th, td {
   border: 1px solid #ccc;
   padding: 10px;
   text-align: center;
+  /* white-space: nowrap; */
+}
+
+td.acciones-cell {
+  text-align: center;
+  width: 15%;
+  white-space: nowrap;
 }
 
 .data-table .action-buttons {
   display: flex;
   justify-content: center;
   gap: 10px; 
+  margin-top: 0;
 }
 
 .table-actions {
@@ -77,13 +124,56 @@
   margin-top: 20px;
 }
 
-.spinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
+/* Responsive: ajustes en pantallas pequeñas */
+@media (max-width: 768px) {
+  th, td {
+    padding: 8px 10px;
+    font-size: 0.8rem !important;
+  }
 }
 
-textarea {
-  color: #000000 !important;
+@media (max-width: 480px) {
+  table {
+    table-layout: auto; /* Permite ajuste automático */
+  }
+
+  td {
+    font-size: 0.7rem !important;
+  }
+
+  .info-box {
+    font-size: 0.85rem;
+  }
+}
+
+td.acciones-cell button.mat-icon-button {
+  min-width: 30px !important;
+  width: 30px !important;
+  height: 30px !important;
+  padding: 0 !important;
+  margin: 0 3px !important;
+  font-size: 14px;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 480px) {
+  table {
+    table-layout: auto; /* Permite ajuste automático */
+  }
+
+  th, td {
+    padding: 6px; /* Reduce el espacio */
+    font-size: 12px; /* Tamaño más pequeño */
+  }
+
+  td.acciones-cell {
+    width: 20%; /* Aumenta ligeramente el ancho */
+  }
+
+  td.acciones-cell button.mat-icon-button {
+    width: 25px !important;
+    height: 25px !important;
+    font-size: 12px;
+    margin: 0 2px !important; /* Espaciado más pequeño */
+  }
 }

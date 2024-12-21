@@ -1,26 +1,34 @@
 <div class="dashboard-container">
-  <h1>Panel de Control de la Clínica</h1>
-
-  <div class="dashboard-buttons-container">
-    <div class="dashboard-buttons">
-      <!-- Botón "Datos Clínica" -->
-      <div 
-        class="dashboard-button"
-        (click)="navegarDatosClinica()">
-        <i class="fa-solid fa-circle-info"></i>
-        <span>Datos Clínica</span>
-      </div>
-
-      <!-- Botón "Gestión Empleados" -->
-      <div 
-        class="dashboard-button"
-        (click)="navegarGestionEmpleados()">
-        <i class="fa-solid fa-user-doctor"></i>
-        <span>Gestión Empleados</span>
-      </div>
-    </div>
+  <!-- Spinner de carga -->
+  <div *ngIf="isLoading" class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
   </div>
 
-  <!-- Botón de Volver -->
-  <button mat-raised-button class="button-secondary" (click)="navegarVolver()">Volver</button>
+  <!-- Contenido del dashboard -->
+  <div *ngIf="!isLoading">
+    <h1>{{ clinica?.nombre }}</h1>
+
+    <div class="dashboard-buttons-container">
+      <div class="dashboard-buttons">
+        <!-- Botón "Datos Clínica" -->
+        <div 
+          class="dashboard-button"
+          (click)="navegarDatosClinica()">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Datos Clínica</span>
+        </div>
+
+        <!-- Botón "Gestión Empleados" -->
+        <div 
+          class="dashboard-button"
+          (click)="navegarGestionEmpleados()">
+          <i class="fa-solid fa-user-doctor"></i>
+          <span>Gestión Empleados</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón de Volver -->
+    <button mat-raised-button class="button-secondary" (click)="navegarVolver()">Volver</button>
+  </div>
 </div>

@@ -2,6 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MascotaService } from '../../Services/mascota.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Mascota } from '../../Models/mascota.dto';
+import { Vacuna } from 'src/app/vacuna/Models/vacuna.dto';
+import { VacunaService } from 'src/app/vacuna/Services/vacuna.service';
+import { Prueba } from 'src/app/prueba/Models/prueba.dto';
+import { PruebaService } from 'src/app/prueba/Services/prueba.service';
+import { DocumentoPrueba } from 'src/app/prueba/Models/documento-prueba.dto';
+import { DocumentoPruebaService } from 'src/app/prueba/Services/documento-prueba.service';
+import { Consulta } from 'src/app/consulta/Models/consulta.dto';
+import { ConsultaService } from 'src/app/consulta/Services/consulta.service';
 
 @Component({
   selector: 'app-mascota-dashboard',
@@ -10,10 +19,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class MascotaDashboardComponent implements OnInit {
   idMascota: number | undefined;
+  mascota: Mascota | null = null;
+  ultimasConsultas: Consulta[] = [];
+  ultimasPruebas: Prueba[] = [];
+  ultimasVacunas: Vacuna[] = [];
+  isLoading: boolean = false;
   rolUsuario: string | null = null;
-  origin: string | null = null;
+  origen: string | null = null;
 
-  constructor(private mascotaService: MascotaService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private mascotaService: MascotaService, private vacunaService: VacunaService, private pruebaService: PruebaService, private consultaService: ConsultaService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -21,19 +35,31 @@ export class MascotaDashboardComponent implements OnInit {
       if (id) {
         this.idMascota = +id;
 
-        this.route.queryParams.subscribe((queryParams) => {
-          this.origin = queryParams['origin'] || null;
+        this.route.queryParams.subscribe(queryParams => {
+          this.origen = queryParams['origen'] || null;
         });
 
         this.rolUsuario = sessionStorage.getItem('rol');
-  
+
+        // Se inicia la carga de la mascota
+        this.cargarMascota(this.idMascota);
+
+        // Cargamos las últimas pruebas
+        this.cargarUltimasConsultas(this.idMascota);
+
+        // Cargamos las últimas pruebas
+        this.cargarUltimasPruebas(this.idMascota);
+
+        // Cargamos las últimas vacunas
+        this.cargarUltimasVacunas(this.idMascota);
+
+        // Verifica permisos
         this.mascotaService.verificarPropietario(this.idMascota).subscribe({
           next: () => {
             console.log('Acceso autorizado a la mascota.');
           },
           error: (err: HttpErrorResponse) => {
             console.error('Error de acceso:', err);
-            // Se comprueba el código de estado HTTP
             if (err.status === 403) {
               this.router.navigate(['/acceso-no-autorizado']);
             } else {
@@ -46,7 +72,70 @@ export class MascotaDashboardComponent implements OnInit {
       }
     });
   }
-  
+
+  cargarUltimasConsultas(idMascota: number): void {
+    this.consultaService.getUltimasConsultas(idMascota).subscribe({
+        next: (consultas) => {
+            this.ultimasConsultas = consultas;
+            console.log('Consultas cargadas:', consultas);
+        },
+        error: (err) => {
+            console.error('Error obteniendo las últimas pruebas:', err);
+        }
+    });
+  }
+
+  cargarUltimasPruebas(idMascota: number): void {
+    this.pruebaService.getUltimasPruebas(idMascota).subscribe({
+        next: (pruebas) => {
+            this.ultimasPruebas = pruebas;
+            console.log('Pruebas cargadas:', pruebas);
+        },
+        error: (err) => {
+            console.error('Error obteniendo las últimas pruebas:', err);
+        }
+    });
+  }
+
+  cargarUltimasVacunas(idMascota: number): void {
+    this.vacunaService.getUltimasVacunas(idMascota).subscribe({
+      next: (vacunas) => {
+        this.ultimasVacunas = vacunas;
+      },
+      error: (err) => {
+        console.error('Error obteniendo las últimas vacunas:', err);
+      }
+    });
+  }
+
+  // Carga los datos de la mascota
+  cargarMascota(idMascota: number): void {
+    this.isLoading = true;
+    this.mascotaService.getMascotaPorId(idMascota).subscribe({
+      next: (mascota) => {
+        this.mascota = mascota;
+      },
+      error: (err) => {
+        console.error('Error obteniendo la mascota:', err);
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
+  }
+
+  verDetallePrueba(idPrueba: number): void {
+    this.router.navigate([`/prueba/detalle/${idPrueba}`], {
+      queryParams: { origen: 'mascota-dashboard' }
+    });
+  }
+
+  verDetalleConsulta(idConsulta: number): void {
+    this.router.navigate([`/consulta/detalle/${idConsulta}`], {
+      queryParams: { origen: 'mascota-dashboard' }
+    });
+  }
+
   navegarDetalle() {
     if (this.idMascota !== null) {
       this.router.navigate([`/mascota/detalle/${this.idMascota}`]);
@@ -54,7 +143,7 @@ export class MascotaDashboardComponent implements OnInit {
       console.error('ID de la mascota no disponible para navegación');
     }
   }
-  
+
   navegarConsultas() {
     if (this.idMascota !== null) {
       this.router.navigate([`/consulta/mascota-consultas-list/${this.idMascota}`]);
@@ -62,7 +151,7 @@ export class MascotaDashboardComponent implements OnInit {
       console.error('ID de la mascota no disponible para navegación');
     }
   }
-  
+
   navegarPruebas() {
     if (this.idMascota !== null) {
       this.router.navigate([`/prueba/mascota-pruebas-list/${this.idMascota}`]);
@@ -92,44 +181,37 @@ export class MascotaDashboardComponent implements OnInit {
     const rolUsuarioSesion = sessionStorage.getItem('rol');
 
     if (!idUsuarioSesion || !rolUsuarioSesion) {
-        console.error('No se encontraron datos de sesión. Redirigiendo a acceso no autorizado.');
-        this.router.navigate(['/acceso-no-autorizado']);
-        return;
+      console.error('No se encontraron datos de sesión. Redirigiendo a acceso no autorizado.');
+      this.router.navigate(['/acceso-no-autorizado']);
+      return;
     }
 
     if (rolUsuarioSesion === 'CLIENTE') {
-        // Si es cliente, se navega al listado de sus mascotas
-        this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
-        return;
+      this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
+      return;
     }
 
-    // Si no es cliente, determinamos el origen
-    if (this.origin === 'cliente-mascotas-list') {
-        // Navegamos al listado de mascotas del cliente según el propietario
-        if (this.idMascota !== undefined) {
-            this.mascotaService.getMascotaPorId(this.idMascota).subscribe({
-                next: (mascota) => {
-                    if (mascota && mascota.propietarioId) {
-                        // Redirigimos al listado del propietario
-                        this.router.navigate([`/mascota/cliente-mascotas-list/${mascota.propietarioId}`]);
-                    } else {
-                        console.error('No se encontró el propietario de la mascota. Redirigiendo a acceso no autorizado.');
-                        this.router.navigate(['/acceso-no-autorizado']);
-                    }
-                },
-                error: (err) => {
-                    console.error('Error obteniendo el propietario de la mascota:', err);
-                    this.router.navigate(['/acceso-no-autorizado']);
-                }
-            });
-        } else {
-            console.error('ID de la mascota no está definido. Redirigiendo a gestión de mascotas.');
-            this.router.navigate(['/mascota/gestion-mascotas']);
-        }
-    } else {
-        // Si el origen no es 'cliente-mascotas-list', se navega a gestión de mascotas
+    if (this.origen === 'cliente-mascotas-list') {
+      if (this.idMascota !== undefined) {
+        this.mascotaService.getMascotaPorId(this.idMascota).subscribe({
+          next: (mascota) => {
+            if (mascota && mascota.propietarioId) {
+              this.router.navigate([`/mascota/cliente-mascotas-list/${mascota.propietarioId}`]);
+            } else {
+              console.error('No se encontró el propietario de la mascota.');
+              this.router.navigate(['/acceso-no-autorizado']);
+            }
+          },
+          error: (err) => {
+            console.error('Error obteniendo el propietario de la mascota:', err);
+            this.router.navigate(['/acceso-no-autorizado']);
+          }
+        });
+      } else {
         this.router.navigate(['/mascota/gestion-mascotas']);
+      }
+    } else {
+      this.router.navigate(['/mascota/gestion-mascotas']);
     }
-}
-
+  }
 }

@@ -22,6 +22,8 @@ export class HeaderComponent implements OnInit {
   constructor(private authService: AuthService, private usuarioService: UsuarioService, private router: Router) {}
 
   ngOnInit(): void {
+    this.rolUsuario = sessionStorage.getItem('rol') || '';
+
     // Suscribirse al estado de autenticación
     this.authService.isUsuarioLogin.subscribe(isLogged => {
       this.isLogged = isLogged;

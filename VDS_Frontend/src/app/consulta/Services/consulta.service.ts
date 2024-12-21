@@ -25,7 +25,6 @@ export class ConsultaService {
     );
   }
   
-
   // Obtener consulta por ID
   getConsultaPorId(id: number): Observable<Consulta> {
     return this.http.get<Consulta>(`${this.consultaUrl}/getConsultaPorId/${id}`).pipe(
@@ -46,6 +45,13 @@ export class ConsultaService {
   getConsultasPorIdMascota(idMascota: number): Observable<Consulta[]> {
     return this.http.get<Consulta[]>(`${this.consultaUrl}/getConsultasPorIdMascota/${idMascota}`).pipe(
       tap((consultas) => console.log('Consultas obtenidas para la mascota:', consultas)),
+      catchError(this.handleError)
+    );
+  }
+
+  getUltimasConsultas(idMascota: number): Observable<Consulta[]> {
+    return this.http.get<Consulta[]>(`${this.consultaUrl}/getUltimasConsultas/${idMascota}`).pipe(
+      tap((consultas) => console.log('Últimas consultas obtenidas para la mascota:', consultas)),
       catchError(this.handleError)
     );
   }

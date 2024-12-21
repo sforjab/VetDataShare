@@ -23,6 +23,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GestionClinicasComponent } from './Components/gestion-clinicas/gestion-clinicas.component';
 import { BajaClinicaComponent } from './Components/baja-clinica/baja-clinica.component';
 import { AltaClinicaComponent } from './Components/alta-clinica/alta-clinica.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { AltaClinicaComponent } from './Components/alta-clinica/alta-clinica.com
     MatDialogModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatIconModule
+    MatIconModule,
+    MatExpansionModule
   ]
 })
 export class ClinicaModule { }

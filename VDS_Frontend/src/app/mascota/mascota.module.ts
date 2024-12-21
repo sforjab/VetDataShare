@@ -21,6 +21,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { BajaMascotaComponent } from './Components/baja-mascota/baja-mascota.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 
@@ -52,7 +54,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatNativeDateModule,
     MatDialogModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatTabsModule
     
   ],
   providers: [

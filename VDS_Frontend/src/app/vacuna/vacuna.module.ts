@@ -14,6 +14,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { VacunaDetalleComponent } from './Components/vacuna-detalle/vacuna-detalle.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatButtonModule,
     MatInputModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatPaginatorModule
   
   ]
 })

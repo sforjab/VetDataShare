@@ -16,6 +16,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { SubirDocumentoComponent } from './Components/subir-documento/subir-documento.component';
 import { EliminarDocumentoComponent } from './Components/eliminar-documento/eliminar-documento.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSelectModule,
     MatCardModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatPaginatorModule
   ]
 })
 export class PruebaModule { }

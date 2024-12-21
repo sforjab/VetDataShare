@@ -1,51 +1,57 @@
+/* Contenedor principal */
 .dashboard-container {
     text-align: center;
     margin: 40px auto;
-  }
-  
-  .dashboard-buttons-container {
-    margin: 20px auto;
     padding: var(--padding);
-    max-width: 900px; /* Ajuste del ancho máximo del contenedor */
   }
   
+  /* Contenedor de botones (para TODOS) */
   .dashboard-buttons {
-    display: flex;
-    justify-content: space-around;
-    gap: 20px; /* Separación entre botones */
-    flex-wrap: nowrap; /* Los botones permanecen en una fila */
-    width: 100%; /* Ocupa el ancho del contenedor */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 2 botones por fila */
+    max-width: 400px;
+    gap: 15px; /* Espaciado entre botones */
+    margin: 0 auto 2rem; /* Centrado y margen */
+    justify-items: center;
   }
-  
+
   .dashboard-button {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 150px; /* Tamaño del botón */
+    width: 150px;
     height: 150px;
-    background-color: #cbd8df; /* Fondo del botón */
-    color: #1e5067; /* Color del texto */
+    background-color: #cbd8df;
+    color: #1e5067;
     border-radius: var(--border-radius);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 12px var(--card-shadow);
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
   }
   
-  .dashboard-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  }
-  
   .dashboard-button i {
-    font-size: 48px; /* Tamaño del icono */
+    font-size: 48px;
     margin-bottom: 10px;
-    color: #1e5067; /* Color del icono */
+    color: #1e5067;
   }
   
   .dashboard-button span {
-    font-size: 16px; /* Tamaño del texto */
+    font-size: 16px;
     font-weight: bold;
     text-align: center;
-    color: #1e5067; /* Color del texto */
+    color: #1e5067;
   }
+
+  /* Media Query para 580px */
+@media (max-width: 580px) {
+    .dashboard-buttons {
+        grid-template-columns: 1fr; /* Columna única */
+        gap: 10px;
+    }
+  
+    .dashboard-button {
+        width: 100%;
+        max-width: 300px;
+    }
+}

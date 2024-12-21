@@ -6,7 +6,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Prueba } from 'src/app/prueba/Models/prueba.dto';
 import { Vacuna } from 'src/app/vacuna/Models/vacuna.dto';
 import { Mascota } from 'src/app/mascota/Models/mascota.dto';
-import { MascotaService } from 'src/app/mascota/Services/mascota.service';
 import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { ClinicaService } from 'src/app/clinica/Services/clinica.service';
@@ -40,6 +39,7 @@ export class ConsultaDetalleComponent implements OnInit {
   mostrarNotas: boolean = true;
   idConsulta: number | null = null;
   isLoading: boolean = false;
+  origen: string | null = null;
 
   constructor(private consultaService: ConsultaService, private usuarioService: UsuarioService, private clinicaService: ClinicaService,
               private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
@@ -50,6 +50,10 @@ export class ConsultaDetalleComponent implements OnInit {
     const usuarioId = +sessionStorage.getItem('idUsuario')!;
     this.idConsulta = +this.route.snapshot.paramMap.get('idConsulta')!;
     this.rol = sessionStorage.getItem('rol'); // Recuperamos el rol del usuario logueado
+
+    this.route.queryParams.subscribe(queryParams => {
+      this.origen = queryParams['origen'] || null;
+    });
   
     if (!this.idConsulta) {
       this.snackBar.open('ID de consulta no encontrado', 'Cerrar', { duration: 3000 });
@@ -177,18 +181,15 @@ export class ConsultaDetalleComponent implements OnInit {
 
   nuevaPrueba(): void {
     if (this.idConsulta) {
-      this.router.navigate([`/prueba/alta-prueba/${this.idConsulta}`]);
-    } else {
-      this.snackBar.open('No se puede crear prueba, ID de consulta no disponible', 'Cerrar', {
-        duration: 3000,
+      this.router.navigate([`/prueba/alta-prueba/${this.idConsulta}`], {
+        queryParams: { origenPrevio: this.origen }
       });
     }
   }
 
   editarPrueba(prueba: Prueba): void {
-    /* this.router.navigate([`/prueba/detalle/${prueba.id}`]); */
     this.router.navigate([`/prueba/detalle/${prueba.id}`], {
-      queryParams: { origen: 'consulta-detalle' }
+      queryParams: { origenPrevio: this.origen }
     });
   }
 
@@ -215,16 +216,18 @@ export class ConsultaDetalleComponent implements OnInit {
 
   nuevaVacuna(): void {
     if (this.idConsulta) {
-      this.router.navigate([`/vacuna/alta-vacuna/${this.idConsulta}`]);
-    } else {
-      this.snackBar.open('No se puede crear vacuna, ID de consulta no disponible', 'Cerrar', {
-        duration: 3000,
+      this.router.navigate([`/vacuna/alta-vacuna/${this.idConsulta}`], {
+        queryParams: { origenPrevio: this.origen }
       });
-    }
+      ;
+    } 
   }
 
   editarVacuna(vacuna: Vacuna): void {
-    this.router.navigate([`/vacuna/detalle/${vacuna.id}`]);
+    this.router.navigate([`/vacuna/detalle/${vacuna.id}`], {
+      queryParams: { origenPrevio: this.origen }
+    });
+    ;
   }
 
   eliminarVacuna(vacuna: Vacuna): void {
@@ -254,6 +257,13 @@ export class ConsultaDetalleComponent implements OnInit {
   }
   
   volver(): void {
-    this.router.navigate([`/consulta/mascota-consultas-list/${this.mascota?.id}`]);
+    if (this.origen === 'mascota-consultas-list' && this.mascota) {
+      this.router.navigate([`/consulta/mascota-consultas-list/${this.mascota.id}`]);
+    } else if (this.origen === 'mascota-dashboard' && this.mascota) {
+      this.router.navigate([`/mascota/dashboard/${this.mascota.id}`]);
+    } else {
+      this.router.navigate(['/']);
+    }
   }
+  
 }

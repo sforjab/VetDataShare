@@ -4,10 +4,10 @@
   <!-- Formulario para número de colegiado -->
   <mat-card class="card colegiado-card">
     <mat-card-content>
-      <form [formGroup]="colegiadoForm" class="colegiado-form" (ngSubmit)="validarColegiado()">
+      <form [formGroup]="colegiadoForm" class="colegiado-form grid-form" (ngSubmit)="validarColegiado()">
         <!-- Campo para introducir el número de colegiado -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numColegiado')">
-          <mat-label>Introduce el número de colegiado</mat-label>
+          <mat-label>Número de colegiado</mat-label>
           <input matInput formControlName="numColegiado" maxlength="8" />
           <mat-error *ngIf="colegiadoForm.get('numColegiado')?.hasError('required')">
             El número de colegiado es obligatorio.

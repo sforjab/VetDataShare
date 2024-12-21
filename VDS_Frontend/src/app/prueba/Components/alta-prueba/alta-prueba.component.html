@@ -1,43 +1,52 @@
 <div class="page-container">
-  <h1>Nueva Prueba</h1>
+  <!-- Spinner de carga -->
+  <div *ngIf="isLoading" class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+  </div>
 
-  <mat-card class="card perfil-card">
-    <mat-card-content>
-      <form [formGroup]="altaPruebaForm" class="grid-form">
-        <!-- Tipo de Prueba -->
-        <mat-form-field appearance="fill" class="grid-span">
-          <mat-label>Tipo de Prueba</mat-label>
-          <mat-select formControlName="tipo">
-            <mat-option value="" disabled>Seleccione el tipo de prueba</mat-option>
-            <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="altaPruebaForm.get('tipo')?.hasError('required')">
-            El tipo de prueba es obligatorio.
-          </mat-error>
-        </mat-form-field>
+  <!-- Contenido principal -->
+  <div *ngIf="!isLoading">
+    <h1>Nueva Prueba</h1>
+    <h3 *ngIf="mascota">{{ mascota.nombre }} ({{ mascota.numChip }})</h3>
+
+    <mat-card class="card perfil-card">
+      <mat-card-content>
+        <form [formGroup]="altaPruebaForm" class="grid-form">
+          <!-- Tipo de Prueba -->
+          <mat-form-field appearance="fill" class="grid-span">
+            <mat-label>Tipo de Prueba</mat-label>
+            <mat-select formControlName="tipo">
+              <mat-option value="" disabled>Seleccione el tipo</mat-option>
+              <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="altaPruebaForm.get('tipo')?.hasError('required')">
+              El tipo de prueba es obligatorio.
+            </mat-error>
+          </mat-form-field>
       
-        <!-- Descripción -->
-        <mat-form-field appearance="fill" class="grid-span">
-          <mat-label>Descripción</mat-label>
-          <textarea matInput formControlName="descripcion" rows="4"></textarea>
-          <mat-error *ngIf="altaPruebaForm.get('descripcion')?.hasError('required')">
-            La descripción es obligatoria.
-          </mat-error>
-          <mat-error *ngIf="altaPruebaForm.get('descripcion')?.hasError('maxlength')">
-            No puede exceder los 500 caracteres.
-          </mat-error>
-        </mat-form-field>
-      </form>
-    </mat-card-content>
+          <!-- Descripción -->
+          <mat-form-field appearance="fill" class="grid-span">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="descripcion" rows="4"></textarea>
+            <mat-error *ngIf="altaPruebaForm.get('descripcion')?.hasError('required')">
+              La descripción es obligatoria.
+            </mat-error>
+            <mat-error *ngIf="altaPruebaForm.get('descripcion')?.hasError('maxlength')">
+              No puede exceder los 500 caracteres.
+            </mat-error>
+          </mat-form-field>
+        </form>
+      </mat-card-content>
 
-    <!-- Botones -->
-    <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="crearPrueba()" [disabled]="altaPruebaForm.invalid">
-        Crear
-      </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">
-        Volver
-      </button>
-    </mat-card-actions>
-  </mat-card>
+      <!-- Botones -->
+      <mat-card-actions class="action-buttons">
+        <button mat-raised-button class="button-primary" (click)="crearPrueba()" [disabled]="altaPruebaForm.invalid">
+          Crear
+        </button>
+        <button mat-raised-button class="button-secondary" (click)="volver()">
+          Volver
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>

@@ -41,28 +41,28 @@ public class DocumentoPruebaService {
     }
 
     @Transactional
-public Optional<DocumentoPruebaDTO> create(DocumentoPruebaDTO documentoPruebaDTO) {
-    try {
-        if (documentoPruebaRepository.existsByNombreArchivoAndPruebaId(
-                documentoPruebaDTO.getNombreArchivo(), documentoPruebaDTO.getPruebaId())) {
-            return Optional.empty(); // Documento duplicado
+    public Optional<DocumentoPruebaDTO> create(DocumentoPruebaDTO documentoPruebaDTO) {
+        try {
+            if (documentoPruebaRepository.existsByNombreArchivoAndPruebaId(
+                    documentoPruebaDTO.getNombreArchivo(), documentoPruebaDTO.getPruebaId())) {
+                return Optional.empty(); // Documento duplicado
+            }
+
+            DocumentoPrueba documento = documentoPruebaMapper.toEntity(documentoPruebaDTO);
+
+            Prueba prueba = pruebaRepository.findById(documentoPruebaDTO.getPruebaId())
+                .orElseThrow(() -> new IllegalArgumentException("Prueba no encontrada con ID: " + documentoPruebaDTO.getPruebaId()));
+
+            documento.setPrueba(prueba);
+
+            DocumentoPrueba documentoGuardado = documentoPruebaRepository.save(documento);
+
+            return Optional.of(documentoPruebaMapper.toDTO(documentoGuardado));
+        } catch (Exception e) {
+            e.printStackTrace(); // Solo para depuración, evita esto en producción
+            return Optional.empty();
         }
-
-        DocumentoPrueba documento = documentoPruebaMapper.toEntity(documentoPruebaDTO);
-
-        Prueba prueba = pruebaRepository.findById(documentoPruebaDTO.getPruebaId())
-            .orElseThrow(() -> new IllegalArgumentException("Prueba no encontrada con ID: " + documentoPruebaDTO.getPruebaId()));
-
-        documento.setPrueba(prueba);
-
-        DocumentoPrueba documentoGuardado = documentoPruebaRepository.save(documento);
-
-        return Optional.of(documentoPruebaMapper.toDTO(documentoGuardado));
-    } catch (Exception e) {
-        e.printStackTrace(); // Solo para depuración, evita esto en producción
-        return Optional.empty();
     }
-}
 
     @Transactional
     public boolean delete(Long id) {

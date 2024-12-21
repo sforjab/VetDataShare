@@ -1,4 +1,4 @@
-<div class="container">
+<div class="page-container">
   <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
     <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
@@ -7,147 +7,151 @@
   <!-- Contenido principal -->
   <div *ngIf="!isLoading">
     <h1 class="title">Detalle de consulta</h1>
-    <mat-card class="consulta-card">
-      <mat-card-content>
-        <!-- Información general -->
-        <div class="details-header">
-          <div class="details-column">
+    <h3>{{ mascota?.nombre }} ({{ mascota?.numChip }})</h3>
+
+    <div class="detalle-consulta-container">
+      <mat-card class="card info-card">
+        <mat-card-content class="info-box">
+          <div class="info-row">
             <p><strong>Fecha:</strong> {{ consulta?.fechaConsulta | date: 'dd/MM/yyyy HH:mm' }}</p>
             <p><strong>Veterinario:</strong> {{ veterinario?.numColegiado || 'No disponible' }}</p>
+            <!-- <p><strong>Clínica:</strong> {{ clinica?.nombre || 'No disponible' }}</p> -->
+          </div>
+          <div class="info-row">
             <p><strong>Clínica:</strong> {{ clinica?.nombre || 'No disponible' }}</p>
           </div>
-          <div class="details-column">
-            <p><strong>Número de chip:</strong> {{ mascota?.numChip || 'No disponible' }}</p>
-            <p><strong>Nombre de mascota:</strong> {{ mascota?.nombre || 'No disponible' }}</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="consulta-card">
+        <mat-card-content>
+          <!-- Campos editables -->
+          <form [formGroup]="consultaForm" class="details-body">
+            <div class="form-group" [ngClass]="{'error': campoEsInvalido('motivo')}">
+              <mat-form-field class="full-width">
+                <mat-label>Motivo de consulta</mat-label>
+                <textarea matInput id="motivo" formControlName="motivo" rows="4" [readOnly]="!puedeEditar"></textarea>
+                <mat-error *ngIf="campoEsInvalido('motivo')">
+                  Motivo es obligatorio y debe tener un máximo de 500 caracteres.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          
+            <div class="form-group" *ngIf="mostrarNotas" [ngClass]="{'error': campoEsInvalido('notas')}">
+              <mat-form-field class="full-width">
+                <mat-label>Notas</mat-label>
+                <textarea
+                  matInput
+                  id="notas"
+                  formControlName="notas"
+                  rows="4"
+                  [readOnly]="!puedeEditar">
+                </textarea>
+                <mat-error *ngIf="campoEsInvalido('notas')">
+                  Notas deben tener un máximo de 500 caracteres.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          
+            <div class="form-group" [ngClass]="{'error': campoEsInvalido('medicacion')}">
+              <mat-form-field class="full-width">
+                <mat-label>Medicación</mat-label>
+                <textarea
+                  matInput
+                  id="medicacion"
+                  formControlName="medicacion"
+                  rows="4"
+                  [readOnly]="!puedeEditar">
+                </textarea>
+                <mat-error *ngIf="campoEsInvalido('medicacion')">
+                  Medicación debe tener un máximo de 500 caracteres.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </form>
+          
+          <!-- Tablas -->
+          <div class="data-table">
+            <h3>Pruebas</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Fecha</th>
+                  <th>Descripción</th>
+                  <th *ngIf="puedeEditar">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let prueba of pruebas">
+                  <td>{{ prueba.tipo }}</td>
+                  <td>{{ prueba.fecha | date: 'dd/MM/yyyy' }}</td>
+                  <td>{{ prueba.descripcion }}</td>
+                  <td>
+                    <div class="action-buttons">
+                      <button mat-icon-button color="primary" (click)="editarPrueba(prueba)" *ngIf="puedeEditar">
+                        <mat-icon>mode_edit</mat-icon>
+                      </button>
+  
+                      <button mat-icon-button color="primary" (click)="editarPrueba(prueba)" *ngIf="!puedeEditar">
+                        <mat-icon>remove_red_eye</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="eliminarPrueba(prueba)" *ngIf="puedeEditar">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>                
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Botón Nueva Prueba -->
+            <div class="table-actions">
+              <button mat-raised-button class="button-primary" (click)="nuevaPrueba()" *ngIf="puedeEditar">Nueva Prueba</button>
+            </div>
           </div>
-        </div>
-
-        <!-- Campos editables -->
-        <form [formGroup]="consultaForm" class="details-body">
-          <div class="form-group" [ngClass]="{'error': campoEsInvalido('motivo')}">
-            <mat-form-field class="full-width">
-              <mat-label>Motivo de consulta</mat-label>
-              <textarea matInput id="motivo" formControlName="motivo" rows="4" [readOnly]="!puedeEditar"></textarea>
-              <mat-error *ngIf="campoEsInvalido('motivo')">
-                Motivo es obligatorio y debe tener un máximo de 500 caracteres.
-              </mat-error>
-            </mat-form-field>
+  
+          <div class="data-table">
+            <h3>Vacunas</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Fecha</th>
+                  <th>Laboratorio</th>
+                  <th *ngIf="puedeEditar">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let vacuna of vacunas">
+                  <td>{{ vacuna.nombre }}</td>
+                  <td>{{ vacuna.fecha | date: 'dd/MM/yyyy' }}</td>
+                  <td>{{ vacuna.laboratorio }}</td>
+                  <td *ngIf="puedeEditar">
+                    <div class="action-buttons">
+                      <button mat-icon-button color="primary" (click)="editarVacuna(vacuna)">
+                        <mat-icon>mode_edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="eliminarVacuna(vacuna)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Botón Nueva Vacuna -->
+            <div class="table-actions">
+              <button mat-raised-button class="button-primary" (click)="nuevaVacuna()" *ngIf="puedeEditar">Nueva Vacuna</button>
+            </div>
           </div>
-        
-          <div class="form-group" *ngIf="mostrarNotas" [ngClass]="{'error': campoEsInvalido('notas')}">
-            <mat-form-field class="full-width">
-              <mat-label>Notas</mat-label>
-              <textarea
-                matInput
-                id="notas"
-                formControlName="notas"
-                rows="4"
-                [readOnly]="!puedeEditar">
-              </textarea>
-              <mat-error *ngIf="campoEsInvalido('notas')">
-                Notas deben tener un máximo de 500 caracteres.
-              </mat-error>
-            </mat-form-field>
+  
+          <!-- Botones -->
+          <div class="form-actions">
+            <button mat-raised-button class="button-primary" (click)="guardar()" *ngIf="puedeEditar">Guardar</button>
+            <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
           </div>
-        
-          <div class="form-group" [ngClass]="{'error': campoEsInvalido('medicacion')}">
-            <mat-form-field class="full-width">
-              <mat-label>Medicación</mat-label>
-              <textarea
-                matInput
-                id="medicacion"
-                formControlName="medicacion"
-                rows="4"
-                [readOnly]="!puedeEditar">
-              </textarea>
-              <mat-error *ngIf="campoEsInvalido('medicacion')">
-                Medicación debe tener un máximo de 500 caracteres.
-              </mat-error>
-            </mat-form-field>
-          </div>
-        </form>
-        
-        <!-- Tablas -->
-        <div class="data-table">
-          <h3>Pruebas:</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Tipo</th>
-                <th>Fecha</th>
-                <th>Descripción</th>
-                <th *ngIf="puedeEditar">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let prueba of pruebas">
-                <td>{{ prueba.tipo }}</td>
-                <td>{{ prueba.fecha | date: 'dd/MM/yyyy' }}</td>
-                <td>{{ prueba.descripcion }}</td>
-                <td>
-                  <div class="action-buttons">
-                    <button mat-icon-button color="primary" (click)="editarPrueba(prueba)" *ngIf="puedeEditar">
-                      <mat-icon>mode_edit</mat-icon>
-                    </button>
-
-                    <button mat-icon-button color="primary" (click)="editarPrueba(prueba)" *ngIf="!puedeEditar">
-                      <mat-icon>remove_red_eye</mat-icon>
-                    </button>
-                    <button mat-icon-button color="warn" (click)="eliminarPrueba(prueba)" *ngIf="puedeEditar">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </div>                
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <!-- Botón Nueva Prueba -->
-          <div class="table-actions">
-            <button mat-raised-button class="button-primary" (click)="nuevaPrueba()" *ngIf="puedeEditar">Nueva Prueba</button>
-          </div>
-        </div>
-
-        <div class="data-table">
-          <h3>Vacunas:</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Fecha</th>
-                <th>Laboratorio</th>
-                <th *ngIf="puedeEditar">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let vacuna of vacunas">
-                <td>{{ vacuna.nombre }}</td>
-                <td>{{ vacuna.fecha | date: 'dd/MM/yyyy' }}</td>
-                <td>{{ vacuna.laboratorio }}</td>
-                <td *ngIf="puedeEditar">
-                  <div class="action-buttons">
-                    <button mat-icon-button color="primary" (click)="editarVacuna(vacuna)">
-                      <mat-icon>mode_edit</mat-icon>
-                    </button>
-                    <button mat-icon-button color="warn" (click)="eliminarVacuna(vacuna)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <!-- Botón Nueva Vacuna -->
-          <div class="table-actions">
-            <button mat-raised-button class="button-primary" (click)="nuevaVacuna()" *ngIf="puedeEditar">Nueva Vacuna</button>
-          </div>
-        </div>
-
-        <!-- Botones -->
-        <div class="form-actions">
-          <button mat-raised-button class="button-primary" (click)="guardar()" *ngIf="puedeEditar">Guardar</button>
-          <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
   </div>
 </div>

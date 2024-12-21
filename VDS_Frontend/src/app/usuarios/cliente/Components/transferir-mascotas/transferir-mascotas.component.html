@@ -1,9 +1,11 @@
 <div class="page-container">
     <h1>{{ idMascota ? 'Transferir Mascota' : 'Transferir Mascotas' }}</h1>
-  
-    <div class="info-container">
-      <p><strong>Propietario origen:</strong> {{ propietarioOrigen }}</p>
-    </div>
+    <h3 *ngIf="idMascota">
+      {{ mascota?.nombre }} ({{ mascota?.numChip }})
+    </h3>
+    <h3 *ngIf="!idMascota">
+        {{ propietario?.nombre }} {{ propietario?.apellido1 }} {{ propietario?.apellido2 }} ({{ propietario?.numIdent }})
+    </h3>
   
     <p *ngIf="!tieneMascotas" class="error">{{ mensajeSinMascotas }}</p>
   
@@ -13,7 +15,7 @@
         <form [formGroup]="propietarioForm" class="search-form">
           <!-- Campo Identificador del propietario destino -->
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('propietarioDestino')">
-            <mat-label>Identificador del propietario destino</mat-label>
+            <mat-label>Ident. propietario destino</mat-label>
             <input matInput formControlName="propietarioDestino" />
             <mat-error *ngIf="campoEsInvalido('propietarioDestino')">
                 <ng-container *ngIf="propietarioForm.get('propietarioDestino')?.hasError('required')">

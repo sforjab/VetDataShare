@@ -13,23 +13,21 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./mascota-detalle.component.css']
 })
 export class MascotaDetalleComponent implements OnInit {
-  /* mascota: Mascota = {
-    numChip: '',
-    nombre: '',
-    especie: '',
-    raza: '',
-    sexo: '',
-    fechaNacimiento: '',
-    propietarioId: 0
-  }; */
   mascotaForm!: FormGroup;
+  mascota: Mascota | null = null; // Información completa de la mascota
   propietario: Usuario | null = null;
   idMascota: number | null = null;
   isLoading: boolean = false;
   puedeEditar: boolean = false;
 
-  constructor(private mascotaService: MascotaService, private usuarioService: UsuarioService, private fb: FormBuilder,
-              private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
+  constructor(
+    private mascotaService: MascotaService,
+    private usuarioService: UsuarioService,
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.inicializarFormulario();
@@ -58,25 +56,20 @@ export class MascotaDetalleComponent implements OnInit {
 
   inicializarFormulario(): void {
     this.mascotaForm = this.fb.group({
-      numChip: [
-        '',
-        [Validators.required, Validators.pattern(/^\d{15}$/)] // 15 dígitos exactos
-      ],
+      numChip: ['', [Validators.required, Validators.pattern(/^\d{15}$/)]],
       nombre: ['', Validators.required],
       especie: ['', Validators.required],
       raza: ['', Validators.required],
       sexo: ['', Validators.required],
-      fechaNacimiento: [
-        '',
-        [Validators.required, this.validarFechaNacimiento]
-      ]
+      fechaNacimiento: ['', [Validators.required, this.validarFechaNacimiento]]
     });
   }
-  
+
   cargarMascotaDetalle(id: number): void {
     this.isLoading = true;
     this.mascotaService.getMascotaPorId(id).subscribe({
       next: (mascota) => {
+        this.mascota = mascota;
         this.mascotaForm.patchValue({
           numChip: mascota.numChip,
           nombre: mascota.nombre,
@@ -114,16 +107,7 @@ export class MascotaDetalleComponent implements OnInit {
   }
 
   evaluarPermisos(rol: string | null): boolean {
-    // CLIENTE y TEMPORAL no pueden editar
-    if (rol === 'CLIENTE' || rol === 'TEMPORAL') {
-      return false;
-    }
-    // VETERINARIO, ADMIN_CLINICA y ADMIN pueden editar
-    if (rol === 'VETERINARIO' || rol === 'ADMIN_CLINICA' || rol === 'ADMIN') {
-      return true;
-    }
-    // Por defecto, no permitir la edición
-    return false;
+    return ['VETERINARIO', 'ADMIN_CLINICA', 'ADMIN'].includes(rol || '');
   }
 
   guardarCambios(): void {
@@ -163,9 +147,8 @@ export class MascotaDetalleComponent implements OnInit {
     const fechaActual = new Date();
     return fechaSeleccionada > fechaActual ? { fechaInvalida: true } : null;
   }
-  
 
   volver(): void {
     this.router.navigate([`/mascota/dashboard/${this.idMascota}`]);
-}
+  }
 }

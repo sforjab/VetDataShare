@@ -78,8 +78,8 @@ public class SecurityConfig {
     
         // Configura los orígenes permitidos desde las propiedades
        /*  String allowedOrigin = environment.getProperty("cors.allowed-origin", "http://localhost:4200"); // Fallback a localhost */
-        /* configuration.setAllowedOrigins(List.of("http://localhost:4200")); */ // En producción, cambiar a la URL correcta
-        configuration.setAllowedOrigins(List.of("https://vetdatashare.netlify.app"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // En producción, cambiar a la URL correcta
+        /* configuration.setAllowedOrigins(List.of("https://vetdatashare.netlify.app", "http://localhost:4200")); */
     
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

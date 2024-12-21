@@ -11,4 +11,5 @@ import com.uoc.tfm.vds_backend.prueba.model.Prueba;
 public interface PruebaRepository extends JpaRepository<Prueba, Long> {
     List<Prueba> findByMascotaId(Long mascotaId);
     List<Prueba> findByConsultaId(Long consultaId);
+    List<Prueba> findTop3ByMascotaIdOrderByFechaDesc(Long mascotaId);
 }

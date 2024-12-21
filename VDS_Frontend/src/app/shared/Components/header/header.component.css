@@ -5,6 +5,9 @@
   padding: 16px;
   background-color: #1e5067;
   color: #ffffff;
+  width: 100%; /* Asegura que ocupe todo el ancho */
+  box-sizing: border-box; /* Evita que el padding desborde el contenedor */
+  position: relative; /* Para mantener el flujo */
 
   .logo {
       font-size: 1.5rem;
@@ -58,4 +61,17 @@
 
 .user-icon {
     margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .user-info {
+        flex-direction: column;
+        gap: 5px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        flex-direction: column;
+    }
 }

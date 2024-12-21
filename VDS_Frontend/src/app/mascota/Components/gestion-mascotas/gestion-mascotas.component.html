@@ -1,9 +1,12 @@
 <div class="page-container">
   <h1>Gestión de mascotas</h1>
 
-  <mat-card class="search-container">
+  <!-- Panel de búsqueda avanzada -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Búsqueda avanzada</mat-panel-title>
+    </mat-expansion-panel-header>
     <mat-card-content>
-      <!-- Formulario de búsqueda -->
       <form (ngSubmit)="buscarMascotas()" class="formulario-busqueda">
         <div class="form-row">
           <mat-form-field class="form-field">
@@ -34,7 +37,7 @@
         </div>
       </form>
     </mat-card-content>
-  </mat-card>
+  </mat-expansion-panel>
 
   <mat-divider *ngIf="busquedaRealizada"></mat-divider>
 
@@ -44,72 +47,64 @@
   </div>
 
   <!-- Tabla de resultados -->
-  <div class="table-container">
+  <div class="tabla-container">
     <table
       *ngIf="!isLoading && busquedaRealizada && dataSource.data.length > 0"
       mat-table
       [dataSource]="dataSource"
       class="mat-elevation-z8 clientes-tabla"
     >
-      <!-- Definición de columnas -->
+      <!-- Columnas -->
       <ng-container matColumnDef="numChip">
-        <th mat-header-cell *matHeaderCellDef>Num Chip</th>
-        <td mat-cell *matCellDef="let mascota">{{ mascota.numChip }}</td>
+        <th mat-header-cell *matHeaderCellDef class="text-center">Num Chip</th>
+        <td mat-cell class="breakCell" *matCellDef="let mascota">{{ mascota.numChip }}</td>
       </ng-container>
 
       <ng-container matColumnDef="nombre">
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <th mat-header-cell *matHeaderCellDef class="text-center">Nombre</th>
         <td mat-cell *matCellDef="let mascota">{{ mascota.nombre }}</td>
       </ng-container>
 
       <ng-container matColumnDef="especie">
-        <th mat-header-cell *matHeaderCellDef>Especie</th>
+        <th mat-header-cell *matHeaderCellDef class="text-center">Especie</th>
         <td mat-cell *matCellDef="let mascota">{{ mascota.especie }}</td>
       </ng-container>
 
       <ng-container matColumnDef="raza">
-        <th mat-header-cell *matHeaderCellDef>Raza</th>
+        <th mat-header-cell *matHeaderCellDef class="text-center">Raza</th>
         <td mat-cell *matCellDef="let mascota">{{ mascota.raza }}</td>
       </ng-container>
 
       <ng-container matColumnDef="fechaNacimiento">
-        <th mat-header-cell *matHeaderCellDef>Fecha Nacimiento</th>
+        <th mat-header-cell *matHeaderCellDef class="text-center">Fecha Nac.</th>
         <td mat-cell *matCellDef="let mascota">{{ mascota.fechaNacimiento | date: 'dd/MM/yyyy' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
         <td mat-cell *matCellDef="let mascota">
-          <div class="action-buttons">
-            <button mat-icon-button color="primary" (click)="navegarDashboardMascota(mascota.id)">
-              <mat-icon title="Acceder">remove_red_eye</mat-icon>
-            </button>
-            <button mat-icon-button color="accent" (click)="transferirMascota(mascota.id)">
-              <mat-icon title="Transferir mascota">compare_arrows</mat-icon>
-            </button>
-            <button mat-icon-button color="warn" (click)="eliminarMascota(mascota)">
-              <mat-icon  title="Eliminar">delete</mat-icon>
-            </button>
-          </div>
+          <button mat-icon-button color="primary" (click)="navegarDashboardMascota(mascota.id)">
+            <mat-icon>remove_red_eye</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="transferirMascota(mascota.id)">
+            <mat-icon>compare_arrows</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="eliminarMascota(mascota)">
+            <mat-icon>delete</mat-icon>
+          </button>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
       <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
     </table>
+    <mat-paginator *ngIf="!isLoading && busquedaRealizada && dataSource.data.length > 0" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 
-  <!-- Contenedor del paginador -->
-  <div class="paginator-container" *ngIf="!isLoading && busquedaRealizada && dataSource.data.length > 0">
-    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
-
-  <!-- Mensaje de "No se encontraron mascotas" -->
   <p *ngIf="!isLoading && busquedaRealizada && dataSource.data.length === 0" class="no-results">
     No se encontraron mascotas.
   </p>
 
-  <!-- Botón Volver -->
   <div class="boton-volver">
     <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
   </div>

@@ -26,20 +26,19 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Usuario>();
   isLoading: boolean = false;
   busquedaRealizada: boolean = false;
-  columnasTabla: string[] = ['numIdent', 'nombre', 'apellido1', 'apellido2', 'telefono', 'email', 'acciones'];
+  columnasTabla: string[] = ['numIdent', 'nombre', 'apellido1', 'apellido2', /* 'telefono', 'email', */ 'acciones'];
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
   constructor(private usuarioService: UsuarioService, private router: Router, private dialog: MatDialog) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.buscarClientes();
+  }
 
   ngAfterViewInit(): void {
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
-      console.log('Paginador asignado en ngAfterViewInit:', this.dataSource.paginator);
-    } else {
-      console.warn('Paginador no disponible en ngAfterViewInit. Intentando asignar después.');
     }
   }
 

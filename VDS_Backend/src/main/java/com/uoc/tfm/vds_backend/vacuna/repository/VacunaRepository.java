@@ -8,4 +8,5 @@ import com.uoc.tfm.vds_backend.vacuna.model.Vacuna;
 public interface VacunaRepository extends JpaRepository<Vacuna, Long> {
     List<Vacuna> findByConsultaId(Long consultaId);
     List<Vacuna> findByMascotaId(Long mascotaId);
+    List<Vacuna> findTop3ByMascotaIdOrderByFechaDesc(Long mascotaId);
 }

@@ -73,6 +73,13 @@ public class ConsultaService {
         });
     }
 
+    @Transactional
+    public List<ConsultaDTO> getUltimasConsultas(Long mascotaId) {
+        return consultaRepository.findTop3ByMascotaIdOrderByFechaConsultaDesc(mascotaId).stream()
+                .map(consultaMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<ConsultaDTO> getConsultasPorFecha(LocalDateTime fecha) {
         return consultaRepository.findByFechaConsulta(fecha).stream()
                 .map(consultaMapper::toDTO)

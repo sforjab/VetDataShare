@@ -8,6 +8,7 @@ import { FooterComponent } from './Components/footer/footer.component';
 import { AyudaComponent } from './Components/pages/ayuda/ayuda.component';
 import { SobreNosotrosComponent } from './Components/pages/sobre-nosotros/sobre-nosotros.component';
 import { PoliticaPrivacidadComponent } from './Components/pages/politica-privacidad/politica-privacidad.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -23,6 +24,7 @@ import { PoliticaPrivacidadComponent } from './Components/pages/politica-privaci
   imports: [
     CommonModule,
     MatButtonModule,
+    RouterModule 
   ],
   exports: [
     FormsModule,

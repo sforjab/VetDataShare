@@ -6,10 +6,14 @@
   align-items: center;
   padding: 20px;
   margin-top: 30px;
-  max-width: 400px; /* Reducimos el ancho máximo */
-  width: 90%; /* Permite que sea adaptable a pantallas pequeñas */
+  max-width: 500px; /* Reducimos el ancho máximo */
+  /* width: 90%; */ /* Permite que sea adaptable a pantallas pequeñas */
   margin: 0 auto; /* Centra el formulario horizontalmente */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+mat-card-content {
+  width: 90%;
 }
 
 /* Estilo general para el contenedor del formulario */
@@ -18,13 +22,6 @@
   flex-direction: column;
   gap: 15px; /* Espaciado entre campos */
   width: 100%; /* Ajusta al ancho del contenedor */
-}
-
-/* Botones centrados */
-.action-buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
 }
 
 /* Estilo para mensajes de error */

@@ -39,7 +39,6 @@ public class DocumentoPruebaController {
         return ResponseEntity.ok(documentos);
     }
 
-
     @PostMapping("/subirDocumento")
     public ResponseEntity<?> subirDocumento(@RequestParam("file") MultipartFile file, @RequestParam("pruebaId") Long pruebaId) {
         try {

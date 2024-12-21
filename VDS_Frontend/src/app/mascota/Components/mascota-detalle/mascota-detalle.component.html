@@ -7,7 +7,8 @@
   <!-- Contenido principal -->
   <div *ngIf="!isLoading">
     <!-- Título principal -->
-    <h1>Detalles de Mascota</h1>
+    <h1>Datos de la Mascota</h1>
+    <h3>{{ mascota?.nombre }} ({{ mascota?.numChip }})</h3>
 
     <!-- Mat Card con el formulario -->
     <mat-card class="card perfil-card">
@@ -72,18 +73,48 @@
           <!-- Cuarta fila -->
           <mat-form-field appearance="fill">
             <mat-label>Edad</mat-label>
-            <input matInput [value]="mascotaForm.get('fechaNacimiento')?.value ? (mascotaForm.get('fechaNacimiento')?.value | calcularEdad:'años') + ' años ' + (mascotaForm.get('fechaNacimiento')?.value | calcularEdad:'meses') + ' meses' : 'No disponible'" disabled />
+            <input
+              matInput
+              [value]="
+                mascotaForm.get('fechaNacimiento')?.value
+                  ? (mascotaForm.get('fechaNacimiento')?.value | calcularEdad : 'años') +
+                    ' años ' +
+                    (mascotaForm.get('fechaNacimiento')?.value | calcularEdad : 'meses') +
+                    ' meses'
+                  : 'No disponible'
+              "
+              disabled
+            />
           </mat-form-field>
 
           <mat-form-field *ngIf="propietario" appearance="fill">
             <mat-label>Propietario</mat-label>
-            <input matInput [value]="propietario.nombre + ' ' + propietario.apellido1 + ' ' + propietario.apellido2" disabled/></mat-form-field>
+            <input
+              matInput
+              [value]="
+                propietario.nombre +
+                ' ' +
+                propietario.apellido1 +
+                ' ' +
+                propietario.apellido2
+              "
+              disabled
+            />
+          </mat-form-field>
         </form>
       </mat-card-content>
 
       <!-- Botones centrados -->
       <mat-card-actions class="action-buttons">
-        <button mat-raised-button class="button-primary" (click)="guardarCambios()" *ngIf="puedeEditar" [disabled]="mascotaForm.invalid">Guardar</button>
+        <button
+          mat-raised-button
+          class="button-primary"
+          (click)="guardarCambios()"
+          *ngIf="puedeEditar"
+          [disabled]="mascotaForm.invalid"
+        >
+          Guardar
+        </button>
         <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
       </mat-card-actions>
     </mat-card>

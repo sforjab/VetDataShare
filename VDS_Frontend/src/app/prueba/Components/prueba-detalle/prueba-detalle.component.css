@@ -12,30 +12,51 @@
   margin-bottom: 20px;
 }
 
-.documentos-table {
-  width: 100%;
-  margin: 20px auto; /* Centramos la tabla horizontalmente */
-  text-align: center; /* Centra el contenido dentro de las celdas */
-  border-collapse: collapse;
+.form-card {
+  align-items: center;
 }
 
-.documentos-table th,
-.documentos-table td {
-  padding: 10px;
-  text-align: center; /* Centra el contenido dentro de cada celda */
-  border: 1px solid #ccc;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Columnas fijas */
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+th, td {
+  padding: 10px 15px;
+  text-align: left;
+  white-space: nowrap; /* Evita saltos de línea */
+  border-right: 1px solid #ccc;
+}
+
+/* Elimina el borde derecho de la última columna */
+th:last-child, td:last-child {
+  border-right: none; 
+}
+
+mat-card-content {
+  display: flex;
+  justify-content: space-between;
 }
 
 .info-row {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  flex-direction: column;
 }
 
 .info-row p {
   margin: 0;
-  text-align: center; /* Centra el texto dentro de las columnas */
   width: 100%; /* Asegura que los textos ocupen el espacio adecuado */
+}
+
+.info-row:first-child p {
+  text-align: start; /* Alinea a la izquierda */
+}
+
+.info-row:last-child p {
+  text-align: end; /* Alinea a la derecha */
 }
 
 .detalle-form {
@@ -50,20 +71,35 @@
   margin-top: 10px;
 }
 
-.botones-accion {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
+.text-center {
+  text-align: center !important;
+}
+
+.no-documentos-text {
+  text-align: center;
+  font-size: 16px;
+  color: #757575;
   margin-top: 20px;
 }
 
-.spinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
+/* Responsive: Ajustes en pantallas pequeñas */
+@media (max-width: 768px) {
+  th, td {
+    padding: 8px 10px;
+    font-size: 12px !important;
+  }
 }
 
-textarea, mat-select {
-  color: #000000 !important;
+@media (max-width: 480px) {
+  table {
+    table-layout: auto;
+  }
+
+  th, td {
+    padding: 6px 8px;
+  }
+
+  mat-card-content {
+    font-size: 0.85rem;
+  }
 }

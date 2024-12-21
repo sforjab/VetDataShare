@@ -1,35 +1,66 @@
-.pruebas-container {
-  padding: 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
+/* Contenedor de la tabla */
 .tabla-container {
-  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 table {
   width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Columnas fijas */
+  font-size: 14px;
+  background-color: #ffffff;
 }
 
 th, td {
-  text-align: left;
-  padding: 8px 16px;
+  padding: 10px 15px;
+  text-align: center;
+  border-right: 1px solid #ccc;
 }
 
+td.acciones-cell {
+  text-align: center;
+  width: 1%; /* Evita que la columna de acciones ocupe demasiado espacio */
+  white-space: nowrap;
+}
+
+/* Centrar el botón Acceder */
+.text-center {
+  text-align: center !important;
+}
+
+/* Botón dentro de la tabla */
 button {
   margin: 0;
   padding: 6px 12px;
   font-size: 0.9rem;
 }
 
+.acciones-cell button {
+  margin: 0 5px;
+}
+
+/* Efecto hover en filas */
 tr:hover {
   background-color: #f5f5f5;
+}
+
+/* Mensaje si no hay pruebas */
+.no-pruebas {
+  text-align: center;
+  font-size: 16px;
+  color: #757575;
+  margin-top: 20px;
+}
+
+/* Paginador */
+mat-paginator {
+  background-color: #ffffff; /* Fondo del paginador */
+  border-top: 1px solid #ddd; /* Línea divisoria con la tabla */
 }
 
 /* Botón de Volver */
@@ -39,13 +70,22 @@ tr:hover {
   margin-top: 30px;
 }
 
-button {
-  min-width: 100px;
+/* Responsive: ajustes en pantallas pequeñas */
+@media (max-width: 768px) {
+  th, td {
+    padding: 8px 10px; /* Reduce el padding */
+    font-size: 12px !important;
+  }
 }
 
-.spinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
+@media (max-width: 480px) {
+  table {
+    table-layout: auto; /* Permite ajuste automático */
+  }
+
+  th, td {
+    padding: 6px 8px;
+    font-size: 11px !important;
+    /* width: 50% !important; */
+  }
 }

@@ -6,6 +6,9 @@
     align-items: center;
     padding: 10px 20px; /* Espaciado lateral */
     font-size: 14px;
+    width: 100%; /* Ocupa todo el ancho */
+    box-sizing: border-box; /* Asegura que los paddings no alteren el ancho */
+    position: relative; /* Mantiene su posición en el flujo normal */
 }
 
 .footer-container {
@@ -50,4 +53,22 @@
 .footer-link:hover {
     background-color: #9ac5d3; /* Subrayado al pasar el cursor */
     color: #141e26 !important;
+}
+
+@media (max-width: 480px) {
+    .footer-container {
+        flex-direction: column;
+    }
+
+    .footer-logo {
+        padding: 0;
+    }
+
+    .footer-links {
+        flex-direction: column;
+    }
+
+    .footer-links button {
+        margin-top: 0.5rem;
+    }
 }

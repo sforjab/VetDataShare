@@ -41,6 +41,12 @@ public class VacunaService {
                 .collect(Collectors.toList());
     }
 
+    public List<VacunaDTO> getUltimasVacunas(Long idMascota) {
+        return vacunaRepository.findTop3ByMascotaIdOrderByFechaDesc(idMascota).stream()
+        .map(vacunaMapper::toDTO)
+        .collect(Collectors.toList());
+    }
+
     @Transactional
     public List<VacunaDTO> getVacunasPorConsultaId(Long consultaId) {
         return vacunaRepository.findByConsultaId(consultaId).stream()

@@ -37,6 +37,12 @@ public class VacunaController {
         return ResponseEntity.ok(vacunas);
     }
 
+    @GetMapping("/getUltimasVacunas/{idMascota}")
+    public ResponseEntity<List<VacunaDTO>> getUltimasVacunas(@PathVariable Long idMascota) {
+        List<VacunaDTO> ultimasVacunas = vacunaService.getUltimasVacunas(idMascota);
+        return ResponseEntity.ok(ultimasVacunas);
+    }
+
     @GetMapping("/getVacunasPorConsultaId/{consultaId}")
     public ResponseEntity<List<VacunaDTO>> getVacunasPorConsultaId(@PathVariable Long consultaId) {
         List<VacunaDTO> vacunas = vacunaService.getVacunasPorConsultaId(consultaId);
