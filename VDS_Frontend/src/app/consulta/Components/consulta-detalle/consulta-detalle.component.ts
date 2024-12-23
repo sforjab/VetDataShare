@@ -62,7 +62,22 @@ export class ConsultaDetalleComponent implements OnInit {
     }
   
     this.isLoading = true; // Activamos spinner
-    this.cargarDatos(usuarioId, this.idConsulta);
+    if (this.idConsulta !== null) {
+      this.consultaService.verificarAccesoConsulta(this.idConsulta).subscribe({
+        next: () => {
+          console.log('Acceso permitido a la consulta.');
+          // Llamar a otros métodos para cargar los detalles de la consulta
+          this.cargarDatos(usuarioId, this.idConsulta!);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Acceso no autorizado:', err);
+          this.router.navigate(['/acceso-no-autorizado']);
+        }
+      });
+    } else {
+      console.error('ID de consulta no disponible.');
+      this.router.navigate(['/acceso-no-autorizado']);
+    }
   }
 
   inicializarFormulario(): void {

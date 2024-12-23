@@ -32,24 +32,94 @@ public class UsuarioController {
 
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            String rolUsuario = userDetails.getRol();
+            Long idUsuarioSesion = userDetails.getIdUsuario();
 
-            // Verificar si el cliente intenta acceder a su propio perfil
-            if ("CLIENTE".equals(userDetails.getRol()) && !userDetails.getIdUsuario().equals(id)) {
+            // Si es CLIENTE, solo puede acceder a su propio perfil
+            if ("CLIENTE".equals(rolUsuario) && !idUsuarioSesion.equals(id)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(new ApiError("Acceso no autorizado."));
             }
+
+            // Si es VETERINARIO, puede acceder a:
+            // - Su propio perfil
+            // - Los clientes (sin restricciones)
+            if ("VETERINARIO".equals(rolUsuario)) {
+                Optional<UsuarioDTO> usuarioOpt = usuarioService.getUsuarioPorId(id);
+                if (usuarioOpt.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body(new ApiError("Usuario no encontrado."));
+                }
+
+                UsuarioDTO usuario = usuarioOpt.get();
+                if ("CLIENTE".equals(usuario.getRol()) || idUsuarioSesion.equals(id)) {
+                    return ResponseEntity.ok(usuario);
+                }
+
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ApiError("Acceso no autorizado. Solo puedes acceder a clientes o a tu propio perfil."));
+            }
+
+            // Si es ADMIN_CLINICA, puede acceder a:
+            // - Clientes (sin restricciones)
+            // - Usuarios de su clínica
+            if ("ADMIN_CLINICA".equals(rolUsuario)) {
+                // Obtenemos el usuario en sesión para validar su clínica
+                Optional<UsuarioDTO> usuarioSesionOpt = usuarioService.getUsuarioPorId(idUsuarioSesion);
+                if (usuarioSesionOpt.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(new ApiError("Usuario no encontrado en la sesión."));
+                }
+
+                UsuarioDTO usuarioSesion = usuarioSesionOpt.get();
+                Optional<UsuarioDTO> usuarioOpt = usuarioService.getUsuarioPorId(id);
+                if (usuarioOpt.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body(new ApiError("Usuario no encontrado."));
+                }
+
+                UsuarioDTO usuario = usuarioOpt.get();
+                if ("CLIENTE".equals(usuario.getRol())) {
+                    return ResponseEntity.ok(usuario); // Puede acceder a cualquier cliente
+                }
+
+                // Validar que el usuario pertenece a la misma clínica
+                if (!usuarioSesion.getClinicaId().equals(usuario.getClinicaId())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(new ApiError("Acceso no autorizado. Este usuario no pertenece a su clínica."));
+                }
+
+                return ResponseEntity.ok(usuario);
+            }
+
+            // Si es ADMIN, puede acceder a cualquier perfil
+            if ("ADMIN".equals(rolUsuario)) {
+                Optional<UsuarioDTO> usuarioOpt = usuarioService.getUsuarioPorId(id);
+                return usuarioOpt.<ResponseEntity<Object>>map(ResponseEntity::ok)
+                        .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(new ApiError("Usuario no encontrado.")));
+            }
         }
 
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ApiError("Acceso no autorizado."));
+    }
+
+    @GetMapping("/getNumColegiadoPorIdVet/{id}")
+    public ResponseEntity<Object> getNumColegiadoPorIdVet(@PathVariable Long id) {
         Optional<UsuarioDTO> usuarioDTO = usuarioService.getUsuarioPorId(id);
 
-        if (usuarioDTO.isPresent()) {
-            System.out.println("UsuarioDTO enviado al frontend: " + usuarioDTO);
-            return ResponseEntity.ok(usuarioDTO.get());
-        } else {
+        if (usuarioDTO.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError("Usuario no encontrado con ID: " + id));
+                    .body(new ApiError("Veterinario no encontrado con ID: " + id));
         }
+
+        UsuarioDTO usuario = usuarioDTO.get();
+
+        // Devolver solo el número de colegiado
+        return ResponseEntity.ok(Map.of("numColegiado", usuario.getNumColegiado()));
     }
+
 
     @GetMapping("/getUsuarioPorNumIdent/{numIdent}")
     public ResponseEntity<Object> getUsuarioPorNumIdent(@PathVariable String numIdent) {
@@ -91,12 +161,37 @@ public class UsuarioController {
     }
 
     @GetMapping("/buscarEmpleados/{idClinica}")
-    public ResponseEntity<List<UsuarioDTO>> buscarEmpleados(
+    public ResponseEntity<Object> buscarEmpleados(
             @PathVariable Long idClinica,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String apellido1,
             @RequestParam(required = false) String apellido2,
             @RequestParam(required = false) String rol) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            String rolUsuario = userDetails.getRol();
+
+            if ("ADMIN_CLINICA".equals(rolUsuario)) {
+                Long idUsuario = userDetails.getIdUsuario();
+                Optional<UsuarioDTO> usuarioOpt = usuarioService.getUsuarioPorId(idUsuario);
+
+                if (usuarioOpt.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(new ApiError("Usuario no encontrado."));
+                }
+
+                UsuarioDTO usuario = usuarioOpt.get();
+
+                // Se valida que el 'idClinica' del usuario coincida con el 'idClinica' solicitado
+                if (!usuario.getClinicaId().equals(idClinica)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(new ApiError("Acceso no autorizado a esta clínica."));
+                }
+            }
+        }
 
         List<UsuarioDTO> empleados = usuarioService.buscarEmpleados(idClinica, nombre, apellido1, apellido2, rol);
         return ResponseEntity.ok(empleados);

@@ -11,9 +11,9 @@ import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 export class ClienteDashboardComponent implements OnInit {
 
   idCliente: number | null = null;
-  rolUsuarioSesion: string | null = null; // Guardamos el rol del usuario logueado
-  cliente: any = null; // Datos del cliente
-  cargando: boolean = true; // Estado del spinner
+  rolUsuarioSesion: string | null = null; 
+  cliente: any = null; 
+  cargando: boolean = true;
 
   constructor(private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router) {}
 
@@ -44,9 +44,11 @@ export class ClienteDashboardComponent implements OnInit {
             console.error('Error al obtener datos del cliente:', err);
             this.cargando = false; // Ocultamos el spinner en caso de error
             if (err.status === 403) {
+              console.log('Acceso no autorizado')
               this.router.navigate(['/acceso-no-autorizado']);
-            } else {
-              console.error('Error inesperado:', err);
+            } else if (err.status === 404) {
+              console.error('Usuario no encontrado');
+              this.router.navigate(['/acceso-no-autorizado']);
             }
           }
         });

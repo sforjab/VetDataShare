@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.uoc.tfm.vds_backend.consulta.model.Consulta;
 import com.uoc.tfm.vds_backend.consulta.repository.ConsultaRepository;
 import com.uoc.tfm.vds_backend.mascota.model.Mascota;
+import com.uoc.tfm.vds_backend.mascota.service.MascotaService;
 import com.uoc.tfm.vds_backend.prueba.dto.PruebaDTO;
 import com.uoc.tfm.vds_backend.prueba.mapper.PruebaMapper;
 import com.uoc.tfm.vds_backend.prueba.model.Prueba;
@@ -28,6 +29,9 @@ public class PruebaService {
 
     @Autowired
     private ConsultaRepository consultaRepository;
+
+    @Autowired
+    private MascotaService mascotaService;
 
     @Transactional(readOnly = true)
     public Optional<PruebaDTO> getPruebaPorId(Long id) {
@@ -54,6 +58,21 @@ public class PruebaService {
         return pruebaRepository.findByConsultaId(consultaId).stream()
                 .map(pruebaMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public boolean validarAccesoPrueba(Long idPrueba, Long idUsuario) {
+        Optional<Prueba> pruebaOpt = pruebaRepository.findById(idPrueba);
+
+        if (pruebaOpt.isPresent()) {
+            Prueba prueba = pruebaOpt.get();
+            Long idMascota = prueba.getMascota().getId();
+
+            // Validamos si la mascota pertenece al usuario
+            return mascotaService.verificarPropietario(idMascota, idUsuario);
+        }
+
+        return false;
     }
 
     @Transactional

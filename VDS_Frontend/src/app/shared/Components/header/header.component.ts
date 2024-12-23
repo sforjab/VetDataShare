@@ -3,9 +3,6 @@ import { AuthService } from 'src/app/auth/Services/auth.service';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
 import { Router } from '@angular/router';
-import { jwtDecode } from 'jwt-decode';
-
-
 
 @Component({
   selector: 'app-header',

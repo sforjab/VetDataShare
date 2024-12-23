@@ -7,11 +7,16 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.uoc.tfm.vds_backend.clinica.dto.ClinicaDTO;
 import com.uoc.tfm.vds_backend.clinica.service.ClinicaService;
 import com.uoc.tfm.vds_backend.error.ApiError;
+import com.uoc.tfm.vds_backend.jwt.CustomUserDetails;
+import com.uoc.tfm.vds_backend.usuario.dto.UsuarioDTO;
+import com.uoc.tfm.vds_backend.usuario.service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/clinicas")
@@ -20,8 +25,39 @@ public class ClinicaController {
     @Autowired
     ClinicaService clinicaService;
 
+    @Autowired
+    UsuarioService usuarioService;
+
     @GetMapping("/getClinicaPorId/{id}")
     public ResponseEntity<Object> getClinicaPorId(@PathVariable Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            String rol = userDetails.getRol();
+
+            // Solo verificamos para el rol ADMIN_CLINICA
+            if ("ADMIN_CLINICA".equals(rol)) {
+                Long idUsuario = userDetails.getIdUsuario();
+
+                // Obtenemos el usuario actual para verificar su idClinica
+                Optional<UsuarioDTO> usuarioOpt = usuarioService.getUsuarioPorId(idUsuario);
+                if (usuarioOpt.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(new ApiError("No se encontró el usuario en sesión."));
+                }
+
+                UsuarioDTO usuario = usuarioOpt.get();
+
+                // Comparamos el idClinica del usuario con el solicitado
+                if (!usuario.getClinicaId().equals(id)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(new ApiError("Acceso no autorizado a la clínica solicitada."));
+                }
+            }
+        }
+
+        // Si pasa las verificaciones, obtenemos la clínica
         Optional<ClinicaDTO> clinicaDTO = clinicaService.getClinicaPorId(id);
         if (clinicaDTO.isPresent()) {
             return ResponseEntity.ok(clinicaDTO.get());
@@ -30,6 +66,7 @@ public class ClinicaController {
                     .body(new ApiError("Clínica no encontrada con ID: " + id));
         }
     }
+
 
 
     @GetMapping("/getClinicaPorNombre/{nombre}")

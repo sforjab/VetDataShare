@@ -66,7 +66,7 @@ export class NumeroColegiadoComponent {
     const requestData = {
       token: this.accesoToken,
       numColegiado: numColegiado,
-      fechaExpiracion: new Date(new Date().getTime() + 60 * 60 * 1000).toISOString() // Una hora desde ahora
+      fechaExpiracion: new Date(new Date().getTime() + 30 * 60 * 1000).toISOString() // Media hora
     };
 
     this.accesoTemporalService.actualizarAccesoTemporal(requestData).subscribe({

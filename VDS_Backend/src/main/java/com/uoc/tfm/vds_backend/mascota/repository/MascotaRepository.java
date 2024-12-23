@@ -16,4 +16,5 @@ public interface MascotaRepository extends JpaRepository <Mascota, Long> {
     boolean existsByIdAndUsuarioId(Long idUsuario, Long idMascota);
     List<Mascota> findByUsuarioId(Long usuarioId);
     List<Mascota> findByClinicaId(Long clinicaId);
+    List<Mascota> findAllByUsuarioId(Long usuarioId);
 }

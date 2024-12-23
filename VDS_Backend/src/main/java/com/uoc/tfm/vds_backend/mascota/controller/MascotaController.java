@@ -55,7 +55,7 @@ public class MascotaController {
     @GetMapping("/verificarPropietario/{idMascota}")
     public ResponseEntity<Object> verificarPropietario(@PathVariable Long idMascota) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         // Permitir acceso a roles diferentes de CLIENTE
         if (!"CLIENTE".equals(userDetails.getRol())) {

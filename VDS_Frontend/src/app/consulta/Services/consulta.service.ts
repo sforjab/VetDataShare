@@ -88,6 +88,13 @@ export class ConsultaService {
     );
   }
 
+  // Verificar acceso a la consulta
+  verificarAccesoConsulta(idConsulta: number): Observable<void> {
+    return this.http.get<void>(`${this.consultaUrl}/verificarConsulta/${idConsulta}`).pipe(
+      tap(() => console.log(`Acceso a la consulta ${idConsulta} verificado con éxito.`)),
+      catchError(this.handleError)
+    );
+  }
 
   // Crear una nueva consulta
   createConsulta(consulta: Consulta): Observable<Consulta> {

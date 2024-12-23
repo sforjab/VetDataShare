@@ -1,7 +1,11 @@
 <header class="header">
   <!-- Logo a la izquierda -->
   <div class="header-logo">
-    <button mat-button (click)="navigateTo('/')">VetDataShare</button>
+    <!-- <button mat-button (click)="navigateTo('/')">VetDataShare</button> -->
+    <a [routerLink]="'/'" class="logo-link">
+      <img src="assets/images/logo-sin-texto-250px.png" alt="VetDataShare Logo" class="logo-img">
+      <span class="logo-text">VetDataShare</span>
+    </a>
   </div>
 
   <!-- Opciones a la derecha -->

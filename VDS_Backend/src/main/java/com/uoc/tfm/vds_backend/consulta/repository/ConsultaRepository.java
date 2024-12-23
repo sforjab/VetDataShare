@@ -16,4 +16,5 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
     List<Consulta> findByMascotaId(Long mascotaId);
     List<Consulta> findByClinicaId(Long clinicaId);
     List<Consulta> findTop3ByMascotaIdOrderByFechaConsultaDesc(Long mascotaId);
+    boolean existsByIdAndMascotaIdIn(Long idConsulta, List<Long> mascotaIds);
 }

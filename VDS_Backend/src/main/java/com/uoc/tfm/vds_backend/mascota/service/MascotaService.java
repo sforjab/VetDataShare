@@ -91,6 +91,13 @@ public class MascotaService {
         return false;
     }
     
+    public List<Long> obtenerIdsMascotasPorUsuario(Long idUsuario) {
+        // Obtener todas las mascotas asociadas al usuario
+        return mascotaRepository.findAllByUsuarioId(idUsuario)
+                .stream()
+                .map(Mascota::getId) // Extraer solo los IDs de las mascotas
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public boolean esPropietarioDeMascota(Long idUsuario, Long idMascota) {

@@ -170,7 +170,47 @@ public class ConsultaController {
         return ResponseEntity.ok(vacunas); // 200 OK si hay datos
     }
 
-    // Crear consulta
+    @GetMapping("/verificarConsulta/{idConsulta}")
+    public ResponseEntity<Object> verificarConsulta(@PathVariable Long idConsulta) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Autenticación inválida. Por favor, inicie sesión."));
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String rol = userDetails.getRol();
+
+        if ("TEMPORAL".equals(rol)) {
+            Long idMascotaToken = userDetails.getIdMascota();
+            Optional<ConsultaDTO> consulta = consultaService.getConsultaPorId(idConsulta);
+    
+            if (consulta.isEmpty() || !consulta.get().getMascotaId().equals(idMascotaToken)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ApiError("No tiene acceso a esta consulta."));
+            }
+            return ResponseEntity.ok().build();
+        }
+
+        // Se permite acceso completo a roles diferentes de CLIENTE
+        if (!"CLIENTE".equals(rol)) {
+            return ResponseEntity.ok().build();
+        }
+
+        // Si es CLIENTE, se valida si la consulta pertenece a una de sus mascotas
+        Long idUsuario = userDetails.getIdUsuario();
+        boolean tieneAcceso = consultaService.verificarConsultaMascotaUsuario(idConsulta, idUsuario);
+
+        if (tieneAcceso) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ApiError("No tiene acceso a esta consulta."));
+        }
+    }
+
+    // Creamos una consulta
     @PostMapping("/create")
     public ResponseEntity<Object> createConsulta(@RequestBody ConsultaDTO consultaDTO) {
         Optional<ConsultaDTO> consultaCreada = consultaService.createConsulta(consultaDTO);
@@ -182,11 +222,12 @@ public class ConsultaController {
         }
     }
 
+    // Actualizamos la consulta
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateConsulta(@PathVariable Long id, @RequestBody ConsultaDTO consultaDTO) {
         System.out.println("Controller - ID recibido: " + id);
         System.out.println("Controller - DTO recibido: " + consultaDTO);
-        // Actualizar la consulta
+        
         Optional<ConsultaDTO> consultaActualizada = consultaService.updateConsulta(id, consultaDTO);
 
         if (consultaActualizada.isPresent()) {
@@ -197,7 +238,7 @@ public class ConsultaController {
         }
     }
 
-    // Eliminar consulta
+    // Eliminamos una consulta
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteConsulta(@PathVariable Long id) {
         boolean consultaEliminada = consultaService.deleteConsulta(id);

@@ -34,6 +34,20 @@ export class MascotaVacunasListComponent implements OnInit {
       const id = params.get('idMascota');
       if (id) {
         this.idMascota = +id;
+         // Verifica permisos
+         this.mascotaService.verificarPropietario(this.idMascota).subscribe({
+          next: () => {
+            console.log('Acceso autorizado a la mascota.');
+          },
+          error: (err: HttpErrorResponse) => {
+            console.error('Error de acceso:', err);
+            if (err.status === 403) {
+              this.router.navigate(['/acceso-no-autorizado']);
+            } else {
+              console.error('Error inesperado:', err);
+            }
+          }
+        });
         this.cargarMascota(this.idMascota);
         this.cargarVacunas(this.idMascota);
       } else {

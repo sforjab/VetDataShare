@@ -36,6 +36,17 @@ export class UsuarioService {
     );
   }
 
+  getNumColegiadoPorIdVet(id: number): Observable<{ numColegiado: string }> {
+    return this.http
+      .get<{ numColegiado: string }>(`${this.usuarioUrl}/getNumColegiadoPorIdVet/${id}`)
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error obteniendo el número de colegiado:', error);
+          throw error;
+        })
+      );
+  }
+
   buscarClientes(filtros: {
     numIdent?: string;
     nombre?: string;

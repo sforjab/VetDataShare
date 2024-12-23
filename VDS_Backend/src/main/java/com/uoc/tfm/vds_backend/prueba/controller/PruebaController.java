@@ -3,9 +3,13 @@ package com.uoc.tfm.vds_backend.prueba.controller;
 import com.uoc.tfm.vds_backend.prueba.dto.PruebaDTO;
 import com.uoc.tfm.vds_backend.prueba.service.PruebaService;
 import com.uoc.tfm.vds_backend.error.ApiError;
+import com.uoc.tfm.vds_backend.jwt.CustomUserDetails;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +25,26 @@ public class PruebaController {
 
     @GetMapping("/getPruebaPorId/{id}")
     public ResponseEntity<Object> getPruebaPorId(@PathVariable Long id) {
-        Optional<PruebaDTO> pruebaDTO = pruebaService.getPruebaPorId(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            // Verificamos si el rol es CLIENTE
+            if ("CLIENTE".equals(userDetails.getRol())) {
+                // Se obtiene el usuario autenticado y se valida la pertenencia de la prueba
+                Long idUsuario = userDetails.getIdUsuario();
+                boolean esValido = pruebaService.validarAccesoPrueba(id, idUsuario);
+
+                if (!esValido) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(new ApiError("No tiene acceso a esta prueba."));
+                }
+            }
+        }
+
+        // Si no es CLIENTE, o la validación es exitosa, devolvemos la prueba
+        Optional<PruebaDTO> pruebaDTO = pruebaService.getPruebaPorId(id);
         if (pruebaDTO.isPresent()) {
             return ResponseEntity.ok(pruebaDTO.get());
         } else {

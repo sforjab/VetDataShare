@@ -73,6 +73,7 @@ export class AuthInterceptor implements HttpInterceptor {
           }
         } else if (error.status === 403) {
           this.snackBar.open('No tiene permisos para realizar esta acción.', 'Cerrar', { duration: 3000 });
+          this.router.navigate(['/acceso-no-autorizado']);
         }
 
         // Propagamos el error

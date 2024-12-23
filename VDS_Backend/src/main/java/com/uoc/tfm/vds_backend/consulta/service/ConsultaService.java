@@ -102,6 +102,14 @@ public class ConsultaService {
         return mascotaService.esPropietarioDeMascota(idUsuario, idMascota);
     }
 
+    public boolean verificarConsultaMascotaUsuario(Long idConsulta, Long idUsuario) {
+        // Obtener las mascotas del usuario
+        List<Long> mascotasDelUsuario = mascotaService.obtenerIdsMascotasPorUsuario(idUsuario);
+    
+        // Verificar si la consulta pertenece a alguna de estas mascotas
+        return consultaRepository.existsByIdAndMascotaIdIn(idConsulta, mascotasDelUsuario);
+    }
+
     @Transactional
     public Optional<ConsultaDTO> createConsulta(ConsultaDTO consultaDTO) {
         try {

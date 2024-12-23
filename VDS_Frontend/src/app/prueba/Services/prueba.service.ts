@@ -12,14 +12,17 @@ export class PruebaService {
 
     constructor(private http: HttpClient) {}
 
- // Obtener las pruebas por ID de la mascota
+    // Obtener las pruebas por ID de la mascota
     getPruebasPorIdMascota(idMascota: number): Observable<Prueba[]> {
         return this.http.get<Prueba[]>(`${this.pruebaUrl}/getPruebasPorIdMascota/${idMascota}`);
     }
 
     // Obtener una prueba por su ID
-    getPruebaPorId(idPrueba: number): Observable<Prueba> {
-        return this.http.get<Prueba>(`${this.pruebaUrl}/getPruebaPorId/${idPrueba}`);
+    getPruebaPorId(id: number): Observable<Prueba> {
+        return this.http.get<Prueba>(`${this.pruebaUrl}/getPruebaPorId/${id}`).pipe(
+          tap(prueba => console.log('Prueba obtenida: ', prueba)),
+          catchError(this.handleError)
+        );
     }
 
     getUltimasPruebas(idMascota: number): Observable<Prueba[]> {

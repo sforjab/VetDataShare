@@ -39,6 +39,7 @@ export class PruebaDetalleComponent implements OnInit {
   nombreMascota: string = '';
   numeroChip: string = '';
   numColegiado: string = '';
+  idClinicaConsulta: number | undefined;
   documentos: DocumentoPrueba[] = [];
   origenPrevio: string | null = null;
   origen: string | null = null;
@@ -81,19 +82,29 @@ export class PruebaDetalleComponent implements OnInit {
     this.pruebaService.getPruebaPorId(id).subscribe({
       next: (prueba) => {
         this.prueba = prueba;
-
+  
         this.detallePruebaForm.patchValue({
           tipo: prueba.tipo,
           descripcion: prueba.descripcion
         });
-
+  
         this.cargarMascota(prueba.mascotaId);
         this.cargarConsulta(prueba.consultaId);
-        this.evaluarPermisos();
+        /* this.evaluarPermisos(); */
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error cargando prueba:', err);
-        this.snackBar.open('Error cargando los datos de la prueba', 'Cerrar', { duration: 3000 });
+  
+        // Manejo de error 403
+        if (err.status === 403) {
+          this.snackBar.open('No tiene acceso a esta prueba.', 'Cerrar', { duration: 3000 });
+          this.router.navigate(['/acceso-no-autorizado']);
+        } else if (err.status === 404) {
+          this.snackBar.open('Prueba no encontrada.', 'Cerrar', { duration: 3000 });
+          this.router.navigate(['/']);
+        } else {
+          this.snackBar.open('Error cargando los datos de la prueba.', 'Cerrar', { duration: 3000 });
+        }
       },
       complete: () => {
         this.isLoading = false;
@@ -110,7 +121,12 @@ export class PruebaDetalleComponent implements OnInit {
         if (this.rol === 'ADMIN') {
           this.puedeEditar = true;
         } else if (this.rol === 'VETERINARIO' || this.rol === 'ADMIN_CLINICA') {
-          this.puedeEditar = this.prueba.consultaId === usuario.clinicaId;
+          if (this.idClinicaConsulta !== undefined) {
+            this.puedeEditar = this.idClinicaConsulta === usuario.clinicaId;
+          } else {
+            this.puedeEditar = false;
+          }
+          /* this.puedeEditar = this.prueba.consultaId === usuario.clinicaId; */
         } else if (this.rol === 'TEMPORAL') {
           this.puedeEditar = false;
         } else {
@@ -151,7 +167,9 @@ export class PruebaDetalleComponent implements OnInit {
     this.isLoading = true;
     this.consultaService.getConsultaPorId(consultaId).subscribe({
       next: (consulta: Consulta) => {
-        this.cargarVeterinario(consulta.veterinarioId);
+        this.idClinicaConsulta = consulta.clinicaId;
+        this.cargarNumColegiado(consulta.veterinarioId);
+        this.evaluarPermisos();
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error cargando consulta:', err);
@@ -163,21 +181,19 @@ export class PruebaDetalleComponent implements OnInit {
     });
   }
 
-  cargarVeterinario(veterinarioId: number): void {
-    this.isLoading = true;
-    this.usuarioService.getUsuarioPorId(veterinarioId).subscribe({
-      next: (veterinario: Usuario) => {
-        this.numColegiado = veterinario.numColegiado || 'No disponible';
+  cargarNumColegiado(veterinarioId: number): void {
+    this.usuarioService.getNumColegiadoPorIdVet(veterinarioId).subscribe({
+      next: (response) => {
+        this.numColegiado = response.numColegiado || 'No disponible';
+        console.log('Número de colegiado:', this.numColegiado);
       },
-      error: (err: HttpErrorResponse) => {
-        console.error('Error cargando veterinario:', err);
-        this.snackBar.open('Error cargando los datos del veterinario', 'Cerrar', { duration: 3000 });
+      error: (err) => {
+        console.error('Error obteniendo el número de colegiado:', err);
+        this.snackBar.open('Error al cargar el número de colegiado.', 'Cerrar', { duration: 3000 });
       },
-      complete: () => {
-        this.isLoading = false;
-      }
     });
   }
+    
 
   cargarDocumentos(pruebaId: number): void {
     this.isLoading = true;

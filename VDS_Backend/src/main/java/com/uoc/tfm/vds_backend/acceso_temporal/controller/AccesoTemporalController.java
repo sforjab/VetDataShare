@@ -98,7 +98,7 @@ public class AccesoTemporalController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Acceso temporal no encontrado"));
 
         // Calculamos la fecha de expiración una sola vez
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(5); // Tiempo de duración de token
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(30); // Media hora
 
         // Actualizamos los datos del acceso temporal
         accesoDTO.setNumColegiado(request.getNumColegiado());

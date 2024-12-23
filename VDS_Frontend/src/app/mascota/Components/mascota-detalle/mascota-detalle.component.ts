@@ -6,6 +6,7 @@ import { Usuario } from 'src/app/usuarios/Models/usuario.dto';
 import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-mascota-detalle',
@@ -41,6 +42,22 @@ export class MascotaDetalleComponent implements OnInit {
       }
 
       this.idMascota = +id;
+
+       // Verifica permisos
+      this.mascotaService.verificarPropietario(this.idMascota).subscribe({
+        next: () => {
+          console.log('Acceso autorizado a la mascota.');
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Error de acceso:', err);
+          if (err.status === 403) {
+            this.router.navigate(['/acceso-no-autorizado']);
+          } else {
+            console.error('Error inesperado:', err);
+          }
+        }
+      });
+
       this.cargarMascotaDetalle(this.idMascota);
 
       const rolUsuarioSesion = sessionStorage.getItem('rol');
