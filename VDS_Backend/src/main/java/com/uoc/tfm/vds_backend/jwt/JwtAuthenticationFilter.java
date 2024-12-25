@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
             String rol = claims.get("rol", String.class);
             if ("TEMPORAL".equals(rol)) {
                 Long idMascota = claims.get("idMascota", Long.class);
-                CustomUserDetails customDetails = new CustomUserDetails(null, idMascota, rol);
+                CustomUserDetails customDetails = new CustomUserDetails(null, idMascota, "TEMPORAL");
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         customDetails, null, List.of(() -> "TEMPORAL"));
                 SecurityContextHolder.getContext().setAuthentication(authToken);

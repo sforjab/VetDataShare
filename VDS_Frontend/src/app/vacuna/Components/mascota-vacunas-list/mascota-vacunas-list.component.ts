@@ -79,6 +79,13 @@ export class MascotaVacunasListComponent implements OnInit {
     this.vacunaService.getVacunasPorIdMascota(idMascota).subscribe({
       next: (vacunas) => {
         this.dataSource.data = vacunas || [];
+        setTimeout(() => {
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          } else {
+            console.warn('Paginador aún no disponible.');
+          }
+        });
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar las vacunas:', err);

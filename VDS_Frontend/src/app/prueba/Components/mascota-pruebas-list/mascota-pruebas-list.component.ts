@@ -79,6 +79,13 @@ export class MascotaPruebasListComponent implements OnInit {
     this.pruebaService.getPruebasPorIdMascota(idMascota).subscribe({
       next: (pruebas) => {
         this.dataSource.data = pruebas || [];
+        setTimeout(() => {
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          } else {
+            console.warn('Paginador aún no disponible.');
+          }
+        });
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar las pruebas:', err);

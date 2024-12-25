@@ -25,8 +25,9 @@ export class SubirDocumentoComponent {
           this.snackBar.open('Documento subido con éxito.', 'Cerrar', { duration: 3000 });
           this.dialogRef.close(true); // Cierra el diálogo y refresca la tabla en el componente padre
         },
-        error: () => {
-          this.snackBar.open('Error al subir el documento.', 'Cerrar', { duration: 3000 });
+        error: (err) => {
+          const mensajeError = err.error?.mensaje || 'Error al subir el documento.';
+          this.snackBar.open(mensajeError, 'Cerrar', { duration: 3000 });
         },
       });
     } else {

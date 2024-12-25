@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SubirDocumentoComponent } from '../subir-documento/subir-documento.component';
 import { EliminarDocumentoComponent } from '../eliminar-documento/eliminar-documento.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-prueba-detalle',
@@ -50,8 +51,18 @@ export class PruebaDetalleComponent implements OnInit {
   rol: string | null = null;
   usuarioLogueado: Usuario | null = null;
 
-  constructor(private pruebaService: PruebaService, private mascotaService: MascotaService, private consultaService: ConsultaService, private usuarioService: UsuarioService, private documentoPruebaService: DocumentoPruebaService, 
-              private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
+  constructor(
+    private pruebaService: PruebaService,
+    private mascotaService: MascotaService,
+    private consultaService: ConsultaService,
+    private usuarioService: UsuarioService,
+    private documentoPruebaService: DocumentoPruebaService,
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.pruebaId = +this.route.snapshot.paramMap.get('idPrueba')!;
@@ -62,7 +73,7 @@ export class PruebaDetalleComponent implements OnInit {
     this.inicializarFormulario();
 
     if (this.pruebaId) {
-      this.cargarPrueba(this.pruebaId);
+      this.cargarDatos(this.pruebaId);
       this.cargarDocumentos(this.pruebaId);
     } else {
       this.snackBar.open('ID de prueba no encontrado', 'Cerrar', { duration: 3000 });
@@ -77,25 +88,54 @@ export class PruebaDetalleComponent implements OnInit {
     });
   }
 
-  cargarPrueba(id: number): void {
+  cargarDatos(pruebaId: number): void {
     this.isLoading = true;
-    this.pruebaService.getPruebaPorId(id).subscribe({
-      next: (prueba) => {
-        this.prueba = prueba;
-  
+    const requests: { [key: string]: Observable<any> } = {
+      pruebaDetalle: this.pruebaService.getPruebaPorId(pruebaId),
+    };
+
+    const usuarioId = +sessionStorage.getItem('idUsuario')!;
+    if (usuarioId !== 0) {
+      requests['usuario'] = this.usuarioService.getUsuarioPorId(usuarioId);
+    }
+
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        const pruebaDetalle = responses['pruebaDetalle'];
+        this.prueba = pruebaDetalle;
+
         this.detallePruebaForm.patchValue({
-          tipo: prueba.tipo,
-          descripcion: prueba.descripcion
+          tipo: pruebaDetalle.tipo,
+          descripcion: pruebaDetalle.descripcion
         });
-  
-        this.cargarMascota(prueba.mascotaId);
-        this.cargarConsulta(prueba.consultaId);
+
+        this.cargarMascota(pruebaDetalle.mascotaId);
+        /* this.cargarConsulta(pruebaDetalle.consultaId); */
+
+        // Cargamos consulta y se asigna la clínica
+        this.consultaService.getConsultaPorId(pruebaDetalle.consultaId).subscribe({
+          next: (consulta: Consulta) => {
+            this.idClinicaConsulta = consulta.clinicaId;
+            this.cargarNumColegiado(consulta.veterinarioId);
+            // Evaluar permisos después de asignar la clínica
+            this.evaluarPermisos();
+          },
+          error: (err: HttpErrorResponse) => {
+            console.error('Error cargando consulta:', err);
+            this.snackBar.open('Error cargando los datos de la consulta', 'Cerrar', { duration: 3000 });
+            this.evaluarPermisos(); // Asegúrate de que siempre se evalúen los permisos
+          }
+        });
+
+        if ('usuario' in responses) {
+          this.usuarioLogueado = responses['usuario'];
+        }
+
         /* this.evaluarPermisos(); */
       },
       error: (err: HttpErrorResponse) => {
-        console.error('Error cargando prueba:', err);
-  
-        // Manejo de error 403
+        console.error('Error cargando los datos:', err);
+
         if (err.status === 403) {
           this.snackBar.open('No tiene acceso a esta prueba.', 'Cerrar', { duration: 3000 });
           this.router.navigate(['/acceso-no-autorizado']);
@@ -108,44 +148,30 @@ export class PruebaDetalleComponent implements OnInit {
       },
       complete: () => {
         this.isLoading = false;
-      }
+      },
     });
   }
 
   evaluarPermisos(): void {
-    const usuarioId = +sessionStorage.getItem('idUsuario')!;
-    this.usuarioService.getUsuarioPorId(usuarioId).subscribe({
-      next: (usuario: Usuario) => {
-        this.usuarioLogueado = usuario;
+    this.puedeEditar = false;
 
-        if (this.rol === 'ADMIN') {
-          this.puedeEditar = true;
-        } else if (this.rol === 'VETERINARIO' || this.rol === 'ADMIN_CLINICA') {
-          if (this.idClinicaConsulta !== undefined) {
-            this.puedeEditar = this.idClinicaConsulta === usuario.clinicaId;
-          } else {
-            this.puedeEditar = false;
-          }
-          /* this.puedeEditar = this.prueba.consultaId === usuario.clinicaId; */
-        } else if (this.rol === 'TEMPORAL') {
-          this.puedeEditar = false;
-        } else {
-          this.puedeEditar = false;
-        }
+    if (this.rol === 'ADMIN') {
+      this.puedeEditar = true;
+    } else if (this.rol === 'VETERINARIO' || this.rol === 'ADMIN_CLINICA') {
+      this.puedeEditar = this.idClinicaConsulta === this.usuarioLogueado?.clinicaId;
+    } else if (this.rol === 'TEMPORAL') {
+      this.puedeEditar = false;
+    } else {
+      this.puedeEditar = false;
+    }
 
-        if (this.puedeEditar) {
-          this.detallePruebaForm.enable();
-        } else {
-            this.detallePruebaForm.disable();
-        }
-      },
-      error: (err) => {
-        console.error('Error cargando usuario logueado:', err);
-        this.puedeEditar = false;
-        this.detallePruebaForm.disable();
-      }
-    });
+    if (this.puedeEditar) {
+      this.detallePruebaForm.enable();
+    } else {
+      this.detallePruebaForm.disable();
+    }
   }
+
   cargarMascota(mascotaId: number): void {
     this.isLoading = true;
     this.mascotaService.getMascotaPorId(mascotaId).subscribe({
@@ -169,7 +195,6 @@ export class PruebaDetalleComponent implements OnInit {
       next: (consulta: Consulta) => {
         this.idClinicaConsulta = consulta.clinicaId;
         this.cargarNumColegiado(consulta.veterinarioId);
-        this.evaluarPermisos();
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error cargando consulta:', err);
@@ -185,7 +210,6 @@ export class PruebaDetalleComponent implements OnInit {
     this.usuarioService.getNumColegiadoPorIdVet(veterinarioId).subscribe({
       next: (response) => {
         this.numColegiado = response.numColegiado || 'No disponible';
-        console.log('Número de colegiado:', this.numColegiado);
       },
       error: (err) => {
         console.error('Error obteniendo el número de colegiado:', err);
@@ -193,7 +217,6 @@ export class PruebaDetalleComponent implements OnInit {
       },
     });
   }
-    
 
   cargarDocumentos(pruebaId: number): void {
     this.isLoading = true;
@@ -214,9 +237,9 @@ export class PruebaDetalleComponent implements OnInit {
   abrirDialogSubirDocumento(): void {
     const dialogRef = this.dialog.open(SubirDocumentoComponent, {
       width: '400px',
-      data: { pruebaId: this.pruebaId }, // Pasa el ID de la prueba al diálogo
+      data: { pruebaId: this.pruebaId },
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.cargarDocumentos(this.pruebaId!);
@@ -227,12 +250,12 @@ export class PruebaDetalleComponent implements OnInit {
   descargarDocumento(documento: DocumentoPrueba): void {
     this.documentoPruebaService.descargarDocumento(documento.id!).subscribe({
       next: (blob: Blob | MediaSource) => {
-        const url = window.URL.createObjectURL(blob); // Se crea una URL para el Blob
-        const a = document.createElement('a'); // Creamos un enlace temporal
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
         a.href = url;
-        a.download = documento.nombreArchivo; // Este es el nombre del archivo para la descarga
-        a.click(); // Se activa la descarga
-        window.URL.revokeObjectURL(url); // Se limpia la URL temporal
+        a.download = documento.nombreArchivo;
+        a.click();
+        window.URL.revokeObjectURL(url);
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al descargar el documento:', err);
@@ -246,7 +269,7 @@ export class PruebaDetalleComponent implements OnInit {
       width: '400px',
       data: documento
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result === true) {
         this.cargarDocumentos(this.pruebaId!);
@@ -287,7 +310,7 @@ export class PruebaDetalleComponent implements OnInit {
   }
 
   volver(): void {
-    if(this.origen) {
+    if (this.origen) {
       if (this.origen === 'mascota-pruebas-list') {
         this.router.navigate([`/prueba/mascota-pruebas-list/${this.prueba.mascotaId}`]);
       } else if (this.origen === 'mascota-dashboard') {
@@ -296,9 +319,9 @@ export class PruebaDetalleComponent implements OnInit {
         this.router.navigate(['/']);
       }
     } else {
-        this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`], {
-            queryParams: { origen: this.origenPrevio }
-        });
+      this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`], {
+        queryParams: { origen: this.origenPrevio }
+      });
     }
   }
 }

@@ -33,17 +33,38 @@ public class UsuarioController {
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             String rolUsuario = userDetails.getRol();
-            Long idUsuarioSesion = userDetails.getIdUsuario();
 
-            // Si es CLIENTE, solo puede acceder a su propio perfil
-            if ("CLIENTE".equals(rolUsuario) && !idUsuarioSesion.equals(id)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(new ApiError("Acceso no autorizado."));
+            // Caso 0: TEMPORAL no debería acceder a este endpoint
+            if ("TEMPORAL".equals(rolUsuario)) {
+                Optional<UsuarioDTO> usuarioOpt = usuarioService.getUsuarioPorId(id);
+                if (usuarioOpt.isPresent()) {
+                    return ResponseEntity.ok(usuarioOpt.get());
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body(new ApiError("Usuario no encontrado."));
+                }
             }
 
-            // Si es VETERINARIO, puede acceder a:
+            Long idUsuarioSesion = userDetails.getIdUsuario();
+
+            // Caso 1: CLIENTE solo puede acceder a su propio perfil
+            if ("CLIENTE".equals(rolUsuario)) {
+                if (!idUsuarioSesion.equals(id)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(new ApiError("Acceso no autorizado. Solo puedes acceder a tu propio perfil."));
+                }
+                Optional<UsuarioDTO> usuarioOpt = usuarioService.getUsuarioPorId(id);
+                if (usuarioOpt.isPresent()) {
+                    return ResponseEntity.ok(usuarioOpt.get());
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body(new ApiError("Usuario no encontrado."));
+                }
+            }
+
+            // Caso 2: VETERINARIO puede acceder a:
             // - Su propio perfil
-            // - Los clientes (sin restricciones)
+            // - Clientes sin restricciones
             if ("VETERINARIO".equals(rolUsuario)) {
                 Optional<UsuarioDTO> usuarioOpt = usuarioService.getUsuarioPorId(id);
                 if (usuarioOpt.isEmpty()) {
@@ -60,11 +81,10 @@ public class UsuarioController {
                         .body(new ApiError("Acceso no autorizado. Solo puedes acceder a clientes o a tu propio perfil."));
             }
 
-            // Si es ADMIN_CLINICA, puede acceder a:
-            // - Clientes (sin restricciones)
+            // Caso 3: ADMIN_CLINICA puede acceder a:
+            // - Clientes sin restricciones
             // - Usuarios de su clínica
             if ("ADMIN_CLINICA".equals(rolUsuario)) {
-                // Obtenemos el usuario en sesión para validar su clínica
                 Optional<UsuarioDTO> usuarioSesionOpt = usuarioService.getUsuarioPorId(idUsuarioSesion);
                 if (usuarioSesionOpt.isEmpty()) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
@@ -72,6 +92,7 @@ public class UsuarioController {
                 }
 
                 UsuarioDTO usuarioSesion = usuarioSesionOpt.get();
+
                 Optional<UsuarioDTO> usuarioOpt = usuarioService.getUsuarioPorId(id);
                 if (usuarioOpt.isEmpty()) {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -79,12 +100,14 @@ public class UsuarioController {
                 }
 
                 UsuarioDTO usuario = usuarioOpt.get();
+
+                // Validar acceso a cualquier cliente
                 if ("CLIENTE".equals(usuario.getRol())) {
-                    return ResponseEntity.ok(usuario); // Puede acceder a cualquier cliente
+                    return ResponseEntity.ok(usuario);
                 }
 
                 // Validar que el usuario pertenece a la misma clínica
-                if (!usuarioSesion.getClinicaId().equals(usuario.getClinicaId())) {
+                if (usuarioSesion.getClinicaId() == null || !usuarioSesion.getClinicaId().equals(usuario.getClinicaId())) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body(new ApiError("Acceso no autorizado. Este usuario no pertenece a su clínica."));
                 }
@@ -92,18 +115,23 @@ public class UsuarioController {
                 return ResponseEntity.ok(usuario);
             }
 
-            // Si es ADMIN, puede acceder a cualquier perfil
+            // Caso 4: ADMIN puede acceder a cualquier usuario
             if ("ADMIN".equals(rolUsuario)) {
                 Optional<UsuarioDTO> usuarioOpt = usuarioService.getUsuarioPorId(id);
-                return usuarioOpt.<ResponseEntity<Object>>map(ResponseEntity::ok)
-                        .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .body(new ApiError("Usuario no encontrado.")));
+                if (usuarioOpt.isPresent()) {
+                    return ResponseEntity.ok(usuarioOpt.get());
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body(new ApiError("Usuario no encontrado."));
+                }
             }
         }
 
+        // Si no pasa ninguna validación
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ApiError("Acceso no autorizado."));
     }
+
 
     @GetMapping("/getNumColegiadoPorIdVet/{id}")
     public ResponseEntity<Object> getNumColegiadoPorIdVet(@PathVariable Long id) {

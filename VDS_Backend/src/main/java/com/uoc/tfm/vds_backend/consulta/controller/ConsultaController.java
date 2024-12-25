@@ -100,7 +100,6 @@ public class ConsultaController {
         return ResponseEntity.ok(ultimasConsultas);
     }
 
-
     // Obtener consultas por fecha
     @GetMapping("/getConsultasPorFecha/{fecha}")
     public ResponseEntity<Object> getConsultasPorFecha(@PathVariable String fecha) {

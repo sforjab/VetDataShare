@@ -53,7 +53,7 @@ public class DocumentoPruebaController {
             if (documentoGuardado.isPresent()) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(documentoGuardado.get());
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiError("Error al guardar el documento."));
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiError("Ya existe un documento con este nombre para la prueba."));
             }
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiError("Error al procesar el archivo."));

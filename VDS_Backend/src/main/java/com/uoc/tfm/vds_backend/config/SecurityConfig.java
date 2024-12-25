@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final SessionValidationFilter sessionValidationFilter;
     private final AuthenticationProvider authProvider;
 
     @Bean
@@ -70,6 +71,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Usamos JWT, sin estado
                 .authenticationProvider(authProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(sessionValidationFilter, JwtAuthenticationFilter.class)
                 .build();
     }
 
@@ -78,8 +80,8 @@ public class SecurityConfig {
     
         // Configura los orígenes permitidos desde las propiedades
        /*  String allowedOrigin = environment.getProperty("cors.allowed-origin", "http://localhost:4200"); // Fallback a localhost */
-        /* configuration.setAllowedOrigins(List.of("http://localhost:4200")); */ // En producción, cambiar a la URL correcta
-        configuration.setAllowedOrigins(List.of("https://vetdatashare.netlify.app"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // En producción, cambiar a la URL correcta
+        /* configuration.setAllowedOrigins(List.of("https://vetdatashare.netlify.app", "http://localhost:4200")); */
     
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

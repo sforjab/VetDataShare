@@ -25,6 +25,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (jwtTemporal && req.url.includes('/login')) {
       console.log('Borrando jwtTemporal para nueva autenticación');
       sessionStorage.removeItem('jwtTemporal');
+      sessionStorage.removeItem('rol');
     }
 
     let modifiedReq = req;
@@ -49,37 +50,71 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     }
 
-    console.log('Token enviado en el request:', token);
+    const rolSesion = sessionStorage.getItem('rol');
+    const idUsuarioSesion = sessionStorage.getItem('idUsuario');
+
+    if (rolSesion) {
+      let headersToSet: { [header: string]: string } = {
+        'Rol-Sesion': rolSesion
+      };
+    
+      if (idUsuarioSesion) {
+        headersToSet['IdUsuario-Sesion'] = idUsuarioSesion;
+      }
+    
+      modifiedReq = modifiedReq.clone({
+        setHeaders: headersToSet
+      });
+    }
 
     // Manejo de errores
     return next.handle(modifiedReq).pipe(
       catchError((error: HttpErrorResponse) => {
+        let mensaje = 'Ha ocurrido un error inesperado.'; // Mensaje por defecto
+    
+        // Se comprueba si el backend envió un mensaje de error (ApiError)
+        if (error.error && typeof error.error === 'object' && error.error.mensaje) {
+          mensaje = error.error.mensaje; // Mensaje específico del backend
+        } else if (error.error && typeof error.error === 'string') {
+          mensaje = error.error; // En caso de que el backend envíe un texto simple
+        }
+    
+        console.log('Error recibido del backend:', mensaje);
+
+        // Manejamos errores 404 en /getUltimasConsultas como críticos
+        if (error.status === 404 && req.url.includes('/getUltimasConsultas')) {
+          // Se devuelve un observable vacío para que no interrumpa la ejecución
+          return throwError(() => null);
+        }
+    
+        // Evitamos mostrar el 'snackBar' si el error es un 404 en /getUltimasConsultas
+        if (!(error.status === 404 && req.url.includes('/getUltimasConsultas'))) {
+          this.snackBar.open(mensaje, 'Cerrar', { duration: 3000 });
+        }
+    
+        // Manejar errores según el código de estado
         if (error.status === 401) {
-          // Distinción entre solicitudes de login y otras solicitudes
           if (req.url.includes('/login')) {
             // Propagamos el error al componente para manejar credenciales incorrectas
             return throwError(() => error);
           }
-
-          const backendMessage = error.error;
-          if (typeof backendMessage === 'string' && backendMessage.includes('El token ha expirado')) {
+    
+          // Mensaje específico para token expirado
+          if (mensaje.includes('El token ha expirado')) {
             console.log('El token ha expirado. Redirigiendo a acceso restringido.');
             sessionStorage.removeItem('jwtTemporal');
-            this.snackBar.open('El acceso temporal ha expirado.', 'Cerrar', { duration: 3000 });
             this.router.navigate(['/acceso-no-autorizado']);
           } else {
-            this.snackBar.open('Acceso no autorizado. Inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
             this.router.navigate(['/acceso-no-autorizado']);
           }
         } else if (error.status === 403) {
-          this.snackBar.open('No tiene permisos para realizar esta acción.', 'Cerrar', { duration: 3000 });
           this.router.navigate(['/acceso-no-autorizado']);
         }
-
-        // Propagamos el error
+    
+        // Propagar el error para otros manejos
         return throwError(() => error);
       })
-    );
+    );    
   }
 
   // Se verifica si el token ha expirado

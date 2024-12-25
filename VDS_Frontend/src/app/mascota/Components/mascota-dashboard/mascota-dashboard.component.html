@@ -8,108 +8,106 @@
   <ng-template #contenidoMascota>
     <h1>Panel de Mascota</h1>
     <h3>{{ mascota?.nombre }} ({{ mascota?.numChip }})</h3>
-
+    
     <!-- Tabs para actividad reciente -->
-    <mat-tab-group>
-      <mat-tab label="Últimas Consultas">
-        <div *ngIf="ultimasConsultas.length > 0; else noConsultas">
-          <table mat-table [dataSource]="ultimasConsultas" class="mat-elevation-z8">
-            <!-- Fecha de Consulta -->
-            <ng-container matColumnDef="fecha">
-              <th mat-header-cell *matHeaderCellDef class="text-center">Fecha</th>
-              <td mat-cell *matCellDef="let consulta" class="text-center">{{ consulta.fechaConsulta | date:'dd/MM/yyyy' }}</td>
-            </ng-container>
-            
-            <!-- Motivo -->
-            <ng-container matColumnDef="motivo">
-              <th mat-header-cell *matHeaderCellDef class="text-center">Motivo</th>
-              <td mat-cell *matCellDef="let consulta" class="text-center">{{ consulta.motivo }}</td>
-            </ng-container>
-      
-            <!-- Botón Acceder -->
-            <ng-container matColumnDef="acciones">
-              <th mat-header-cell *matHeaderCellDef class="text-center">Acceder</th>
-              <td mat-cell *matCellDef="let consulta" class="text-center">
-                <button mat-icon-button color="primary" (click)="verDetalleConsulta(consulta.id)">
-                  <mat-icon>remove_red_eye</mat-icon>
-                </button>
-              </td>
-            </ng-container>
-      
-            <tr mat-header-row *matHeaderRowDef="['fecha', 'motivo', 'acciones']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['fecha', 'motivo', 'acciones'];"></tr>
-          </table>
-        </div>
-      
-        <!-- Mensaje si no hay consultas -->
-        <ng-template #noConsultas>
-          <p>No se encontraron consultas recientes para esta mascota.</p>
-        </ng-template>
-      </mat-tab>
+    <div class="tabs-container">
+      <mat-tab-group>
+        <!-- Tab de Últimas Consultas -->
+        <mat-tab label="Últimas Consultas">
+          <div *ngIf="ultimasConsultas?.length; else noConsultas">
+            <table mat-table [dataSource]="ultimasConsultas" class="mat-elevation-z8">
+              <!-- Fecha -->
+              <ng-container matColumnDef="fecha">
+                <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                <td mat-cell *matCellDef="let consulta">{{ consulta.fechaConsulta | date: 'dd/MM/yyyy' }}</td>
+              </ng-container>
 
-      <mat-tab label="Últimas Pruebas">
-        <div *ngIf="ultimasPruebas.length > 0; else noPruebas">
-          <table mat-table [dataSource]="ultimasPruebas" class="mat-elevation-z8">
-            <!-- Fecha de Prueba -->
-            <ng-container matColumnDef="fecha">
-              <th mat-header-cell *matHeaderCellDef class="text-center"> Fecha </th>
-              <td mat-cell *matCellDef="let prueba" class="text-center"> {{ prueba.fecha | date:'dd/MM/yyyy' }} </td>
-            </ng-container>
-            
-            <!-- Tipo de Prueba -->
-            <ng-container matColumnDef="tipo">
-              <th mat-header-cell *matHeaderCellDef class="text-center"> Tipo </th>
-              <td mat-cell *matCellDef="let prueba" class="text-center"> {{ prueba.tipo }} </td>
-            </ng-container>
-      
-            <!-- Botón Acceder -->
-            <ng-container matColumnDef="acciones">
-              <th mat-header-cell *matHeaderCellDef class="text-center"> Acceder </th>
-              <td mat-cell *matCellDef="let prueba" class="text-center">
-                <button mat-icon-button color="primary" (click)="verDetallePrueba(prueba.id)">
-                  <mat-icon>remove_red_eye</mat-icon>
-                </button>
-              </td>
-            </ng-container>
-      
-            <tr mat-header-row *matHeaderRowDef="['fecha', 'tipo', 'acciones']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['fecha', 'tipo', 'acciones'];"></tr>
-          </table>
-        </div>
-      
-        <!-- Mensaje si no hay pruebas -->
-        <ng-template #noPruebas>
-          <p>No se encontraron pruebas recientes para esta mascota.</p>
-        </ng-template>
-      </mat-tab>
+              <!-- Motivo -->
+              <ng-container matColumnDef="motivo">
+                <th mat-header-cell *matHeaderCellDef>Motivo</th>
+                <td mat-cell *matCellDef="let consulta">{{ consulta.motivo }}</td>
+              </ng-container>
 
-      <mat-tab label="Últimas Vacunas">
-        <div *ngIf="ultimasPruebas.length > 0; else noVacunas">
-          <table mat-table [dataSource]="ultimasVacunas" class="mat-elevation-z8">
-            <ng-container matColumnDef="fecha">
-              <th mat-header-cell *matHeaderCellDef>Fecha</th>
-              <td mat-cell *matCellDef="let vacuna">{{ vacuna.fecha | date:'dd/MM/yyyy' }}</td>
-            </ng-container>
-            <ng-container matColumnDef="nombre">
-              <th mat-header-cell *matHeaderCellDef>Nombre</th>
-              <td mat-cell *matCellDef="let vacuna">{{ vacuna.nombre }}</td>
-            </ng-container>
-            <ng-container matColumnDef="laboratorio">
-              <th mat-header-cell *matHeaderCellDef>Laboratorio</th>
-              <td mat-cell *matCellDef="let vacuna">{{ vacuna.laboratorio }}</td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['fecha', 'nombre', 'laboratorio']"></tr>
-          <tr mat-row *matRowDef="let row; columns: ['fecha', 'nombre', 'laboratorio'];"></tr>
-          </table>
-        </div>
+              <!-- Acciones -->
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                <td mat-cell *matCellDef="let consulta">
+                  <button mat-icon-button color="primary" (click)="verDetalleConsulta(consulta.id)">
+                    <mat-icon>remove_red_eye</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
 
-        <!-- Mensaje si no hay vacunas -->
-        <ng-template #noVacunas>
-          <p>No se encontraron vacunas recientes para esta mascota.</p>
-        </ng-template>
-      </mat-tab>    
-    </mat-tab-group>
+              <tr mat-header-row *matHeaderRowDef="['fecha', 'motivo', 'acciones']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['fecha', 'motivo', 'acciones']"></tr>
+            </table>
+          </div>
+          <ng-template #noConsultas>
+            <p class="placeholder">No se encontraron consultas recientes para esta mascota.</p>
+          </ng-template>
+        </mat-tab>
 
+        <!-- Tab de Últimas Pruebas -->
+        <mat-tab label="Últimas Pruebas">
+          <div *ngIf="ultimasPruebas?.length; else noPruebas">
+            <table mat-table [dataSource]="ultimasPruebas" class="mat-elevation-z8">
+              <!-- Fecha -->
+              <ng-container matColumnDef="fecha">
+                <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                <td mat-cell *matCellDef="let prueba">{{ prueba.fecha | date: 'dd/MM/yyyy' }}</td>
+              </ng-container>
+
+              <!-- Tipo -->
+              <ng-container matColumnDef="tipo">
+                <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                <td mat-cell *matCellDef="let prueba">{{ prueba.tipo }}</td>
+              </ng-container>
+
+              <!-- Acciones -->
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                <td mat-cell *matCellDef="let prueba">
+                  <button mat-icon-button color="primary" (click)="verDetallePrueba(prueba.id)">
+                    <mat-icon>remove_red_eye</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="['fecha', 'tipo', 'acciones']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['fecha', 'tipo', 'acciones']"></tr>
+            </table>
+          </div>
+          <ng-template #noPruebas>
+            <p class="placeholder">No se encontraron pruebas recientes para esta mascota.</p>
+          </ng-template>
+        </mat-tab>
+
+        <!-- Tab de Últimas Vacunas -->
+        <mat-tab label="Últimas Vacunas">
+          <div *ngIf="ultimasVacunas?.length; else noVacunas">
+            <table mat-table [dataSource]="ultimasVacunas" class="mat-elevation-z8">
+              <!-- Fecha -->
+              <ng-container matColumnDef="fecha">
+                <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                <td mat-cell *matCellDef="let vacuna">{{ vacuna.fecha | date: 'dd/MM/yyyy' }}</td>
+              </ng-container>
+
+              <!-- Nombre -->
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let vacuna">{{ vacuna.nombre }}</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="['fecha', 'nombre']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['fecha', 'nombre'];"></tr>
+            </table>
+          </div>
+          <ng-template #noVacunas>
+            <p class="placeholder">No se encontraron vacunas recientes para esta mascota.</p>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
     <div
       class="dashboard-buttons"
       [ngClass]="{'cliente-layout': rolUsuario === 'CLIENTE', 'default-layout': rolUsuario !== 'CLIENTE'}"

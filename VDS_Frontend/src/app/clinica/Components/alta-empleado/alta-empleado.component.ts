@@ -71,7 +71,12 @@ export class AltaEmpleadoComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al crear el empleado:', err);
-        this.snackBar.open('Error al crear el empleado', 'Cerrar', { duration: 3000 });
+        let mensajeError = 'Error al crear el empleado';
+        if (err.error && err.error.mensaje) {
+          mensajeError = err.error.mensaje; // Mostrar mensaje específico del backend
+        }
+  
+        this.snackBar.open(mensajeError, 'Cerrar', { duration: 3000 });
       }
     });
   }

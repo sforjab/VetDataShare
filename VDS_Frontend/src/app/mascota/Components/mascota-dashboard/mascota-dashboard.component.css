@@ -25,6 +25,17 @@
   max-width: 400px;
 }
 
+.tabs-container {
+  min-height: 200px; /* Define una altura mínima para los tabs */
+}
+
+.placeholder {
+  text-align: center;
+  font-style: italic;
+  margin-top: 50px;
+  color: gray;
+}
+
 /* Tablas de últimos registros */
 mat-tab-group {
   margin: 2rem 0;

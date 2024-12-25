@@ -3,6 +3,7 @@ import { AccesoTemporalService } from '../../Services/acceso-temporal.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GenerarAccesoRequestDTO } from '../../Models/generar-acceso-request.dto';
 import { MascotaService } from 'src/app/mascota/Services/mascota.service';
+import { Mascota } from 'src/app/mascota/Models/mascota.dto';
 
 @Component({
   selector: 'app-acceso-temporal-generar',
@@ -11,7 +12,8 @@ import { MascotaService } from 'src/app/mascota/Services/mascota.service';
 })
 export class AccesoTemporalGenerarComponent {
   mascotaId!: number;
-  numChip!: string;
+  /* numChip!: string; */
+  mascota: Mascota | null = null;
   codigoGeneradoQR: string | null = null;
   codigoGeneradoNumerico: string | null = null;
 
@@ -22,17 +24,20 @@ export class AccesoTemporalGenerarComponent {
       const id = params.get('idMascota'); // Se obtiene el ID de la mascota de la URL
       if (id) {
         this.mascotaId = +id;
-        this.obtenerNumChipMascota(this.mascotaId);
+        /* this.obtenerNumChipMascota(this.mascotaId); */
+        this.obtenerMascota(this.mascotaId);
       } else {
         console.error('ID de la mascota no encontrado en la URL.');
       }
     });
   }
 
-  obtenerNumChipMascota(mascotaId: number): void {
+  /* obtenerNumChipMascota(mascotaId: number): void { */
+  obtenerMascota(mascotaId: number): void {
     this.mascotaService.getMascotaPorId(mascotaId).subscribe({
       next: (mascota: any) => {
-        this.numChip = mascota.numChip;
+        this.mascota = mascota;
+        /* this.numChip = mascota.numChip; */
       },
       error: (err: any) => {
         console.error('Error al obtener el número de chip de la mascota:', err);

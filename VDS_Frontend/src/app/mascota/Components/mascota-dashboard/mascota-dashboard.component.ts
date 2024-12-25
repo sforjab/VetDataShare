@@ -7,8 +7,6 @@ import { Vacuna } from 'src/app/vacuna/Models/vacuna.dto';
 import { VacunaService } from 'src/app/vacuna/Services/vacuna.service';
 import { Prueba } from 'src/app/prueba/Models/prueba.dto';
 import { PruebaService } from 'src/app/prueba/Services/prueba.service';
-import { DocumentoPrueba } from 'src/app/prueba/Models/documento-prueba.dto';
-import { DocumentoPruebaService } from 'src/app/prueba/Services/documento-prueba.service';
 import { Consulta } from 'src/app/consulta/Models/consulta.dto';
 import { ConsultaService } from 'src/app/consulta/Services/consulta.service';
 
@@ -75,38 +73,48 @@ export class MascotaDashboardComponent implements OnInit {
 
   cargarUltimasConsultas(idMascota: number): void {
     this.consultaService.getUltimasConsultas(idMascota).subscribe({
-        next: (consultas) => {
-            this.ultimasConsultas = consultas;
-            console.log('Consultas cargadas:', consultas);
-        },
-        error: (err) => {
-            console.error('Error obteniendo las últimas pruebas:', err);
-        }
-    });
-  }
-
-  cargarUltimasPruebas(idMascota: number): void {
-    this.pruebaService.getUltimasPruebas(idMascota).subscribe({
-        next: (pruebas) => {
-            this.ultimasPruebas = pruebas;
-            console.log('Pruebas cargadas:', pruebas);
-        },
-        error: (err) => {
-            console.error('Error obteniendo las últimas pruebas:', err);
-        }
-    });
-  }
-
-  cargarUltimasVacunas(idMascota: number): void {
-    this.vacunaService.getUltimasVacunas(idMascota).subscribe({
-      next: (vacunas) => {
-        this.ultimasVacunas = vacunas;
+      next: (consultas) => {
+        this.ultimasConsultas = consultas || []; // Aseguramos que siempre sea un arreglo
       },
       error: (err) => {
-        console.error('Error obteniendo las últimas vacunas:', err);
+        if (err.status === 404) {
+          this.ultimasConsultas = []; // Vaciar la lista si no hay datos
+        } else {
+          console.error('Error obteniendo las últimas consultas:', err);
+        }
       }
     });
   }
+  
+  cargarUltimasPruebas(idMascota: number): void {
+    this.pruebaService.getUltimasPruebas(idMascota).subscribe({
+      next: (pruebas) => {
+        this.ultimasPruebas = pruebas || [];
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.ultimasPruebas = [];
+        } else {
+          console.error('Error obteniendo las últimas pruebas:', err);
+        }
+      }
+    });
+  }
+  
+  cargarUltimasVacunas(idMascota: number): void {
+    this.vacunaService.getUltimasVacunas(idMascota).subscribe({
+      next: (vacunas) => {
+        this.ultimasVacunas = vacunas || [];
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.ultimasVacunas = [];
+        } else {
+          console.error('Error obteniendo las últimas vacunas:', err);
+        }
+      }
+    });
+  }  
 
   // Carga los datos de la mascota
   cargarMascota(idMascota: number): void {
