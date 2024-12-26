@@ -6,41 +6,41 @@
       <form [formGroup]="clienteForm" class="perfil-form grid-form">
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numIdent')">
           <mat-label>Número de Identificación</mat-label>
-          <input matInput formControlName="numIdent" />
+          <input matInput formControlName="numIdent" aria-label="Introduce el número de identificación del cliente"/>
           <mat-error *ngIf="campoEsInvalido('numIdent')">El número de identificación es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('nombre')">
           <mat-label>Nombre</mat-label>
-          <input matInput formControlName="nombre" />
+          <input matInput formControlName="nombre" aria-label="Introduce el nombre del cliente"/>
           <mat-error *ngIf="campoEsInvalido('nombre')">El nombre es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('apellido1')">
           <mat-label>Primer Apellido</mat-label>
-          <input matInput formControlName="apellido1" />
+          <input matInput formControlName="apellido1" aria-label="Introduce el primer apellido del cliente"/>
           <mat-error *ngIf="campoEsInvalido('apellido1')">El primer apellido es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Segundo Apellido</mat-label>
-          <input matInput formControlName="apellido2" />
+          <input matInput formControlName="apellido2" aria-label="Introduce el segundo apellido del cliente (opcional)"/>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Dirección</mat-label>
-          <input matInput formControlName="direccion" />
+          <input matInput formControlName="direccion" aria-label="Introduce la dirección del cliente (opcional)"/>
         </mat-form-field>
 
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('telefono')">
           <mat-label>Teléfono</mat-label>
-          <input matInput formControlName="telefono" />
+          <input matInput formControlName="telefono" aria-label="Introduce el teléfono del cliente"/>
           <mat-error *ngIf="campoEsInvalido('telefono')">El teléfono es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('email')">
           <mat-label>Email</mat-label>
-          <input matInput formControlName="email" />
+          <input matInput formControlName="email" aria-label="Introduce el correo electrónico del cliente"/>
           <mat-error *ngIf="campoEsInvalido('email')">
             El email es obligatorio y debe tener un formato válido.
           </mat-error>
@@ -49,10 +49,11 @@
     </mat-card-content>
 
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="crearCliente()" [disabled]="clienteForm.invalid">
+      <button mat-raised-button class="button-primary" (click)="crearCliente()" 
+              [disabled]="clienteForm.invalid" aria-label="Crear un nuevo cliente con los datos proporcionados">
         Crear
       </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+      <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver a la pantalla anterior">Volver</button>
     </mat-card-actions>
   </mat-card>
 </div>

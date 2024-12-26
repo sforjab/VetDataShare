@@ -1,7 +1,7 @@
 <div class="page-container">
   <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando los datos de la mascota"></mat-progress-spinner>
   </div>
 
   <!-- Contenido principal -->
@@ -18,34 +18,34 @@
           <!-- Primera fila -->
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numChip')">
             <mat-label>Número de Chip</mat-label>
-            <input matInput formControlName="numChip" />
+            <input matInput formControlName="numChip" aria-label="Introduce el número de chip de la mascota, debe contener exactamente 15 dígitos"/>
             <mat-error *ngIf="mascotaForm.get('numChip')?.hasError('required')">El número de chip es obligatorio.</mat-error>
             <mat-error *ngIf="mascotaForm.get('numChip')?.hasError('pattern')">Debe contener exactamente 15 dígitos.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('nombre')">
             <mat-label>Nombre</mat-label>
-            <input matInput formControlName="nombre" />
+            <input matInput formControlName="nombre" aria-label="Introduce el nombre de la mascota"/>
             <mat-error *ngIf="mascotaForm.get('nombre')?.hasError('required')">El nombre es obligatorio.</mat-error>
           </mat-form-field>
 
           <!-- Segunda fila -->
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('especie')">
             <mat-label>Especie</mat-label>
-            <input matInput formControlName="especie" />
+            <input matInput formControlName="especie" aria-label="Introduce la especie de la mascota"/>
             <mat-error *ngIf="mascotaForm.get('especie')?.hasError('required')">La especie es obligatoria.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('raza')">
             <mat-label>Raza</mat-label>
-            <input matInput formControlName="raza" />
+            <input matInput formControlName="raza" aria-label="Introduce la raza de la mascota"/>
             <mat-error *ngIf="mascotaForm.get('raza')?.hasError('required')">La raza es obligatoria.</mat-error>
           </mat-form-field>
 
           <!-- Tercera fila -->
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('sexo')">
             <mat-label>Sexo</mat-label>
-            <mat-select formControlName="sexo">
+            <mat-select formControlName="sexo" aria-label="Selecciona el sexo de la mascota">
               <mat-option value="" disabled>Seleccione el sexo de la mascota</mat-option>
               <mat-option value="Macho">Macho</mat-option>
               <mat-option value="Hembra">Hembra</mat-option>
@@ -59,6 +59,7 @@
               matInput
               [matDatepicker]="picker"
               formControlName="fechaNacimiento"
+              aria-label="Seleccione la fecha de nacimiento de la mascota, debe ser anterior o igual a hoy"
             />
             <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="!puedeEditar"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -84,6 +85,7 @@
                   : 'No disponible'
               "
               disabled
+              aria-label="Edad de la mascota calculada automáticamente"
             />
           </mat-form-field>
 
@@ -99,6 +101,7 @@
                 propietario.apellido2
               "
               disabled
+              aria-label="Propietario de la mascota"
             />
           </mat-form-field>
         </form>
@@ -112,10 +115,11 @@
           (click)="guardarCambios()"
           *ngIf="puedeEditar"
           [disabled]="mascotaForm.invalid"
+          aria-label="Guardar los cambios realizados"
         >
           Guardar
         </button>
-        <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+        <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al menú anterior">Volver</button>
       </mat-card-actions>
     </mat-card>
   </div>

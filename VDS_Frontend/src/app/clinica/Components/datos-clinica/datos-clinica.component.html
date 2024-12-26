@@ -1,6 +1,6 @@
 <div class="page-container">
   <div *ngIf="isLoading" class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando los datos de la clínica"></mat-progress-spinner>
   </div>
 
   <div *ngIf="!isLoading">
@@ -12,28 +12,28 @@
           <!-- Campo Nombre -->
           <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('nombre')">
             <mat-label>Nombre</mat-label>
-            <input matInput formControlName="nombre" />
+            <input matInput formControlName="nombre" aria-label="Introduce el nombre de la clínica, máximo 100 caracteres"/>
             <mat-error *ngIf="campoEsInvalido('nombre')">El nombre es obligatorio.</mat-error>
           </mat-form-field>
 
           <!-- Campo Dirección -->
           <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('direccion')">
             <mat-label>Dirección</mat-label>
-            <input matInput formControlName="direccion" />
+            <input matInput formControlName="direccion" aria-label="Introduce la dirección de la clínica, máximo 100 caracteres"/>
             <mat-error *ngIf="campoEsInvalido('direccion')">La dirección es obligatoria.</mat-error>
           </mat-form-field>
 
           <!-- Campo Teléfono -->
           <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('telefono')">
             <mat-label>Teléfono</mat-label>
-            <input matInput formControlName="telefono" />
+            <input matInput formControlName="telefono" aria-label="Introduce el teléfono de la clínica, exactamente 9 dígitos"/>
             <mat-error *ngIf="campoEsInvalido('telefono')">El teléfono es obligatorio.</mat-error>
           </mat-form-field>
 
           <!-- Campo Email -->
           <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('email')">
             <mat-label>Email</mat-label>
-            <input matInput formControlName="email" />
+            <input matInput formControlName="email" aria-label="Introduce el email de la clínica, máximo 50 caracteres"/>
             <mat-error *ngIf="campoEsInvalido('email')">
               <span *ngIf="datosClinicaForm.get('email')?.hasError('required')">El email es obligatorio.</span>
               <span *ngIf="datosClinicaForm.get('email')?.hasError('email')">El formato del email es incorrecto.</span>
@@ -43,10 +43,10 @@
       </mat-card-content>
 
       <mat-card-actions class="action-buttons">
-        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="datosClinicaForm.invalid">
-          Guardar
+        <button mat-raised-button class="button-primary" (click)="guardarCambios()" 
+                [disabled]="datosClinicaForm.invalid" aria-label="Guardar los cambios realizados en los datos de la clínica">Guardar
         </button>
-        <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+        <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al menú anterior">Volver</button>
       </mat-card-actions>
     </mat-card>
   </div>

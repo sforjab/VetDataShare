@@ -7,7 +7,7 @@
         <!-- Número de Identificación -->
         <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('numIdent')">
           <mat-label>Número de Identificación</mat-label>
-          <input matInput formControlName="numIdent" />
+          <input matInput formControlName="numIdent" aria-label="Introduce el número de identificación, máximo 15 caracteres" />
           <mat-error *ngIf="campoEsInvalido('numIdent')">
             <ng-container *ngIf="empleadoForm.get('numIdent')?.hasError('required')">El número de identificación es obligatorio.</ng-container>
             <ng-container *ngIf="empleadoForm.get('numIdent')?.hasError('maxlength')">No puede exceder los 15 caracteres.</ng-container>
@@ -17,7 +17,7 @@
         <!-- Número de Colegiado -->
         <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('numColegiado')">
           <mat-label>Número de Colegiado</mat-label>
-          <input matInput formControlName="numColegiado" />
+          <input matInput formControlName="numColegiado" aria-label="Introduce el número de colegiado, máximo 8 caracteres"/>
           <mat-error *ngIf="campoEsInvalido('numColegiado')">
             <ng-container *ngIf="empleadoForm.get('numColegiado')?.hasError('required')">El número de colegiado es obligatorio.</ng-container>
             <ng-container *ngIf="empleadoForm.get('numColegiado')?.hasError('maxlength')">No puede exceder los 8 caracteres.</ng-container>
@@ -28,7 +28,7 @@
         <!-- Nombre -->
         <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('nombre')">
           <mat-label>Nombre</mat-label>
-          <input matInput formControlName="nombre" />
+          <input matInput formControlName="nombre" aria-label="Introduce el nombre del empleado, máximo 50 caracteres" />
           <mat-error *ngIf="campoEsInvalido('nombre')">
             <ng-container *ngIf="empleadoForm.get('nombre')?.hasError('required')">El nombre es obligatorio.</ng-container>
             <ng-container *ngIf="empleadoForm.get('nombre')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
@@ -38,7 +38,7 @@
         <!-- Primer Apellido -->
         <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('apellido1')">
           <mat-label>Primer Apellido</mat-label>
-          <input matInput formControlName="apellido1" />
+          <input matInput formControlName="apellido1" aria-label="Introduce el primer apellido del empleado, máximo 50 caracteres"/>
           <mat-error *ngIf="campoEsInvalido('apellido1')">
             <ng-container *ngIf="empleadoForm.get('apellido1')?.hasError('required')">El primer apellido es obligatorio.</ng-container>
             <ng-container *ngIf="empleadoForm.get('apellido1')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
@@ -48,7 +48,7 @@
         <!-- Segundo Apellido -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('apellido2')">
           <mat-label>Segundo Apellido</mat-label>
-          <input matInput formControlName="apellido2" />
+          <input matInput formControlName="apellido2" aria-label="Introduce el segundo apellido del empleado, máximo 50 caracteres" />
           <mat-error *ngIf="campoEsInvalido('apellido2')">
             <ng-container *ngIf="empleadoForm.get('apellido2')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
           </mat-error>
@@ -57,7 +57,7 @@
         <!-- Rol -->
         <mat-form-field appearance="fill" class="form-field" [class.error]="campoEsInvalido('rol')">
           <mat-label>Rol</mat-label>
-          <mat-select formControlName="rol">
+          <mat-select formControlName="rol" aria-label="Selecciona el rol del empleado">
             <mat-option value="">Seleccione el rol</mat-option>
             <mat-option *ngFor="let rol of roles" [value]="rol">{{ rol }}</mat-option>
           </mat-select>
@@ -67,10 +67,11 @@
     </mat-card-content>
 
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="crearEmpleado()" [disabled]="empleadoForm.invalid">
+      <button mat-raised-button class="button-primary" (click)="crearEmpleado()" 
+              [disabled]="empleadoForm.invalid" aria-label="Crear un nuevo empleado">
         Crear
       </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+      <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al listado de empleados">Volver</button>
     </mat-card-actions>
   </mat-card>
 </div>

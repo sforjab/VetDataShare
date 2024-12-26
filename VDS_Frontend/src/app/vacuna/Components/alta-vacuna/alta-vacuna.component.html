@@ -10,7 +10,7 @@
         <!-- Nombre -->
         <mat-form-field appearance="fill" class="grid-span">
           <mat-label>Nombre</mat-label>
-          <input matInput formControlName="nombre" />
+          <input matInput formControlName="nombre" aria-label="Nombre de la vacuna"/>
           <mat-error *ngIf="altaVacunaForm.get('nombre')?.hasError('required')">
             El nombre es obligatorio.
           </mat-error>
@@ -22,7 +22,7 @@
         <!-- Laboratorio -->
         <mat-form-field appearance="fill" class="grid-span">
           <mat-label>Laboratorio</mat-label>
-          <input matInput formControlName="laboratorio" />
+          <input matInput formControlName="laboratorio" aria-label="Laboratorio de la vacuna"/>
           <mat-error *ngIf="altaVacunaForm.get('laboratorio')?.hasError('required')">
             El laboratorio es obligatorio.
           </mat-error>
@@ -35,10 +35,11 @@
 
     <!-- Botones -->
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="crearVacuna()" [disabled]="altaVacunaForm.invalid">
+      <button mat-raised-button class="button-primary" (click)="crearVacuna()" 
+              [disabled]="altaVacunaForm.invalid" aria-label="Crear vacuna">
         Crear
       </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">
+      <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver a la pantalla anterior">
         Volver
       </button>
     </mat-card-actions>

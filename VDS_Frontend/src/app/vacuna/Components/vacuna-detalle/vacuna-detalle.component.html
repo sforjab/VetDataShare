@@ -1,7 +1,7 @@
 <div class="page-container">
     <!-- Spinner de carga -->
     <div *ngIf="isLoading" class="spinner-container">
-      <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+      <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando contenido"></mat-progress-spinner>
     </div>
   
     <!-- Contenido principal -->
@@ -15,7 +15,7 @@
             <!-- Nombre -->
             <mat-form-field appearance="fill">
               <mat-label>Nombre</mat-label>
-              <input matInput formControlName="nombre" />
+              <input matInput formControlName="nombre" aria-label="Nombre de la vacuna"/>
               <mat-error *ngIf="campoEsInvalido('nombre') && detalleVacunaForm.get('nombre')?.hasError('required')">
                 El nombre es obligatorio.
               </mat-error>
@@ -27,7 +27,7 @@
             <!-- Laboratorio -->
             <mat-form-field appearance="fill">
               <mat-label>Laboratorio</mat-label>
-              <input matInput formControlName="laboratorio" />
+              <input matInput formControlName="laboratorio" aria-label="Nombre del laboratorio"/>
               <mat-error *ngIf="campoEsInvalido('laboratorio') && detalleVacunaForm.get('laboratorio')?.hasError('required')">
                 El laboratorio es obligatorio.
               </mat-error>
@@ -39,10 +39,11 @@
         </mat-card-content>
   
         <mat-card-actions class="action-buttons">
-          <button mat-raised-button class="button-primary" (click)="guardarVacuna()" [disabled]="detalleVacunaForm.invalid">
+          <button mat-raised-button class="button-primary" (click)="guardarVacuna()" 
+                  [disabled]="detalleVacunaForm.invalid" aria-label="Guardar cambios de la vacuna">
             Guardar
           </button>
-          <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+          <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver a la pantalla anterior">Volver</button>
         </mat-card-actions>
       </mat-card>
     </div>

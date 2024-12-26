@@ -1,7 +1,7 @@
 <div class="page-container">
   <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando contenido"></mat-progress-spinner>
   </div>
 
   <!-- Contenido principal -->
@@ -30,7 +30,7 @@
       </table>
 
       <!-- Paginador -->
-      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Paginador para la tabla de vacunas"></mat-paginator>
     </div>
 
     <!-- Mensaje si no hay vacunas -->
@@ -40,7 +40,7 @@
 
     <!-- Botón de Volver -->
     <div class="boton-volver">
-      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+      <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al panel anterior">Volver</button>
     </div>
   </div>
 </div>

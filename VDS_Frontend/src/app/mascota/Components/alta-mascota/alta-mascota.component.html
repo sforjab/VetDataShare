@@ -7,7 +7,7 @@
         <!-- Número de Chip -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numChip')">
           <mat-label>Número de Chip</mat-label>
-          <input matInput formControlName="numChip" />
+          <input matInput formControlName="numChip" aria-label="Introduce el número de chip de la mascota, debe tener exactamente 15 dígitos"/>
           <mat-error *ngIf="altaMascotaForm.get('numChip')?.hasError('required')">El número de chip es obligatorio.</mat-error>
           <mat-error *ngIf="altaMascotaForm.get('numChip')?.hasError('pattern')">Debe tener exactamente 15 dígitos.</mat-error>
         </mat-form-field>
@@ -15,28 +15,28 @@
         <!-- Nombre -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('nombre')">
           <mat-label>Nombre</mat-label>
-          <input matInput formControlName="nombre" />
+          <input matInput formControlName="nombre" aria-label="Introduce el nombre de la mascota"/>
           <mat-error *ngIf="altaMascotaForm.get('nombre')?.hasError('required')">El nombre es obligatorio.</mat-error>
         </mat-form-field>
 
         <!-- Especie -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('especie')">
           <mat-label>Especie</mat-label>
-          <input matInput formControlName="especie" />
+          <input matInput formControlName="especie" aria-label="Introduce la especie de la mascota"/>
           <mat-error *ngIf="altaMascotaForm.get('especie')?.hasError('required')">La especie es obligatoria.</mat-error>
         </mat-form-field>
 
         <!-- Raza -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('raza')">
           <mat-label>Raza</mat-label>
-          <input matInput formControlName="raza" />
+          <input matInput formControlName="raza" aria-label="Introduce la raza de la mascota"/>
           <mat-error *ngIf="altaMascotaForm.get('raza')?.hasError('required')">La raza es obligatoria.</mat-error>
         </mat-form-field>
 
         <!-- Sexo -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('sexo')">
           <mat-label>Sexo</mat-label>
-          <mat-select formControlName="sexo">
+          <mat-select formControlName="sexo" aria-label="Seleccione el sexo de la mascota">
             <mat-option value="" disabled>Seleccione el sexo</mat-option>
             <mat-option value="Macho">Macho</mat-option>
             <mat-option value="Hembra">Hembra</mat-option>
@@ -47,7 +47,7 @@
         <!-- Fecha de Nacimiento -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('fechaNacimiento')">
           <mat-label>Fecha de Nacimiento</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento" />
+          <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento" aria-label="Seleccione el sexo de la mascota"/>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
           <mat-error *ngIf="altaMascotaForm.get('fechaNacimiento')?.hasError('required')">La fecha de nacimiento es obligatoria.</mat-error>
@@ -57,10 +57,11 @@
     </mat-card-content>
 
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="crearMascota()" [disabled]="altaMascotaForm.invalid">
+      <button mat-raised-button class="button-primary" (click)="crearMascota()" 
+              [disabled]="altaMascotaForm.invalid" aria-label="Registrar una nueva mascota">
         Crear
       </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+      <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al menú anterior">Volver</button>
     </mat-card-actions>
   </mat-card>
 </div>

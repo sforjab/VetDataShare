@@ -15,7 +15,7 @@
           <mat-error *ngIf="colegiadoForm.get('numColegiado')?.hasError('pattern')">
             Solo se permiten números.
           </mat-error>
-          <mat-error *ngIf="colegiadoForm.get('numColegiado')?.hasError('maxLength')">
+          <mat-error *ngIf="colegiadoForm.get('numColegiado')?.hasError('maxLength')" aria-label="Introduce el número de colegiado, máximo 8 dígitos">
             El número de colegiado no puede tener más de 8 dígitos.
           </mat-error>
         </mat-form-field>
@@ -24,10 +24,11 @@
 
     <!-- Botón de validar y registrar -->
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" type="submit" [disabled]="colegiadoForm.invalid" (click)="validarColegiado()">Validar y Registrar</button>
+      <button mat-raised-button class="button-primary" type="submit" [disabled]="colegiadoForm.invalid" 
+              (click)="validarColegiado()" aria-label="Validar y registrar el número de colegiado">Validar y Registrar</button>
     </mat-card-actions>
   </mat-card>
 
   <!-- Mensaje de resultado -->
-  <p *ngIf="mensaje" class="mensaje-validacion">{{ mensaje }}</p>
+  <p *ngIf="mensaje" class="mensaje-validacion" aria-label="Mensaje de validación">{{ mensaje }}</p>
 </div>

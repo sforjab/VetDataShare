@@ -8,8 +8,8 @@
       <div 
         class="dashboard-button"
         *ngIf="rolUsuarioSesion === 'VETERINARIO'"
-        (click)="navegarPerfil()">
-        <i class="fa-solid fa-user"></i>
+        (click)="navegarPerfil()" aria-label="Navegar a mi perfil">
+        <i class="fa-solid fa-user" title="Mi Perfil"></i>
         <span>Mi Perfil</span>
       </div>
 
@@ -17,22 +17,22 @@
       <div 
         class="dashboard-button"
         *ngIf="rolUsuarioSesion === 'ADMIN_CLINICA'"
-        (click)="navegarClinica()">
-        <i class="fa-solid fa-hospital"></i>
+        (click)="navegarClinica()" aria-label="Navegar a los datos de la clínica">
+        <i class="fa-solid fa-hospital" title="Clínica"></i>
         <span>Clínica</span>
       </div>
 
       <!-- Botones comunes a ambos roles -->
       <div 
         class="dashboard-button"
-        (click)="navegarClientes()">
-        <i class="fa-solid fa-users"></i>
+        (click)="navegarClientes()" aria-label="Navegar a la gestión de clientes">
+        <i class="fa-solid fa-users" title="Gestión Clientes"></i>
         <span>Gestión Clientes</span>
       </div>
       <div 
         class="dashboard-button"
-        (click)="navegarMascotas()">
-        <i class="fa-solid fa-paw"></i>
+        (click)="navegarMascotas()" aria-label="Navegar a la gestión de mascotas">
+        <i class="fa-solid fa-paw" title="Gestión Mascotas"></i>
         <span>Gestión Mascotas</span>
       </div>
     </div>

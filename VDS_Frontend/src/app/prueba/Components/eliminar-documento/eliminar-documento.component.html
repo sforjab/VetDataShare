@@ -3,6 +3,6 @@
   <p>¿Está seguro de que desea eliminar el documento "{{ data.nombreArchivo }}"?</p>
 </mat-dialog-content>
 <mat-dialog-actions class="action-buttons">
-  <button mat-raised-button class="button-primary" (click)="confirmarEliminacion()">Confirmar</button>
-  <button mat-raised-button class="button-secondary" (click)="cancelar()">Cancelar</button>
+  <button mat-raised-button class="button-primary" (click)="confirmarEliminacion()" aria-label="Confirmar la eliminación del documento">Confirmar</button>
+  <button mat-raised-button class="button-secondary" (click)="cancelar()" aria-label="Cancelar la eliminación del documento">Cancelar</button>
 </mat-dialog-actions>

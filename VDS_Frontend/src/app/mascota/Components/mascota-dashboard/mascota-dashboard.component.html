@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <!-- Spinner de carga -->
-  <ng-container *ngIf="isLoading; else contenidoMascota">
-    <mat-spinner></mat-spinner>
+  <ng-container class="spinner-container" *ngIf="isLoading; else contenidoMascota">
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando el panel de mascota"></mat-progress-spinner>
   </ng-container>
 
   <!-- Contenido de la mascota -->
@@ -11,11 +11,11 @@
     
     <!-- Tabs para actividad reciente -->
     <div class="tabs-container">
-      <mat-tab-group>
+      <mat-tab-group aria-label="Secciones del panel de la mascota">
         <!-- Tab de Últimas Consultas -->
         <mat-tab label="Últimas Consultas">
           <div *ngIf="ultimasConsultas?.length; else noConsultas">
-            <table mat-table [dataSource]="ultimasConsultas" class="mat-elevation-z8">
+            <table mat-table [dataSource]="ultimasConsultas" class="mat-elevation-z8" aria-label="Tabla de últimas consultas">
               <!-- Fecha -->
               <ng-container matColumnDef="fecha">
                 <th mat-header-cell *matHeaderCellDef>Fecha</th>
@@ -32,8 +32,8 @@
               <ng-container matColumnDef="acciones">
                 <th mat-header-cell *matHeaderCellDef>Acciones</th>
                 <td mat-cell *matCellDef="let consulta">
-                  <button mat-icon-button color="primary" (click)="verDetalleConsulta(consulta.id)">
-                    <mat-icon>remove_red_eye</mat-icon>
+                  <button mat-icon-button color="primary" (click)="verDetalleConsulta(consulta.id)" aria-label="Ver detalles de la consulta">
+                    <mat-icon title="Acceder">remove_red_eye</mat-icon>
                   </button>
                 </td>
               </ng-container>
@@ -50,7 +50,7 @@
         <!-- Tab de Últimas Pruebas -->
         <mat-tab label="Últimas Pruebas">
           <div *ngIf="ultimasPruebas?.length; else noPruebas">
-            <table mat-table [dataSource]="ultimasPruebas" class="mat-elevation-z8">
+            <table mat-table [dataSource]="ultimasPruebas" class="mat-elevation-z8" aria-label="Tabla de últimas pruebas">
               <!-- Fecha -->
               <ng-container matColumnDef="fecha">
                 <th mat-header-cell *matHeaderCellDef>Fecha</th>
@@ -67,8 +67,8 @@
               <ng-container matColumnDef="acciones">
                 <th mat-header-cell *matHeaderCellDef>Acciones</th>
                 <td mat-cell *matCellDef="let prueba">
-                  <button mat-icon-button color="primary" (click)="verDetallePrueba(prueba.id)">
-                    <mat-icon>remove_red_eye</mat-icon>
+                  <button mat-icon-button color="primary" (click)="verDetallePrueba(prueba.id)" aria-label="Ver detalles de la prueba">
+                    <mat-icon title="Acceder">remove_red_eye</mat-icon>
                   </button>
                 </td>
               </ng-container>
@@ -85,7 +85,7 @@
         <!-- Tab de Últimas Vacunas -->
         <mat-tab label="Últimas Vacunas">
           <div *ngIf="ultimasVacunas?.length; else noVacunas">
-            <table mat-table [dataSource]="ultimasVacunas" class="mat-elevation-z8">
+            <table mat-table [dataSource]="ultimasVacunas" class="mat-elevation-z8" aria-label="Tabla de últimas vacunas">
               <!-- Fecha -->
               <ng-container matColumnDef="fecha">
                 <th mat-header-cell *matHeaderCellDef>Fecha</th>
@@ -113,32 +113,32 @@
       [ngClass]="{'cliente-layout': rolUsuario === 'CLIENTE', 'default-layout': rolUsuario !== 'CLIENTE'}"
     >
       <div class="dashboard-button" (click)="navegarDetalle()">
-        <i class="fa-solid fa-circle-info"></i>
-        <span>Consultar datos</span>
+        <i class="fa-solid fa-circle-info" title="Consultar datos"></i>
+        <span aria-label="Consultar datos">Consultar datos</span>
       </div>
       <div class="dashboard-button" (click)="navegarConsultas()">
-        <i class="fa-solid fa-notes-medical"></i>
-        <span>Histórico de consultas</span>
+        <i class="fa-solid fa-notes-medical" title="Histórico de consultas"></i>
+        <span aria-label="Histórico de consultas">Histórico de consultas</span>
       </div>
       <div class="dashboard-button" (click)="navegarPruebas()">
-        <i class="fa-solid fa-vial"></i>
-        <span>Pruebas</span>
+        <i class="fa-solid fa-vial" title="Pruebas"></i>
+        <span aria-label="Pruebas">Pruebas</span>
       </div>
       <div class="dashboard-button" (click)="navegarVacunas()">
-        <i class="fa-solid fa-syringe"></i>
-        <span>Vacunas</span>
+        <i class="fa-solid fa-syringe" title="Vacunas"></i>
+        <span aria-label="Vacunas">Vacunas</span>
       </div>
       <div
         class="dashboard-button"
         *ngIf="rolUsuario === 'CLIENTE'"
         (click)="navegarAccesoTemporal()"
       >
-        <i class="fa-solid fa-hourglass-half"></i>
-        <span>Generar Acceso Temporal</span>
+        <i class="fa-solid fa-hourglass-half" title="Generar Acceso Temporal"></i>
+        <span aria-label="Generar Acceso Temporal">Generar Acceso Temporal</span>
       </div>
     </div>
 
     <!-- Botón Volver -->
-    <button mat-raised-button class="button-secondary button-volver" (click)="volver()" *ngIf="rolUsuario !== 'TEMPORAL'">Volver</button>
+    <button mat-raised-button class="button-secondary button-volver" (click)="volver()" aria-label="Volver al menú anterior" *ngIf="rolUsuario !== 'TEMPORAL'">Volver</button>
   </ng-template>
 </div>

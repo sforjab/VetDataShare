@@ -10,7 +10,7 @@
         <!-- Primera fila -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('nombre')">
           <mat-label>Nombre</mat-label>
-          <input matInput formControlName="nombre" />
+          <input matInput formControlName="nombre" aria-label="Introduce el nombre de la clínica, máximo 100 caracteres" />
           <mat-error *ngIf="campoEsInvalido('nombre')">
             <ng-container *ngIf="clinicaForm.get('nombre')?.hasError('required')">
               El nombre es obligatorio.
@@ -23,7 +23,7 @@
 
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('direccion')">
           <mat-label>Dirección</mat-label>
-          <input matInput formControlName="direccion" />
+          <input matInput formControlName="direccion" aria-label="Introduce la dirección de la clínica, máximo 100 caracteres" />
           <mat-error *ngIf="campoEsInvalido('direccion')">
             <ng-container *ngIf="clinicaForm.get('direccion')?.hasError('required')">
               La dirección es obligatoria.
@@ -37,7 +37,7 @@
         <!-- Segunda fila -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('telefono')">
           <mat-label>Teléfono</mat-label>
-          <input matInput formControlName="telefono" />
+          <input matInput formControlName="telefono" aria-label="Introduce el teléfono de la clínica, exactamente 9 dígitos"/>
           <mat-error *ngIf="campoEsInvalido('telefono')">
             <ng-container *ngIf="clinicaForm.get('telefono')?.hasError('required')">
               El teléfono es obligatorio.
@@ -50,7 +50,7 @@
 
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('email')">
           <mat-label>Email</mat-label>
-          <input matInput formControlName="email" />
+          <input matInput formControlName="email" aria-label="Introduce el email de la clínica, máximo 50 caracteres"/>
           <mat-error *ngIf="campoEsInvalido('email')">
             <ng-container *ngIf="clinicaForm.get('email')?.hasError('required')">
               El email es obligatorio.
@@ -68,15 +68,10 @@
 
     <!-- Botones -->
     <mat-card-actions class="action-buttons">
-      <button
-        mat-raised-button
-        class="button-primary"
-        (click)="crearClinica()"
-        [disabled]="clinicaForm.invalid"
-      >
-        Crear
+      <button mat-raised-button class="button-primary" (click)="crearClinica()"
+              [disabled]="clinicaForm.invalid" aria-label="Crear la nueva clínica">Crear
       </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+      <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al listado de clínicas">Volver</button>
     </mat-card-actions>
   </mat-card>
 </div>

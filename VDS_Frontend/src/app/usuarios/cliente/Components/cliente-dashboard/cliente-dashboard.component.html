@@ -1,6 +1,6 @@
 <div class="dashboard-container">
   <ng-container *ngIf="cargando; else contenidoCargado">
-    <mat-spinner></mat-spinner> <!-- Spinner de Angular Material -->
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando contenido del dashboard"></mat-progress-spinner>
   </ng-container>
 
   <ng-template #contenidoCargado>
@@ -12,16 +12,16 @@
         <!-- Botón "Mi Perfil" -->
         <div 
           class="dashboard-button"
-          (click)="navegarPerfil()">
-          <i class="fa-solid fa-user"></i>
+          (click)="navegarPerfil()" aria-label="Ir a la sección Mi Perfil del cliente">
+          <i class="fa-solid fa-user" title="Mi perfil"></i>
           <span>Mi Perfil</span>
         </div>
 
         <!-- Botón "Mis Mascotas" -->
         <div 
           class="dashboard-button"
-          (click)="navegarMascotas()">
-          <i class="fa-solid fa-paw"></i>
+          (click)="navegarMascotas()" aria-label="Ir a la sección Mis Mascotas del cliente">
+          <i class="fa-solid fa-paw" title="Mis Mascotas"></i>
           <span>Mis Mascotas</span>
         </div>
       </div>
@@ -32,7 +32,7 @@
       *ngIf="mostrarBotonVolver()" 
       mat-raised-button 
       class="button-secondary" 
-      (click)="navegarGestionClientes()">
+      (click)="navegarGestionClientes()" aria-label="Volver a la gestión de clientes">
       Volver
     </button>
   </ng-template>

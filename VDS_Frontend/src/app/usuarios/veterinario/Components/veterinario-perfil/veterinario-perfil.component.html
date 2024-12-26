@@ -1,6 +1,6 @@
 <div class="page-container">
   <div *ngIf="isLoading" class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando datos del perfil del veterinario"></mat-progress-spinner>
   </div>
 
   <div *ngIf="!isLoading">
@@ -11,7 +11,7 @@
         <form [formGroup]="perfilForm" class="perfil-form grid-form">
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numIdent')">
             <mat-label>Número de Identificación</mat-label>
-            <input matInput formControlName="numIdent" />
+            <input matInput formControlName="numIdent" aria-label="Número de Identificación" />
             <mat-error *ngIf="campoEsInvalido('numIdent')">
               <ng-container *ngIf="perfilForm.get('numIdent')?.hasError('required')">El número de identificación es obligatorio.</ng-container>
               <ng-container *ngIf="perfilForm.get('numIdent')?.hasError('maxlength')">No puede exceder los 15 caracteres.</ng-container>
@@ -20,7 +20,7 @@
           
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('numColegiado')">
             <mat-label>Número de Colegiado</mat-label>
-            <input matInput formControlName="numColegiado" />
+            <input matInput formControlName="numColegiado" aria-label="Número de Colegiado"/>
             <mat-error *ngIf="campoEsInvalido('numColegiado')">
               <ng-container *ngIf="perfilForm.get('numColegiado')?.hasError('required')">El número de colegiado es obligatorio.</ng-container>
               <ng-container *ngIf="perfilForm.get('numColegiado')?.hasError('maxlength')">No puede exceder los 8 caracteres.</ng-container>
@@ -30,7 +30,7 @@
           
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('nombre')">
             <mat-label>Nombre</mat-label>
-            <input matInput formControlName="nombre" />
+            <input matInput formControlName="nombre" aria-label="Nombre del empleado"/>
             <mat-error *ngIf="campoEsInvalido('nombre')">
               <ng-container *ngIf="perfilForm.get('nombre')?.hasError('required')">El nombre es obligatorio.</ng-container>
               <ng-container *ngIf="perfilForm.get('nombre')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
@@ -39,7 +39,7 @@
           
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('apellido1')">
             <mat-label>Primer Apellido</mat-label>
-            <input matInput formControlName="apellido1" />
+            <input matInput formControlName="apellido1" aria-label="Primer Apellido"/>
             <mat-error *ngIf="campoEsInvalido('apellido1')">
               <ng-container *ngIf="perfilForm.get('apellido1')?.hasError('required')">El primer apellido es obligatorio.</ng-container>
               <ng-container *ngIf="perfilForm.get('apellido1')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
@@ -48,7 +48,7 @@
           
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('apellido2')">
             <mat-label>Segundo Apellido</mat-label>
-            <input matInput formControlName="apellido2" />
+            <input matInput formControlName="apellido2" aria-label="Segundo Apellido"/>
             <mat-error *ngIf="campoEsInvalido('apellido2')">
               <ng-container *ngIf="perfilForm.get('apellido2')?.hasError('maxlength')">No puede exceder los 50 caracteres.</ng-container>
             </mat-error>
@@ -56,7 +56,7 @@
 
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('password')">
             <mat-label>Nueva Contraseña</mat-label>
-            <input matInput formControlName="password" type="password" placeholder="Dejar vacío para no modificar" />
+            <input matInput formControlName="password" type="password" placeholder="Dejar vacío para no modificar" aria-label="Nueva Contraseña"/>
             <mat-error *ngIf="campoEsInvalido('password')">
               La contraseña debe tener entre 8 y 16 caracteres.
             </mat-error>
@@ -64,7 +64,7 @@
 
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('rol')">
             <mat-label>Rol</mat-label>
-            <mat-select formControlName="rol">
+            <mat-select formControlName="rol" aria-label="Seleccionar Rol">
               <mat-option *ngFor="let rol of rolesDisponibles" [value]="rol">
                 {{ rol }}
               </mat-option>
@@ -75,10 +75,11 @@
       </mat-card-content>
       
       <mat-card-actions class="action-buttons">
-        <button mat-raised-button class="button-primary" (click)="guardarCambios()" [disabled]="perfilForm.invalid">
+        <button mat-raised-button class="button-primary" (click)="guardarCambios()" 
+                [disabled]="perfilForm.invalid" aria-label="Guardar cambios del perfil">
           Guardar
         </button>
-        <button mat-raised-button class="button-secondary" (click)="volver()">
+        <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver a la pantalla anterior">
           Volver
         </button>
       </mat-card-actions>

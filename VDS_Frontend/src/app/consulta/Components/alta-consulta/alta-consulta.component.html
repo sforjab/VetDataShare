@@ -7,7 +7,7 @@
         <!-- Motivo -->
         <mat-form-field appearance="fill" class="full-width" [class.error]="campoEsInvalido('motivo')">
           <mat-label>Motivo de la consulta</mat-label>
-          <textarea matInput formControlName="motivo" rows="4"></textarea>
+          <textarea matInput formControlName="motivo" rows="4" aria-label="Escribe el motivo de la consulta, máximo 500 caracteres"></textarea>
           <mat-error *ngIf="altaConsultaForm.get('motivo')?.hasError('required')">El motivo es obligatorio.</mat-error>
           <mat-error *ngIf="altaConsultaForm.get('motivo')?.hasError('maxlength')">
             No puede exceder los 500 caracteres.
@@ -22,7 +22,7 @@
           *ngIf="rol !== 'CLIENTE'"
         >
           <mat-label>Notas</mat-label>
-          <textarea matInput formControlName="notas" rows="4"></textarea>
+          <textarea matInput formControlName="notas" rows="4" aria-label="Escribe notas adicionales sobre la consulta, máximo 500 caracteres"></textarea>
           <mat-error *ngIf="altaConsultaForm.get('notas')?.hasError('maxlength')">
             No puede exceder los 500 caracteres.
           </mat-error>
@@ -31,7 +31,7 @@
         <!-- Medicación -->
         <mat-form-field appearance="fill" class="full-width" [class.error]="campoEsInvalido('medicacion')">
           <mat-label>Medicación</mat-label>
-          <textarea matInput formControlName="medicacion" rows="4"></textarea>
+          <textarea matInput formControlName="medicacion" rows="4" aria-label="Escribe la medicación prescrita o sugerida, máximo 500 caracteres"></textarea>
           <mat-error *ngIf="altaConsultaForm.get('medicacion')?.hasError('maxlength')">
             No puede exceder los 500 caracteres.
           </mat-error>
@@ -40,10 +40,11 @@
     </mat-card-content>
 
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" (click)="crearConsulta()" [disabled]="altaConsultaForm.invalid">
+      <button mat-raised-button class="button-primary" (click)="crearConsulta()" 
+              [disabled]="altaConsultaForm.invalid" aria-label="Guardar los datos de la consulta">
         Guardar
       </button>
-      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+      <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al menú anterior">Volver</button>
     </mat-card-actions>
   </mat-card>
 </div>

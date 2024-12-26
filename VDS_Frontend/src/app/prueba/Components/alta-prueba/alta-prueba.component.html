@@ -1,7 +1,7 @@
 <div class="page-container">
   <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando la información para crear una nueva prueba"></mat-progress-spinner>
   </div>
 
   <!-- Contenido principal -->
@@ -15,7 +15,7 @@
           <!-- Tipo de Prueba -->
           <mat-form-field appearance="fill" class="grid-span">
             <mat-label>Tipo de Prueba</mat-label>
-            <mat-select formControlName="tipo">
+            <mat-select formControlName="tipo" aria-label="Selecciona el tipo de prueba">
               <mat-option value="" disabled>Seleccione el tipo</mat-option>
               <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
             </mat-select>
@@ -27,7 +27,7 @@
           <!-- Descripción -->
           <mat-form-field appearance="fill" class="grid-span">
             <mat-label>Descripción</mat-label>
-            <textarea matInput formControlName="descripcion" rows="4"></textarea>
+            <textarea matInput formControlName="descripcion" rows="4" aria-label="Introduce una descripción para la prueba, máximo 500 caracteres"></textarea>
             <mat-error *ngIf="altaPruebaForm.get('descripcion')?.hasError('required')">
               La descripción es obligatoria.
             </mat-error>
@@ -40,10 +40,10 @@
 
       <!-- Botones -->
       <mat-card-actions class="action-buttons">
-        <button mat-raised-button class="button-primary" (click)="crearPrueba()" [disabled]="altaPruebaForm.invalid">
+        <button mat-raised-button class="button-primary" (click)="crearPrueba()" aria-label="Crear una nueva prueba con los datos proporcionados" [disabled]="altaPruebaForm.invalid">
           Crear
         </button>
-        <button mat-raised-button class="button-secondary" (click)="volver()">
+        <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver a la pantalla anterior">
           Volver
         </button>
       </mat-card-actions>

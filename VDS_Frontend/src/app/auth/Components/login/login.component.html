@@ -11,6 +11,7 @@
             matInput
             formControlName="username"
             required
+            aria-label="Introduce tu nombre de usuario"
           />
           <mat-error *ngIf="campoEsInvalido('username')">
             Campo obligatorio
@@ -25,6 +26,7 @@
             formControlName="password"
             type="password"
             required
+            aria-label="Introduce tu contraseña, entre 8 y 16 caracteres"
           />
           <mat-error *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">
             Campo obligatorio
@@ -35,20 +37,21 @@
         </mat-form-field>
 
         <!-- Mensaje de error general -->
-        <div *ngIf="mensajeError" class="error-message">
+        <div *ngIf="mensajeError" class="error-message" aria-label="Mensaje de error general">
           {{ mensajeError }}
         </div>
 
         <!-- Botones -->
         <div class="action-buttons">
-          <button mat-raised-button class="button-primary" type="submit" [disabled]="loginForm.invalid">
+          <button mat-raised-button class="button-primary" type="submit" 
+                  [disabled]="loginForm.invalid" aria-label="Iniciar sesión">
             Acceder
           </button>
         </div>
       </form>
 
       <p>
-        <a [routerLink]="'/auth/olvidar-password'" class="olvidar-password-link">
+        <a [routerLink]="'/auth/olvidar-password'" class="olvidar-password-link" aria-label="Enlace para recuperar tu contraseña">
           ¿Olvidaste tu contraseña?
         </a>
       </p>

@@ -1,7 +1,7 @@
 <div class="page-container">
   <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando los datos de la prueba"></mat-progress-spinner>
   </div>
 
   <!-- Contenido principal -->
@@ -29,7 +29,7 @@
             <!-- Tipo de Prueba -->
             <mat-form-field appearance="fill">
               <mat-label>Tipo de Prueba</mat-label>
-              <mat-select formControlName="tipo" >
+              <mat-select formControlName="tipo" aria-label="Selecciona el tipo de prueba">
                 <mat-option *ngFor="let tipo of tiposPrueba" [value]="tipo">{{ tipo }}</mat-option>
               </mat-select>
               <mat-error *ngIf="campoEsInvalido('tipo')">
@@ -40,7 +40,7 @@
             <!-- Descripción -->
             <mat-form-field appearance="fill">
               <mat-label>Descripción</mat-label>
-              <textarea matInput formControlName="descripcion" rows="4" ></textarea>
+              <textarea matInput formControlName="descripcion" rows="4" aria-label="Introduce la descripción de la prueba, máximo 500 caracteres"></textarea>
               <mat-error *ngIf="campoEsInvalido('descripcion') && detallePruebaForm.get('descripcion')?.hasError('required')">
                 La descripción es obligatoria.
               </mat-error>
@@ -52,7 +52,7 @@
             <!-- Documentos -->
             <h3>Documentos Adjuntos</h3>
             <div class="tabla-container" *ngIf="documentos.length > 0; else noDocumentos">
-              <table mat-table [dataSource]="documentos" class="mat-elevation-z8">
+              <table mat-table [dataSource]="documentos" class="mat-elevation-z8" aria-label="Tabla de documentos asociados a la prueba">
                 <ng-container matColumnDef="nombreArchivo">
                   <th mat-header-cell *matHeaderCellDef class="text-center"> Nombre Archivo </th>
                   <td mat-cell *matCellDef="let documento" class="text-center"> {{ documento.nombreArchivo }} </td>
@@ -61,11 +61,11 @@
                 <ng-container matColumnDef="acciones">
                   <th mat-header-cell *matHeaderCellDef class="text-center"> Acciones </th>
                   <td mat-cell *matCellDef="let documento" class="text-center">
-                    <button mat-icon-button color="primary" (click)="descargarDocumento(documento)">
-                      <mat-icon>file_download</mat-icon>
+                    <button mat-icon-button color="primary" (click)="descargarDocumento(documento)" aria-label="Descargar el documento">
+                      <mat-icon title="Descargar">file_download</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="eliminarDocumento(documento)" *ngIf="puedeEditar">
-                      <mat-icon>delete</mat-icon>
+                    <button mat-icon-button color="warn" (click)="eliminarDocumento(documento)" aria-label="Eliminar el documento" *ngIf="puedeEditar">
+                      <mat-icon title="Eliminar">delete</mat-icon>
                     </button>
                   </td>
                 </ng-container>
@@ -82,17 +82,17 @@
 
             <!-- Botón para añadir documentos -->
             <div class="botones-documento">
-              <button mat-raised-button class="button-primary" (click)="abrirDialogSubirDocumento()" *ngIf="puedeEditar">
+              <button mat-raised-button class="button-primary" (click)="abrirDialogSubirDocumento()" aria-label="Añadir un nuevo documento a la prueba" *ngIf="puedeEditar">
                 Añadir Documento
               </button>
             </div>
 
             <!-- Botones de guardar y volver -->
             <mat-card-actions class="action-buttons">
-              <button mat-raised-button class="button-primary" (click)="guardarPrueba()" [disabled]="detallePruebaForm.invalid" *ngIf="puedeEditar">
+              <button mat-raised-button class="button-primary" (click)="guardarPrueba()" aria-label="Guardar los cambios realizados en la prueba" [disabled]="detallePruebaForm.invalid" *ngIf="puedeEditar">
                 Guardar
               </button>
-              <button mat-raised-button class="button-secondary" (click)="volver()">
+              <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al menú anterior">
                 Volver
               </button>
             </mat-card-actions>

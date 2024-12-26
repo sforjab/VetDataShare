@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando contenido del dashboard"></mat-progress-spinner>
   </div>
 
   <!-- Contenido del dashboard -->
@@ -11,24 +11,21 @@
     <div class="dashboard-buttons-container">
       <div class="dashboard-buttons">
         <!-- Botón "Datos Clínica" -->
-        <div 
-          class="dashboard-button"
-          (click)="navegarDatosClinica()">
-          <i class="fa-solid fa-circle-info"></i>
+        <div class="dashboard-button" (click)="navegarDatosClinica()" aria-label="Ver datos de la clínica">
+          <i class="fa-solid fa-circle-info" title="Ver datos de la clínica"></i>
           <span>Datos Clínica</span>
         </div>
 
         <!-- Botón "Gestión Empleados" -->
         <div 
-          class="dashboard-button"
-          (click)="navegarGestionEmpleados()">
-          <i class="fa-solid fa-user-doctor"></i>
+          class="dashboard-button" (click)="navegarGestionEmpleados()" aria-label="Gestión de empleados">
+          <i class="fa-solid fa-user-doctor" title="Gestión de empleados"></i>
           <span>Gestión Empleados</span>
         </div>
       </div>
     </div>
 
     <!-- Botón de Volver -->
-    <button mat-raised-button class="button-secondary" (click)="navegarVolver()">Volver</button>
+    <button mat-raised-button class="button-secondary" (click)="navegarVolver()" aria-label="Volver al menú anterior">Volver</button>
   </div>
 </div>

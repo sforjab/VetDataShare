@@ -16,7 +16,7 @@
           <!-- Campo Identificador del propietario destino -->
           <mat-form-field appearance="fill" [class.error]="campoEsInvalido('propietarioDestino')">
             <mat-label>Ident. propietario destino</mat-label>
-            <input matInput formControlName="propietarioDestino" />
+            <input matInput formControlName="propietarioDestino" aria-label="Ingresar identificador del propietario destino"/>
             <mat-error *ngIf="campoEsInvalido('propietarioDestino')">
                 <ng-container *ngIf="propietarioForm.get('propietarioDestino')?.hasError('required')">
                   Este campo es obligatorio.
@@ -35,17 +35,18 @@
   
           <!-- Botones de acción -->
           <div class="action-buttons">
-            <button mat-raised-button class="button-primary" (click)="buscarPropietarioDestino()" [disabled]="propietarioForm.invalid">
+            <button mat-raised-button class="button-primary" (click)="buscarPropietarioDestino()" 
+                    [disabled]="propietarioForm.invalid" aria-label="Buscar propietario destino">
               Buscar
             </button>
-            <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+            <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al paso anterior">Volver</button>
           </div>
         </form>
       </mat-card-content>
     </mat-card>
   
     <!-- Información del cliente destino -->
-    <mat-card *ngIf="datosDestino" class="card cliente-destino-card">
+    <mat-card *ngIf="datosDestino" class="card cliente-destino-card" aria-label="Información del cliente destino">
       <mat-card-title class="centered-title">Cliente destino</mat-card-title>
       <mat-card-content>
         <p><strong>Número de identificación:</strong> {{ datosDestino.numIdent }}</p>
@@ -58,8 +59,8 @@
   
       <!-- Botones Transferir y Volver -->
       <mat-card-actions class="action-buttons">
-        <button mat-raised-button class="button-primary" (click)="transferirMascotas()">Transferir</button>
-        <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+        <button mat-raised-button class="button-primary" (click)="transferirMascotas()" aria-label="Confirmar la transferencia de mascotas al cliente destino">Transferir</button>
+        <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver a la pantalla anterior">Volver</button>
       </mat-card-actions>
     </mat-card>
   </div>

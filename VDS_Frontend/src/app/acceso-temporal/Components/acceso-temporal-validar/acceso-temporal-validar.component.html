@@ -8,7 +8,7 @@
         <!-- Campo para introducir el código -->
         <mat-form-field appearance="fill" [class.error]="campoEsInvalido('codigoNumerico')">
           <mat-label>Código numérico</mat-label>
-          <input matInput formControlName="codigoNumerico" maxlength="6" />
+          <input matInput formControlName="codigoNumerico" maxlength="6" aria-label="Introduce el código numérico de 6 dígitos" />
           <mat-error *ngIf="accesoTemporalForm.get('codigoNumerico')?.hasError('required')">
             El código es obligatorio.
           </mat-error>
@@ -18,7 +18,7 @@
         </mat-form-field>
 
         <!-- Mensaje de error general -->
-        <div *ngIf="mensaje" class="error-message">
+        <div *ngIf="mensaje" class="error-message" aria-label="Mensaje de error" >
           {{ mensaje }}
         </div>
       </form>
@@ -26,7 +26,8 @@
 
     <!-- Botón de validar -->
     <mat-card-actions class="action-buttons">
-      <button mat-raised-button class="button-primary" type="submit" [disabled]="accesoTemporalForm.invalid" (click)="validarCodigo()">Validar</button>
+      <button mat-raised-button class="button-primary" type="submit" [disabled]="accesoTemporalForm.invalid" 
+              (click)="validarCodigo()" aria-label="Validar el código numérico introducido">Validar</button>
     </mat-card-actions>
   </mat-card>
 </div>

@@ -1,8 +1,6 @@
 <header class="header">
-  <!-- Logo a la izquierda -->
   <div class="header-logo">
-    <!-- <button mat-button (click)="navigateTo('/')">VetDataShare</button> -->
-    <a [routerLink]="'/'" class="logo-link">
+    <a [routerLink]="'/'" class="logo-link" aria-label="Ir a la página principal de VetDataShare">
       <img src="assets/images/logo-sin-texto-250px.png" alt="VetDataShare Logo" class="logo-img">
       <span class="logo-text">VetDataShare</span>
     </a>
@@ -12,17 +10,17 @@
   <div class="header-options">
     <!-- Si el usuario NO está logueado, mostramos el botón "Acceder" y el enlace para Acceso Temporal -->
     <div *ngIf="!isLogged">
-      <button mat-raised-button color="primary" (click)="navegarLogin()" class="login-btn">Acceder</button>
-      <button mat-raised-button color="primary" (click)="navegarAccesoTemporalValidar()" class="acceso-temporal-btn">Acceso Temporal</button>
+      <button mat-raised-button color="primary" (click)="navegarLogin()" class="login-btn" aria-label="Acceder a tu cuenta">Acceder</button>
+      <button mat-raised-button color="primary" (click)="navegarAccesoTemporalValidar()" aria-label="Acceder con un código temporal" class="acceso-temporal-btn">Acceso Temporal</button>
     </div>
 
     <!-- Si el usuario está logueado, mostramos el botón "Logout" y el rol -->
     <div *ngIf="isLogged" class="user-info">
-      <button mat-button (click)="navegarDashboard()" class="user-button">
+      <button mat-button (click)="navegarDashboard()" aria-label="Ir a tu panel de usuario" class="user-button">
         <i class="fa-solid fa-user fa-lg user-icon"> </i>
         <span>{{ usuario?.username }}</span>
       </button>
-      <button mat-raised-button color="warn" (click)="logout()" class="logout-btn">Cerrar sesión</button>
+      <button mat-raised-button color="warn" (click)="logout()" aria-label="Ir a tu panel de usuario" class="logout-btn">Cerrar sesión</button>
     </div>
   </div>
 </header>

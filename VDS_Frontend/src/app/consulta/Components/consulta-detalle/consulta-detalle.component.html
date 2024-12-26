@@ -1,7 +1,7 @@
 <div class="page-container">
   <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando el detalle de la consulta"></mat-progress-spinner>
   </div>
 
   <!-- Contenido principal -->
@@ -29,7 +29,7 @@
             <div class="form-group" [ngClass]="{'error': campoEsInvalido('motivo')}">
               <mat-form-field class="full-width">
                 <mat-label>Motivo de consulta</mat-label>
-                <textarea matInput id="motivo" formControlName="motivo" rows="4" [readOnly]="!puedeEditar"></textarea>
+                <textarea matInput id="motivo" formControlName="motivo" rows="4" [readOnly]="!puedeEditar" aria-label="Escribe el motivo de la consulta, máximo 500 caracteres"></textarea>
                 <mat-error *ngIf="campoEsInvalido('motivo')">
                   Motivo es obligatorio y debe tener un máximo de 500 caracteres.
                 </mat-error>
@@ -44,7 +44,8 @@
                   id="notas"
                   formControlName="notas"
                   rows="4"
-                  [readOnly]="!puedeEditar">
+                  [readOnly]="!puedeEditar"
+                  aria-label="Escribe notas adicionales sobre la consulta, máximo 500 caracteres">
                 </textarea>
                 <mat-error *ngIf="campoEsInvalido('notas')">
                   Notas deben tener un máximo de 500 caracteres.
@@ -60,7 +61,8 @@
                   id="medicacion"
                   formControlName="medicacion"
                   rows="4"
-                  [readOnly]="!puedeEditar">
+                  [readOnly]="!puedeEditar"
+                  aria-label="Escribe la medicación sugerida, máximo 500 caracteres">
                 </textarea>
                 <mat-error *ngIf="campoEsInvalido('medicacion')">
                   Medicación debe tener un máximo de 500 caracteres.
@@ -72,7 +74,7 @@
           <!-- Tablas -->
           <div class="data-table">
             <h3>Pruebas</h3>
-            <table>
+            <table aria-label="Lista de pruebas realizadas">
               <thead>
                 <tr>
                   <th>Tipo</th>
@@ -88,15 +90,15 @@
                   <td>{{ prueba.descripcion }}</td>
                   <td>
                     <div class="action-buttons">
-                      <button mat-icon-button color="primary" (click)="editarPrueba(prueba)" *ngIf="puedeEditar">
-                        <mat-icon>mode_edit</mat-icon>
+                      <button mat-icon-button color="primary" (click)="editarPrueba(prueba)" aria-label="Editar prueba" *ngIf="puedeEditar">
+                        <mat-icon title="Editar">mode_edit</mat-icon>
                       </button>
   
-                      <button mat-icon-button color="primary" (click)="editarPrueba(prueba)" *ngIf="!puedeEditar">
-                        <mat-icon>remove_red_eye</mat-icon>
+                      <button mat-icon-button color="primary" (click)="editarPrueba(prueba)" aria-label="Ver prueba" *ngIf="!puedeEditar">
+                        <mat-icon title="Acceder">remove_red_eye</mat-icon>
                       </button>
-                      <button mat-icon-button color="warn" (click)="eliminarPrueba(prueba)" *ngIf="puedeEditar">
-                        <mat-icon>delete</mat-icon>
+                      <button mat-icon-button color="warn" (click)="eliminarPrueba(prueba)" aria-label="Eliminar prueba" *ngIf="puedeEditar">
+                        <mat-icon title="Eliminar">delete</mat-icon>
                       </button>
                     </div>                
                   </td>
@@ -105,13 +107,13 @@
             </table>
             <!-- Botón Nueva Prueba -->
             <div class="table-actions">
-              <button mat-raised-button class="button-primary" (click)="nuevaPrueba()" *ngIf="puedeEditar">Nueva Prueba</button>
+              <button mat-raised-button class="button-primary" (click)="nuevaPrueba()" aria-label="Registrar una nueva prueba" *ngIf="puedeEditar">Nueva Prueba</button>
             </div>
           </div>
   
           <div class="data-table">
             <h3>Vacunas</h3>
-            <table>
+            <table aria-label="Lista de vacunas administradas">
               <thead>
                 <tr>
                   <th>Nombre</th>
@@ -127,11 +129,11 @@
                   <td>{{ vacuna.laboratorio }}</td>
                   <td *ngIf="puedeEditar">
                     <div class="action-buttons">
-                      <button mat-icon-button color="primary" (click)="editarVacuna(vacuna)">
-                        <mat-icon>mode_edit</mat-icon>
+                      <button mat-icon-button color="primary" (click)="editarVacuna(vacuna)" aria-label="Editar vacuna">
+                        <mat-icon title="Editar">mode_edit</mat-icon>
                       </button>
-                      <button mat-icon-button color="warn" (click)="eliminarVacuna(vacuna)">
-                        <mat-icon>delete</mat-icon>
+                      <button mat-icon-button color="warn" (click)="eliminarVacuna(vacuna)" aria-label="Eliminar vacuna">
+                        <mat-icon title="Eliminar">delete</mat-icon>
                       </button>
                     </div>
                   </td>
@@ -140,14 +142,14 @@
             </table>
             <!-- Botón Nueva Vacuna -->
             <div class="table-actions">
-              <button mat-raised-button class="button-primary" (click)="nuevaVacuna()" *ngIf="puedeEditar">Nueva Vacuna</button>
+              <button mat-raised-button class="button-primary" (click)="nuevaVacuna()" aria-label="Registrar una nueva vacuna" *ngIf="puedeEditar">Nueva Vacuna</button>
             </div>
           </div>
   
           <!-- Botones -->
           <div class="form-actions">
-            <button mat-raised-button class="button-primary" (click)="guardar()" *ngIf="puedeEditar">Guardar</button>
-            <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+            <button mat-raised-button class="button-primary" (click)="guardar()" aria-label="Guardar los cambios realizados" *ngIf="puedeEditar">Guardar</button>
+            <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al menú anterior">Volver</button>
           </div>
         </mat-card-content>
       </mat-card>

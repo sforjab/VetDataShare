@@ -1,7 +1,7 @@
 <div class="page-container">
   <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando el listado de pruebas"></mat-progress-spinner>
   </div>
 
   <!-- Contenido principal -->
@@ -11,7 +11,7 @@
 
     <!-- Tabla de pruebas -->
     <div class="tabla-container" *ngIf="dataSource.data.length > 0; else noPruebas">
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" aria-label="Tabla con listado de pruebas">
         
         <!-- Tipo de Prueba -->
         <ng-container matColumnDef="tipo">
@@ -29,8 +29,8 @@
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef class="text-center"> Acceder </th>
           <td mat-cell *matCellDef="let prueba" class="text-center">
-            <button mat-icon-button color="primary" (click)="verDetallePrueba(prueba.id)">
-              <mat-icon>remove_red_eye</mat-icon>
+            <button mat-icon-button color="primary" (click)="verDetallePrueba(prueba.id)" aria-label="Ver detalles de la prueba">
+              <mat-icon title="Acceder">remove_red_eye</mat-icon>
             </button>
           </td>
         </ng-container>
@@ -40,7 +40,7 @@
       </table>
 
       <!-- Paginador -->
-      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Paginador para la tabla de pruebas"></mat-paginator>
     </div>
 
     <!-- Mensaje si no hay pruebas -->
@@ -50,7 +50,7 @@
 
     <!-- Botón de Volver -->
     <div class="boton-volver">
-      <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+      <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al menú anterior">Volver</button>
     </div>
   </div>
 </div>

@@ -10,41 +10,41 @@
         <div class="form-row">
           <mat-form-field class="form-field">
             <mat-label>Num Ident</mat-label>
-            <input matInput [(ngModel)]="filtros.numIdent" name="numIdent" />
+            <input matInput [(ngModel)]="filtros.numIdent" name="numIdent" aria-label="Filtrar por número de identificación"/>
           </mat-form-field>
 
           <mat-form-field class="form-field">
             <mat-label>Nombre</mat-label>
-            <input matInput [(ngModel)]="filtros.nombre" name="nombre" />
+            <input matInput [(ngModel)]="filtros.nombre" name="nombre" aria-label="Filtrar por nombre"/>
           </mat-form-field>
         </div>
 
         <div class="form-row">
           <mat-form-field class="form-field">
             <mat-label>Apellido 1</mat-label>
-            <input matInput [(ngModel)]="filtros.apellido1" name="apellido1" />
+            <input matInput [(ngModel)]="filtros.apellido1" name="apellido1" aria-label="Filtrar por primer apellido"/>
           </mat-form-field>
 
           <mat-form-field class="form-field">
             <mat-label>Apellido 2</mat-label>
-            <input matInput [(ngModel)]="filtros.apellido2" name="apellido2" />
+            <input matInput [(ngModel)]="filtros.apellido2" name="apellido2" aria-label="Filtrar por segundo apellido"/>
           </mat-form-field>
         </div>
 
         <div class="form-row">
           <mat-form-field class="form-field">
             <mat-label>Teléfono</mat-label>
-            <input matInput [(ngModel)]="filtros.telefono" name="telefono" />
+            <input matInput [(ngModel)]="filtros.telefono" name="telefono" aria-label="Filtrar por teléfono"/>
           </mat-form-field>
 
           <mat-form-field class="form-field">
             <mat-label>Email</mat-label>
-            <input matInput [(ngModel)]="filtros.email" name="email" />
+            <input matInput [(ngModel)]="filtros.email" name="email" aria-label="Filtrar por correo electrónico"/>
           </mat-form-field>
         </div>
 
         <div class="form-row" style="justify-content: center;">
-          <button mat-raised-button class="button-primary" type="submit">Buscar</button>
+          <button mat-raised-button class="button-primary" type="submit" aria-label="Buscar clientes">Buscar</button>
         </div>
       </form>
     </mat-card-content>
@@ -54,7 +54,7 @@
 
   <!-- Spinner de carga -->
   <div *ngIf="isLoading" class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando resultados"></mat-progress-spinner>
   </div>
 
   <!-- Tabla de resultados -->
@@ -88,13 +88,13 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef>Acciones</th>
         <td mat-cell *matCellDef="let cliente" data-label="Acciones">
-          <button mat-icon-button color="primary" (click)="navegarDashboardCliente(cliente.id)">
+          <button mat-icon-button color="primary" (click)="navegarDashboardCliente(cliente.id)" aria-label="Acceder al dashboard del cliente">
             <mat-icon title="Acceder">remove_red_eye</mat-icon>
           </button>
-          <button mat-icon-button color="accent" (click)="transferirMascotas(cliente.numIdent)">
+          <button mat-icon-button color="accent" (click)="transferirMascotas(cliente.numIdent)" aria-label="Transferir mascotas del cliente">
             <mat-icon title="Transferir mascotas">compare_arrows</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="eliminarCliente(cliente)">
+          <button mat-icon-button color="warn" (click)="eliminarCliente(cliente)" aria-label="Eliminar al cliente">
             <mat-icon title="Eliminar">delete</mat-icon>
           </button>
         </td>
@@ -113,7 +113,7 @@
   </p>
 
   <div class="action-buttons">
-    <button mat-raised-button class="button-primary" (click)="altaCliente()">Nuevo Cliente</button>
-    <button mat-raised-button class="button-secondary" (click)="volver()">Volver</button>
+    <button mat-raised-button class="button-primary" (click)="altaCliente()" aria-label="Registrar un nuevo cliente">Nuevo Cliente</button>
+    <button mat-raised-button class="button-secondary" (click)="volver()" aria-label="Volver al menú principal">Volver</button>
   </div>
 </div>
