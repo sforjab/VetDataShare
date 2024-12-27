@@ -1,7 +1,30 @@
-<div class="home">
-    <div>
-        <h1>Bienvenido a VetDataShare</h1>
-        <p>Su aplicación para la gestión de clínicas y mascotas.</p>
+<div class="home-container">
+    <!-- Texto descriptivo -->
+    <div class="text-column">
+      <h1>Bienvenido a <span>VetDataShare</span></h1>
+      <p>
+        <strong>VetDataShare</strong> es la solución definitiva para el intercambio y gestión de datos veterinarios.
+        Ofrecemos herramientas innovadoras para conectar clínicas, gestionar historiales médicos,
+        y garantizar una atención más eficiente y segura para las mascotas.
+      </p>
+      <button class="button-primary presupuesto-button">Solicita tu presuuesto</button>
+    </div>
+  
+    <!-- Slideshow -->
+    <div class="slideshow-column">
+      <div class="slideshow-container">
+        <div class="slide" *ngFor="let img of images; let i = index" [class.active]="i === activeIndex">
+          <img [src]="img" alt="Slide" />
+        </div>
+        <div class="dots">
+          <span
+            *ngFor="let img of images; let i = index"
+            class="dot"
+            [class.active]="i === activeIndex"
+            (click)="goToSlide(i)"
+          ></span>
+        </div>
+      </div>
     </div>
 </div>
   

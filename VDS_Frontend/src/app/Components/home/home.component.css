@@ -1,15 +1,109 @@
-.home {
-    text-align: center;
-    margin-top: 50px;
-  
-    h1 {
-      font-size: 2.5rem;
-      color: #1e5067;  /* Color primario de Angular Material */
-    }
-  
-    p {
-      font-size: 1.2rem;
-      color: #666;
-    }
-  }
-  
+/* Contenedor principal */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+/* Columna de texto */
+.text-column {
+  width: 100%; 
+  max-width: 800px; 
+  text-align: center;
+  padding: 20px;
+}
+
+.text-column h1 {
+  font-size: 2.5rem;
+  color: #000000;
+  /* text-align: center; */
+}
+
+.text-column h1 span {
+  color: #149cb5;
+}
+
+.text-column p {
+  font-size: 1.2rem;
+  margin: 20px 0;
+  line-height: 1.6;
+}
+
+.presupuesto-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #0066cc;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.learn-more-button:hover {
+  background-color: #004999;
+}
+
+/* Columna del slideshow */
+.slideshow-column {
+  width: 100%; /* Ocupa todo el ancho */
+  max-width: 800px; /* Ajusta el máximo ancho */
+  padding: 20px;
+}
+
+/* Slideshow */
+.slideshow-container {
+  width: 100%;
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slide {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 30px;
+}
+
+.dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background-color: #bbb;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dot.active {
+  background-color: #717171;
+}

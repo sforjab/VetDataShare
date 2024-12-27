@@ -14,6 +14,7 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { HomeComponent } from './Components/home/home.component';
 import { AuthInterceptor } from './auth/Services/auth-interceptor.service';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -29,7 +30,9 @@ import { AuthInterceptor } from './auth/Services/auth-interceptor.service';
         MatFormFieldModule,
         MatButtonModule,
         MatSelectModule,
-        MatSnackBarModule], 
+        MatSnackBarModule,
+        MatTabsModule 
+    ], 
     providers: [
         {
             provide: HTTP_INTERCEPTORS,
