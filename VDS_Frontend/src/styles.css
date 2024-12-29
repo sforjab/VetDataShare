@@ -1,5 +1,6 @@
 /* Importaciones */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import 'animate.css/animate.min.css';
 
 /* Variables globales */
 :root {
@@ -214,4 +215,18 @@ th {
     background-color: #cbd8df !important;
     color: #000000;
     font-size: 1rem !important;
+}
+
+/* Páginas estáticas */
+.pagina-estatica h1 { 
+    text-align: center;
+}
+
+.pagina-estatica h2 {
+    text-align: left !important ;
+}
+
+/* Ordenación de columnas de tablas */
+.mat-sort-header-container {
+    justify-content: center;
 }

@@ -59,28 +59,28 @@
 
   <!-- Tabla de resultados -->
   <div class="tabla-container">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 clientes-tabla">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 clientes-tabla">
       <!-- Columna: Num Ident -->
       <ng-container matColumnDef="numIdent">
-        <th mat-header-cell *matHeaderCellDef>Num Ident</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Num Ident</th>
         <td mat-cell *matCellDef="let cliente" data-label="Num Ident" class="breakCell">{{ cliente.numIdent }}</td>
       </ng-container>
     
       <!-- Columna: Nombre -->
       <ng-container matColumnDef="nombre">
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Nombre</th>
         <td mat-cell *matCellDef="let cliente" data-label="Nombre">{{ cliente.nombre }}</td>
       </ng-container>
     
       <!-- Columna: Apellido 1 -->
       <ng-container matColumnDef="apellido1">
-        <th mat-header-cell *matHeaderCellDef>Apellido 1</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Apellido 1</th>
         <td mat-cell *matCellDef="let cliente" data-label="Apellido 1">{{ cliente.apellido1 }}</td>
       </ng-container>
     
       <!-- Columna: Apellido 2 -->
       <ng-container matColumnDef="apellido2">
-        <th mat-header-cell *matHeaderCellDef>Apellido 2</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Apellido 2</th>
         <td mat-cell *matCellDef="let cliente" data-label="Apellido 2">{{ cliente.apellido2 }}</td>
       </ng-container>
 

@@ -7,6 +7,7 @@ import { Clinica } from '../../Models/clinica.dto';
 import { ClinicaService } from '../../Services/clinica.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BajaClinicaComponent } from '../baja-clinica/baja-clinica.component';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gestion-clinicas',
@@ -28,6 +29,7 @@ export class GestionClinicasComponent implements OnInit, AfterViewInit {
   columnasTabla: string[] = ['nombre', 'direccion', 'telefono', 'email', 'acciones'];
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
   constructor(private clinicaService: ClinicaService, private router: Router, private dialog: MatDialog) {}
 
@@ -38,9 +40,31 @@ export class GestionClinicasComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
-    } else {
-      console.warn('Paginador no disponible en ngAfterViewInit.');
     }
+
+    if (this.sort) {
+          this.dataSource.sort = this.sort;
+    
+          // Comparador personalizado para manejar acentos
+          this.dataSource.sortData = (data: Clinica[], sort: MatSort) => {
+            const active = sort.active;
+            const direction = sort.direction;
+    
+            if (!active || direction === '') {
+              return data;
+            }
+    
+            return data.sort((a, b) => {
+              const valueA = this.getValue(a, active);
+              const valueB = this.getValue(b, active);
+    
+              // Se usa 'localeCompare' para ordenación considerando acentos
+              return direction === 'asc'
+                ? valueA.localeCompare(valueB, 'es', { sensitivity: 'base' })
+                : valueB.localeCompare(valueA, 'es', { sensitivity: 'base' });
+            });
+          };
+        }
   }
 
   buscarClinicas() {
@@ -56,6 +80,14 @@ export class GestionClinicasComponent implements OnInit, AfterViewInit {
         setTimeout(() => {
           if (this.paginator) {
             this.dataSource.paginator = this.paginator;
+          } else {
+            console.warn('Paginador aún no disponible después de la búsqueda.');
+          }
+          if (this.sort) {
+            this.dataSource.sort = this.sort;
+            this.dataSource.sort.sort({ id: 'nombre', start: 'asc', disableClear: true });
+          } else {
+            console.warn('Ordenación aún no disponible después de la búsqueda.');
           }
         });
 
@@ -80,6 +112,11 @@ export class GestionClinicasComponent implements OnInit, AfterViewInit {
       email: filtros.email || undefined,
       activo: filtros.activo === 'true' ? true : filtros.activo === 'false' ? false : undefined
     };
+  }
+
+  // Método auxiliar para obtener valores de objetos
+  private getValue(obj: any, column: string): string {
+    return obj[column] ? obj[column].toString() : '';
   }
 
   navegarDashboardClinica(idClinica: number): void {

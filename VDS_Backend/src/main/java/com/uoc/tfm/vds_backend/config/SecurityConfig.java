@@ -36,7 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest -> authRequest
                         // Rutas públicas (accesibles sin autenticación)
                         .requestMatchers("/api/auth/**", "/api/auth/olvidar-password", "/api/auth/restablecer-password", 
-                                                     "/api/usuarios/create", "/api/accesos-temporales/**").permitAll()
+                                                     "/api/usuarios/create", "/api/accesos-temporales/**",
+                                                     "/api/usuarios/solicitar-presupuesto").permitAll()
 
                         // Rutas accesibles para el rol TEMPORAL y otros roles autenticados
                         .requestMatchers("/mascota/**", "/consulta/**", "/prueba/**", "/vacuna/**")

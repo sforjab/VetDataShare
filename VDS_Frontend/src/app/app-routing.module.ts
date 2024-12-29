@@ -57,7 +57,7 @@ const routes: Routes = [
   },
   { path: 'ayuda', component: AyudaComponent },
   { path: 'sobre-nosotros', component: SobreNosotrosComponent },
-  { path: 'politica-privacidad', component: PoliticaPrivacidadComponent }
+  { path: 'politica-privacidad', component: PoliticaPrivacidadComponent },
 
 ];
 

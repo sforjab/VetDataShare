@@ -6,6 +6,7 @@ import { Mascota } from '../../Models/mascota.dto';
 import { MascotaService } from '../../Services/mascota.service';
 import { MatDialog } from '@angular/material/dialog';
 import { BajaMascotaComponent } from '../baja-mascota/baja-mascota.component';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gestion-mascotas',
@@ -23,9 +24,10 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Mascota>();
   isLoading: boolean = false;
   busquedaRealizada: boolean = false;
-  columnasTabla: string[] = ['numChip', 'nombre', 'especie', 'raza',/*  'fechaNacimiento', */ 'acciones'];
+  columnasTabla: string[] = ['numChip', 'nombre', 'especie', 'raza', 'acciones'];
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
   constructor(private mascotaService: MascotaService, private router: Router, private dialog: MatDialog) {}
 
@@ -36,6 +38,30 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
+    }
+
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
+
+      // Comparador personalizado para manejar acentos
+            this.dataSource.sortData = (data: Mascota[], sort: MatSort) => {
+              const active = sort.active;
+              const direction = sort.direction;
+      
+              if (!active || direction === '') {
+                return data;
+              }
+      
+              return data.sort((a, b) => {
+                const valueA = this.getValue(a, active);
+                const valueB = this.getValue(b, active);
+      
+                // Se usa 'localeCompare' para ordenación considerando acentos
+                return direction === 'asc'
+                  ? valueA.localeCompare(valueB, 'es', { sensitivity: 'base' })
+                  : valueB.localeCompare(valueA, 'es', { sensitivity: 'base' });
+              });
+            };
     }
   }
 
@@ -54,6 +80,12 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
             this.dataSource.paginator = this.paginator;
           } else {
             console.warn('Paginador aún no disponible después de la búsqueda.');
+          }
+          if (this.sort) {
+            this.dataSource.sort = this.sort;
+            this.dataSource.sort.sort({ id: 'nombre', start: 'asc', disableClear: true });
+          } else {
+            console.warn('Ordenación aún no disponible después de la búsqueda.');
           }
         });
 
@@ -77,6 +109,11 @@ export class GestionMascotasComponent implements OnInit, AfterViewInit {
       especie: filtros.especie || undefined,
       raza: filtros.raza || undefined,
     };
+  }
+
+  // Método auxiliar para obtener valores de objetos
+  private getValue(obj: any, column: string): string {
+    return obj[column] ? obj[column].toString() : '';
   }
 
   navegarDashboardMascota(idMascota: number): void {

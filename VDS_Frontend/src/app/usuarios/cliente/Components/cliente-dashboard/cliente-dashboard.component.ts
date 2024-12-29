@@ -13,7 +13,7 @@ export class ClienteDashboardComponent implements OnInit {
   idCliente: number | null = null;
   rolUsuarioSesion: string | null = null; 
   cliente: any = null; 
-  cargando: boolean = true;
+  isLoading: boolean = true;
 
   constructor(private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router) {}
 
@@ -38,11 +38,11 @@ export class ClienteDashboardComponent implements OnInit {
         this.usuarioService.getUsuarioPorId(this.idCliente).subscribe({
           next: (data) => {
             this.cliente = data; // Asignamos los datos del cliente
-            this.cargando = false; // Ocultamos el spinner
+            this.isLoading = false; // Ocultamos el spinner
           },
           error: (err: HttpErrorResponse) => {
             console.error('Error al obtener datos del cliente:', err);
-            this.cargando = false; // Ocultamos el spinner en caso de error
+            this.isLoading = false; // Ocultamos el spinner en caso de error
             if (err.status === 403) {
               console.log('Acceso no autorizado')
               this.router.navigate(['/acceso-no-autorizado']);

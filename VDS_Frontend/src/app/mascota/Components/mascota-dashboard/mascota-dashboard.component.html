@@ -1,11 +1,11 @@
 <div class="dashboard-container">
   <!-- Spinner de carga -->
-  <ng-container class="spinner-container" *ngIf="isLoading; else contenidoMascota">
+  <div *ngIf="isLoading" class="spinner-container">
     <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando el panel de mascota"></mat-progress-spinner>
-  </ng-container>
+  </div>
 
   <!-- Contenido de la mascota -->
-  <ng-template #contenidoMascota>
+  <div *ngIf="!isLoading">
     <h1>Panel de Mascota</h1>
     <h3>{{ mascota?.nombre }} ({{ mascota?.numChip }})</h3>
     
@@ -112,24 +112,24 @@
       class="dashboard-buttons"
       [ngClass]="{'cliente-layout': rolUsuario === 'CLIENTE', 'default-layout': rolUsuario !== 'CLIENTE'}"
     >
-      <div class="dashboard-button" (click)="navegarDetalle()">
+      <div class="dashboard-button animate__animated animate__fadeIn" (click)="navegarDetalle()">
         <i class="fa-solid fa-circle-info" title="Consultar datos"></i>
         <span aria-label="Consultar datos">Consultar datos</span>
       </div>
-      <div class="dashboard-button" (click)="navegarConsultas()">
+      <div class="dashboard-button animate__animated animate__fadeIn" (click)="navegarConsultas()">
         <i class="fa-solid fa-notes-medical" title="Histórico de consultas"></i>
         <span aria-label="Histórico de consultas">Histórico de consultas</span>
       </div>
-      <div class="dashboard-button" (click)="navegarPruebas()">
+      <div class="dashboard-button animate__animated animate__fadeIn" (click)="navegarPruebas()">
         <i class="fa-solid fa-vial" title="Pruebas"></i>
         <span aria-label="Pruebas">Pruebas</span>
       </div>
-      <div class="dashboard-button" (click)="navegarVacunas()">
+      <div class="dashboard-button animate__animated animate__fadeIn" (click)="navegarVacunas()">
         <i class="fa-solid fa-syringe" title="Vacunas"></i>
         <span aria-label="Vacunas">Vacunas</span>
       </div>
       <div
-        class="dashboard-button"
+        class="dashboard-button animate__animated animate__fadeIn"
         *ngIf="rolUsuario === 'CLIENTE'"
         (click)="navegarAccesoTemporal()"
       >
@@ -140,5 +140,5 @@
 
     <!-- Botón Volver -->
     <button mat-raised-button class="button-secondary button-volver" (click)="volver()" aria-label="Volver al menú anterior" *ngIf="rolUsuario !== 'TEMPORAL'">Volver</button>
-  </ng-template>
+  </div>
 </div>

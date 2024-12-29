@@ -25,7 +25,7 @@
 }
 
 .footer-logo button {
-    color: #ffffff; /* Color blanco consistente */
+    color: #ffffff;
     font-size: 1.5rem;
     transition: transform 0.2s ease-in-out; 
 }

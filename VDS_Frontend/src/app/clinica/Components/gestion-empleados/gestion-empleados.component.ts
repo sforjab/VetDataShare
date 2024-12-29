@@ -6,6 +6,7 @@ import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { BajaEmpleadoComponent } from '../baja-empleado/baja-empleado.component';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gestion-empleados',
@@ -34,6 +35,7 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
   idClinica: number | null = null;
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
   constructor(private usuarioService: UsuarioService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {}
 
@@ -51,6 +53,30 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
+    }
+
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
+
+      // Comparador personalizado para manejar acentos
+      this.dataSource.sortData = (data: Usuario[], sort: MatSort) => {
+        const active = sort.active;
+        const direction = sort.direction;
+
+        if (!active || direction === '') {
+          return data;
+        }
+
+        return data.sort((a, b) => {
+          const valueA = this.getValue(a, active);
+          const valueB = this.getValue(b, active);
+
+          // Se usa 'localeCompare' para ordenación considerando acentos
+          return direction === 'asc'
+            ? valueA.localeCompare(valueB, 'es', { sensitivity: 'base' })
+            : valueB.localeCompare(valueA, 'es', { sensitivity: 'base' });
+        });
+      };
     }
   }
 
@@ -75,6 +101,12 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
           } else {
             console.warn('Paginador aún no disponible después de la búsqueda.');
           }
+          if (this.sort) {
+            this.dataSource.sort = this.sort;
+            this.dataSource.sort.sort({ id: 'apellido1', start: 'asc', disableClear: true });
+          } else {
+            console.warn('Ordenación aún no disponible después de la búsqueda.');
+          }
         });
 
         this.busquedaRealizada = true; // La búsqueda ha terminado
@@ -97,6 +129,11 @@ export class GestionEmpleadosComponent implements OnInit, AfterViewInit {
       apellido2: filtros.apellido2 || undefined,
       rol: filtros.rol && filtros.rol !== '' ? filtros.rol : undefined // Solo se envía si 'rol' tiene un valor
     };
+  }
+
+  // Método auxiliar para obtener valores de objetos
+  private getValue(obj: any, column: string): string {
+    return obj[column] ? obj[column].toString() : '';
   }
 
   navegarPerfilEmpleado(idUsuario: number): void {

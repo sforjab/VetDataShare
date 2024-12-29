@@ -23,6 +23,7 @@ import { TransferirMascotasComponent } from './Components/transferir-mascotas/tr
 import { ConfirmarTransferenciaComponent } from './Components/confirmar-transferencia/confirmar-transferencia.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatIconModule,
     MatProgressSpinnerModule,
     RouterModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSortModule
   ]
 })
 export class ClienteModule { }

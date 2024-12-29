@@ -11,17 +11,6 @@ import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
   styleUrls: ['./alta-cliente.component.css']
 })
 export class AltaClienteComponent implements OnInit {
-  /* cliente: Usuario = {
-    numIdent: '',
-    nombre: '',
-    apellido1: '',
-    apellido2: '',
-    telefono: '',
-    email: '',
-    rol: Rol.CLIENTE, // Rol por defecto
-    username: '',
-    password: ''
-  }; */
   clienteForm!: FormGroup;
 
   constructor(private usuarioService: UsuarioService, private fb: FormBuilder, 
@@ -39,7 +28,7 @@ export class AltaClienteComponent implements OnInit {
       apellido2: [''],
       direccion: [''],
       telefono: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]] // Validación de formato de email
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 

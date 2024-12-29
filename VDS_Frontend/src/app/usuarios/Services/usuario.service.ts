@@ -115,6 +115,16 @@ export class UsuarioService {
     );
   }
 
+  // Enviar email de solicitud de presupuesto
+  solicitarPresupuesto(datos: any): Observable<void> {
+    return this.http.post<void>(`${this.usuarioUrl}/solicitar-presupuesto`, datos).pipe(
+      tap(() => {
+        console.log('Solicitud de presupuesto enviada con éxito.');
+      }),
+      catchError(this.handleError)
+    );
+  }
+
   // Crear un nuevo usuario
   createUsuario(usuario: Usuario): Observable<Usuario> {
     return this.http.post<Usuario>(`${this.usuarioUrl}/create`, usuario).pipe(

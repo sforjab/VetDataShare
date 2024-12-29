@@ -41,7 +41,7 @@ public class PruebaService {
 
     @Transactional(readOnly = true)
     public List<PruebaDTO> getPruebasPorIdMascota(Long idMascota) {
-        return pruebaRepository.findByMascotaId(idMascota).stream()
+        return pruebaRepository.findByMascotaIdOrderByFechaDesc(idMascota).stream()
                 .map(pruebaMapper::toDTO)
                 .collect(Collectors.toList());
     }
@@ -55,7 +55,7 @@ public class PruebaService {
 
     @Transactional(readOnly = true)
     public List<PruebaDTO> getPruebasPorConsultaId(Long consultaId) {
-        return pruebaRepository.findByConsultaId(consultaId).stream()
+        return pruebaRepository.findByConsultaIdOrderByFechaDesc(consultaId).stream()
                 .map(pruebaMapper::toDTO)
                 .collect(Collectors.toList());
     }

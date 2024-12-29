@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Consulta } from '../../Models/consulta.dto';
 import { Mascota } from 'src/app/mascota/Models/mascota.dto';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,16 +10,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { BajaConsultaComponent } from '../baja-consulta/baja-consulta.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-mascota-consultas-list',
   templateUrl: './mascota-consultas-list.component.html',
   styleUrls: ['./mascota-consultas-list.component.css']
 })
-export class MascotaConsultasListComponent implements OnInit {
+export class MascotaConsultasListComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Consulta>();
   idMascota: number | undefined;
-  mascota: Mascota | null = null; // Información de la mascota
+  mascota: Mascota | null = null;
   rolUsuarioSesion: string | null = null;
   isLoading: boolean = false;
   clinicaUsuarioSesion: number | null | undefined = null;
@@ -27,6 +28,7 @@ export class MascotaConsultasListComponent implements OnInit {
   columnasTabla: string[] = ['fecha', 'acciones'];
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
   constructor(
     private consultaService: ConsultaService,
@@ -72,10 +74,31 @@ export class MascotaConsultasListComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.paginator) {
-      this.dataSource.paginator = this.paginator;
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+      }
+  
+      if (this.sort) {
+        this.dataSource.sort = this.sort;
+
+        // Configuración del accesor para manejar fechas
+        this.dataSource.sortingDataAccessor = (item: Consulta, property: string) => {
+          console.log('Sorting item:', item);
+          console.log('Sorting property:', property);
+        
+          switch (property) {
+            case 'fecha':
+              // Convierte a timestamp para asegurar que sea ordenable
+              const timestamp = item.fechaConsulta ? new Date(item.fechaConsulta).getTime() : 0;
+              console.log('Timestamp:', timestamp);
+              return timestamp;
+            default:
+              // Acceso seguro para otras propiedades
+              return (item as any)[property] || '';
+          }
+        };        
+      }
     }
-  }
 
   // Carga la información de la mascota
   cargarMascota(idMascota: number): void {
@@ -111,6 +134,20 @@ export class MascotaConsultasListComponent implements OnInit {
     this.consultaService.getConsultasPorIdMascota(idMascota).subscribe({
       next: consultas => {
         this.dataSource.data = consultas || [];
+
+        setTimeout(() => {
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          } else {
+            console.warn('Paginador aún no disponible después de la carga de consultas.');
+          }
+          if (this.sort) {
+            this.dataSource.sort = this.sort;
+            this.dataSource.sort.sort({ id: 'fecha', start: 'asc', disableClear: true });
+          } else {
+            console.warn('Ordenación aún no disponible después de la carga de consultas.');
+          }
+        });
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al cargar las consultas:', err);
@@ -165,6 +202,11 @@ export class MascotaConsultasListComponent implements OnInit {
         }
       }
     });
+  }
+
+  // Método auxiliar para obtener valores de objetos
+  private getValue(obj: any, column: string): string {
+    return obj[column] ? obj[column].toString() : '';
   }
 
   volver(): void {

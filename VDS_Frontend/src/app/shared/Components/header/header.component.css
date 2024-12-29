@@ -5,9 +5,9 @@
   padding: 16px;
   background-color: #1e5067;
   color: #ffffff;
-  width: 100%; /* Asegura que ocupe todo el ancho */
-  box-sizing: border-box; /* Evita que el padding desborde el contenedor */
-  position: relative; /* Para mantener el flujo */
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
 
   .logo {
       font-size: 1.5rem;

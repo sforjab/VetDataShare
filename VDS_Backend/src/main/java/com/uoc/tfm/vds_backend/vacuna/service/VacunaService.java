@@ -36,7 +36,7 @@ public class VacunaService {
 
     @Transactional
     public List<VacunaDTO> getVacunasPorIdMascota(Long idMascota) {
-        return vacunaRepository.findByMascotaId(idMascota).stream()
+        return vacunaRepository.findByMascotaIdOrderByFechaDesc(idMascota).stream()
                 .map(vacunaMapper::toDTO)
                 .collect(Collectors.toList());
     }
@@ -49,7 +49,7 @@ public class VacunaService {
 
     @Transactional
     public List<VacunaDTO> getVacunasPorConsultaId(Long consultaId) {
-        return vacunaRepository.findByConsultaId(consultaId).stream()
+        return vacunaRepository.findByConsultaIdOrderByFechaDesc(consultaId).stream()
                 .map(vacunaMapper::toDTO)
                 .collect(Collectors.toList());
     }

@@ -1,9 +1,9 @@
 <div class="dashboard-container">
-  <ng-container *ngIf="cargando; else contenidoCargado">
+  <div *ngIf="isLoading" class="spinner-container">
     <mat-progress-spinner mode="indeterminate" diameter="50" color="primary" aria-label="Cargando contenido del dashboard"></mat-progress-spinner>
-  </ng-container>
+  </div>
 
-  <ng-template #contenidoCargado>
+  <div class="!isLoading">
     <h1>Panel de Cliente</h1>
     <h3>{{ cliente?.nombre }} {{ cliente?.apellido1 }} {{ cliente?.apellido2 }} ({{ cliente?.numIdent }})</h3>
 
@@ -11,7 +11,7 @@
       <div class="dashboard-buttons">
         <!-- Botón "Mi Perfil" -->
         <div 
-          class="dashboard-button"
+          class="dashboard-button animate__animated animate__fadeIn"
           (click)="navegarPerfil()" aria-label="Ir a la sección Mi Perfil del cliente">
           <i class="fa-solid fa-user" title="Mi perfil"></i>
           <span>Mi Perfil</span>
@@ -19,7 +19,7 @@
 
         <!-- Botón "Mis Mascotas" -->
         <div 
-          class="dashboard-button"
+          class="dashboard-button animate__animated animate__fadeIn"
           (click)="navegarMascotas()" aria-label="Ir a la sección Mis Mascotas del cliente">
           <i class="fa-solid fa-paw" title="Mis Mascotas"></i>
           <span>Mis Mascotas</span>
@@ -35,5 +35,5 @@
       (click)="navegarGestionClientes()" aria-label="Volver a la gestión de clientes">
       Volver
     </button>
-  </ng-template>
+  </div>
 </div>

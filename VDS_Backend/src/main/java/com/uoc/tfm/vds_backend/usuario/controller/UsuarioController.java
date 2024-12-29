@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,9 @@ public class UsuarioController {
 
     @Autowired
     MascotaService mascotaService;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     @GetMapping("getUsuarioPorId/{id}")
     public ResponseEntity<Object> getUsuarioPorId(@PathVariable Long id) {
@@ -237,6 +242,43 @@ public class UsuarioController {
             return ResponseEntity.ok("Transferencia de mascota(s) completada con éxito.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/solicitar-presupuesto")
+    public ResponseEntity<Map<String, String>> solicitarPresupuesto(@RequestBody Map<String, String> datos) {
+        String nombreClinica = datos.get("nombreClinica");
+        String direccion = datos.get("direccion");
+        String telefono = datos.get("telefono");
+        String responsable = datos.get("responsable");
+
+        // Crear el contenido del correo
+        String mensaje = String.format(
+            "Nueva solicitud de presupuesto:\n\n" +
+            "Nombre de la Clínica: %s\n" +
+            "Dirección: %s\n" +
+            "Teléfono: %s\n" +
+            "Responsable: %s",
+            nombreClinica, direccion, telefono, responsable
+        );
+
+        try {
+            // Se configura y se envía el correo
+            SimpleMailMessage email = new SimpleMailMessage();
+            email.setTo("vetdatashare@gmail.com");
+            email.setSubject("Solicitud de Presupuesto");
+            email.setText(mensaje);
+            mailSender.send(email);
+
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "message", "Solicitud enviada con éxito"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "status", "error",
+                "message", "Error al enviar la solicitud"
+            ));
         }
     }
 

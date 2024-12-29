@@ -6,7 +6,7 @@
     <div class="dashboard-buttons">
       <!-- Botón "Mi Perfil" solo para veterinario -->
       <div 
-        class="dashboard-button"
+        class="dashboard-button animate__animated animate__fadeIn"
         *ngIf="rolUsuarioSesion === 'VETERINARIO'"
         (click)="navegarPerfil()" aria-label="Navegar a mi perfil">
         <i class="fa-solid fa-user" title="Mi Perfil"></i>
@@ -15,7 +15,7 @@
 
       <!-- Botón "Datos Clínica" solo para administrador de clínica -->
       <div 
-        class="dashboard-button"
+        class="dashboard-button animate__animated animate__fadeIn"
         *ngIf="rolUsuarioSesion === 'ADMIN_CLINICA'"
         (click)="navegarClinica()" aria-label="Navegar a los datos de la clínica">
         <i class="fa-solid fa-hospital" title="Clínica"></i>
@@ -24,13 +24,13 @@
 
       <!-- Botones comunes a ambos roles -->
       <div 
-        class="dashboard-button"
+        class="dashboard-button animate__animated animate__fadeIn"
         (click)="navegarClientes()" aria-label="Navegar a la gestión de clientes">
         <i class="fa-solid fa-users" title="Gestión Clientes"></i>
         <span>Gestión Clientes</span>
       </div>
       <div 
-        class="dashboard-button"
+        class="dashboard-button animate__animated animate__fadeIn"
         (click)="navegarMascotas()" aria-label="Navegar a la gestión de mascotas">
         <i class="fa-solid fa-paw" title="Gestión Mascotas"></i>
         <span>Gestión Mascotas</span>

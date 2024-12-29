@@ -54,27 +54,28 @@
       *ngIf="!isLoading && busquedaRealizada && dataSource.data.length > 0"
       mat-table
       [dataSource]="dataSource"
+      matSort
       class="mat-elevation-z8 clientes-tabla"
       aria-label="Tabla de resultados de empleados encontrados"
     >
       <!-- Definición de columnas -->
       <ng-container matColumnDef="numIdent">
-        <th mat-header-cell *matHeaderCellDef>Num Ident</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Num Ident</th>
         <td mat-cell *matCellDef="let empleado" class="breakCell">{{ empleado.numIdent }}</td>
       </ng-container>
 
       <ng-container matColumnDef="nombre">
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Nombre</th>
         <td mat-cell *matCellDef="let empleado">{{ empleado.nombre }}</td>
       </ng-container>
 
       <ng-container matColumnDef="apellido1">
-        <th mat-header-cell *matHeaderCellDef>Apellido 1</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Apellido 1</th>
         <td mat-cell *matCellDef="let empleado">{{ empleado.apellido1 }}</td>
       </ng-container>
 
       <ng-container matColumnDef="apellido2">
-        <th mat-header-cell *matHeaderCellDef>Apellido 2</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Apellido 2</th>
         <td mat-cell *matCellDef="let empleado">{{ empleado.apellido2 }}</td>
       </ng-container>
 

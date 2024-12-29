@@ -10,10 +10,10 @@
     <h3>{{ mascota?.nombre }} ({{ mascota?.numChip }})</h3>
 
     <div class="tabla-container" *ngIf="dataSource.data.length > 0; else noConsultas">
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" aria-label="Tabla de historial de consultas">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" aria-label="Tabla de historial de consultas">
         <!-- Fecha y Hora de Consulta -->
         <ng-container matColumnDef="fecha">
-          <th mat-header-cell *matHeaderCellDef class="text-center">Fecha y Hora</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true" class="text-center">Fecha y Hora</th>
           <td mat-cell *matCellDef="let consulta" class="text-center">
             {{ consulta.fechaConsulta | date: 'dd/MM/yyyy HH:mm' }}
           </td>

@@ -6,6 +6,7 @@ import { UsuarioService } from 'src/app/usuarios/Services/usuario.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { BajaClienteComponent } from '../baja-cliente/baja-cliente.component';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gestion-clientes',
@@ -29,6 +30,7 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
   columnasTabla: string[] = ['numIdent', 'nombre', 'apellido1', 'apellido2', /* 'telefono', 'email', */ 'acciones'];
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
   constructor(private usuarioService: UsuarioService, private router: Router, private dialog: MatDialog) {}
 
@@ -39,6 +41,30 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
+    }
+
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
+
+      // Comparador personalizado para manejar acentos
+      this.dataSource.sortData = (data: Usuario[], sort: MatSort) => {
+        const active = sort.active;
+        const direction = sort.direction;
+
+        if (!active || direction === '') {
+          return data;
+        }
+
+        return data.sort((a, b) => {
+          const valueA = this.getValue(a, active);
+          const valueB = this.getValue(b, active);
+
+          // Se usa 'localeCompare' para ordenación considerando acentos
+          return direction === 'asc'
+            ? valueA.localeCompare(valueB, 'es', { sensitivity: 'base' })
+            : valueB.localeCompare(valueA, 'es', { sensitivity: 'base' });
+        });
+      };
     }
   }
 
@@ -57,6 +83,12 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
             this.dataSource.paginator = this.paginator;
           } else {
             console.warn('Paginador aún no disponible después de la búsqueda.');
+          }
+          if (this.sort) {
+            this.dataSource.sort = this.sort;
+            this.dataSource.sort.sort({ id: 'apellido1', start: 'asc', disableClear: true });
+          } else {
+            console.warn('Ordenación aún no disponible después de la búsqueda.');
           }
         });
 
@@ -82,6 +114,11 @@ export class GestionClientesComponent implements OnInit, AfterViewInit {
       telefono: filtros.telefono || undefined,
       email: filtros.email || undefined
     };
+  }
+
+  // Método auxiliar para obtener valores de objetos
+  private getValue(obj: any, column: string): string {
+    return obj[column] ? obj[column].toString() : '';
   }
 
   navegarDashboardCliente(idUsuario: number): void {

@@ -1,4 +1,8 @@
 /* Contenedor principal */
+a {
+  font-weight: bold;
+}
+
 .home-container {
   display: flex;
   flex-direction: column;

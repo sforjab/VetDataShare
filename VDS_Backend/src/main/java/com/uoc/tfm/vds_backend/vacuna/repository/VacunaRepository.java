@@ -9,4 +9,6 @@ public interface VacunaRepository extends JpaRepository<Vacuna, Long> {
     List<Vacuna> findByConsultaId(Long consultaId);
     List<Vacuna> findByMascotaId(Long mascotaId);
     List<Vacuna> findTop3ByMascotaIdOrderByFechaDesc(Long mascotaId);
+    List<Vacuna> findByMascotaIdOrderByFechaDesc(Long idMascota);
+    List<Vacuna> findByConsultaIdOrderByFechaDesc(Long consultaId);
 }

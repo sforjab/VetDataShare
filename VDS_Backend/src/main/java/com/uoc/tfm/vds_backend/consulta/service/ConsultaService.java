@@ -91,10 +91,11 @@ public class ConsultaService {
         if (mascotaService.getMascotaPorId(idMascota).isEmpty()) {
             return List.of(); // Si la mascota no existe, se devuelve una lista vacía
         }
-        return consultaRepository.findByMascotaId(idMascota).stream()
+        return consultaRepository.findByMascotaIdOrderByFechaConsultaDesc(idMascota).stream()
                 .map(consultaMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
 
     @Transactional
     public boolean validarPropietario(Long idUsuario, Long idMascota) {

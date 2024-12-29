@@ -24,6 +24,7 @@ import { GestionClinicasComponent } from './Components/gestion-clinicas/gestion-
 import { BajaClinicaComponent } from './Components/baja-clinica/baja-clinica.component';
 import { AltaClinicaComponent } from './Components/alta-clinica/alta-clinica.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatIconModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSortModule
   ]
 })
 export class ClinicaModule { }

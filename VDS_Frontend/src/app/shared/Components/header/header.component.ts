@@ -13,7 +13,7 @@ export class HeaderComponent implements OnInit {
 
   isLogged: boolean = false;
   rolUsuario: string = '';
-  usuario: Usuario | null = null;  // Detalles del usuario logueado
+  usuario: Usuario | null = null;
   mensajeError: string = '';
 
   constructor(private authService: AuthService, private usuarioService: UsuarioService, private router: Router) {}
@@ -21,18 +21,16 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.rolUsuario = sessionStorage.getItem('rol') || '';
 
-    // Suscribirse al estado de autenticación
     this.authService.isUsuarioLogin.subscribe(isLogged => {
       this.isLogged = isLogged;
       if (this.isLogged) {
-        // Si el usuario está logueado, obtener su id y rol
         this.obtenerDatosUsuario();
       }
     });
   }
 
   navegarLogin(): void {
-    this.router.navigate(['/auth/login']);  // Redirigimos a la ruta de login
+    this.router.navigate(['/auth/login']); 
   }
 
   obtenerDatosUsuario(): void {
@@ -62,7 +60,6 @@ export class HeaderComponent implements OnInit {
     this.authService.usuarioActualRol.next('');
     this.authService.usuarioActualId.next('');
 
-    // Redirigimos a la página de inicio
     this.router.navigate(['/']);
   }
 
