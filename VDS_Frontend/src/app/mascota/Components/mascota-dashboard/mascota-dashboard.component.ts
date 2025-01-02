@@ -116,7 +116,6 @@ export class MascotaDashboardComponent implements OnInit {
     });
   }  
 
-  // Carga los datos de la mascota
   cargarMascota(idMascota: number): void {
     this.isLoading = true;
     this.mascotaService.getMascotaPorId(idMascota).subscribe({
@@ -134,77 +133,96 @@ export class MascotaDashboardComponent implements OnInit {
 
   verDetallePrueba(idPrueba: number): void {
     this.router.navigate([`/prueba/detalle/${idPrueba}`], {
-      queryParams: { origen: 'mascota-dashboard' }
+      queryParams: { 
+        origen: 'mascota-dashboard',
+        origenPrincipal: this.origen 
+      }
     });
   }
 
   verDetalleConsulta(idConsulta: number): void {
     this.router.navigate([`/consulta/detalle/${idConsulta}`], {
-      queryParams: { origen: 'mascota-dashboard' }
+      queryParams: { 
+        origen: 'mascota-dashboard',
+        origenPrincipal: this.origen 
+      }
     });
   }
 
   navegarDetalle() {
     if (this.idMascota !== null) {
-      this.router.navigate([`/mascota/detalle/${this.idMascota}`]);
+      this.router.navigate([`/mascota/detalle/${this.idMascota}`], {
+        queryParams: { origen: this.origen }
+      });
     } else {
       console.error('ID de la mascota no disponible para navegación');
     }
   }
-
+  
   navegarConsultas() {
     if (this.idMascota !== null) {
-      this.router.navigate([`/consulta/mascota-consultas-list/${this.idMascota}`]);
+      this.router.navigate([`/consulta/mascota-consultas-list/${this.idMascota}`], {
+        queryParams: { origen: this.origen || 'mascota-dashboard' }
+      });
     } else {
       console.error('ID de la mascota no disponible para navegación');
     }
   }
-
+  
   navegarPruebas() {
     if (this.idMascota !== null) {
-      this.router.navigate([`/prueba/mascota-pruebas-list/${this.idMascota}`]);
+      this.router.navigate([`/prueba/mascota-pruebas-list/${this.idMascota}`], {
+        queryParams: { origen: this.origen || 'mascota-dashboard' }
+      });
     } else {
       console.error('ID de la mascota no disponible para navegación');
     }
   }
-
+  
   navegarVacunas() {
     if (this.idMascota !== null) {
-      this.router.navigate([`/vacuna/mascota-vacunas-list/${this.idMascota}`]);
+      this.router.navigate([`/vacuna/mascota-vacunas-list/${this.idMascota}`], {
+        queryParams: { origen: this.origen || 'mascota-dashboard' }
+      });
     } else {
       console.error('ID de la mascota no disponible para navegación');
     }
   }
-
+  
   navegarAccesoTemporal(): void {
     if (this.idMascota !== null) {
-      this.router.navigate([`/acceso-temporal/generar/${this.idMascota}`]);
+      this.router.navigate([`/acceso-temporal/generar/${this.idMascota}`], {
+        queryParams: { origen: this.origen || 'mascota-dashboard' }
+      });
     } else {
       console.error('ID de la mascota no disponible para navegación');
     }
   }
+  
 
   volver(): void {
     const idUsuarioSesion = sessionStorage.getItem('idUsuario');
     const rolUsuarioSesion = sessionStorage.getItem('rol');
-
+  
     if (!idUsuarioSesion || !rolUsuarioSesion) {
       console.error('No se encontraron datos de sesión. Redirigiendo a acceso no autorizado.');
       this.router.navigate(['/acceso-no-autorizado']);
       return;
     }
-
+  
     if (rolUsuarioSesion === 'CLIENTE') {
       this.router.navigate([`/mascota/cliente-mascotas-list/${idUsuarioSesion}`]);
       return;
     }
-
+  
     if (this.origen === 'cliente-mascotas-list') {
       if (this.idMascota !== undefined) {
         this.mascotaService.getMascotaPorId(this.idMascota).subscribe({
           next: (mascota) => {
             if (mascota && mascota.propietarioId) {
-              this.router.navigate([`/mascota/cliente-mascotas-list/${mascota.propietarioId}`]);
+              this.router.navigate([`/mascota/cliente-mascotas-list/${mascota.propietarioId}`], {
+                queryParams: { origen: this.origen }
+              });
             } else {
               console.error('No se encontró el propietario de la mascota.');
               this.router.navigate(['/acceso-no-autorizado']);
@@ -221,5 +239,5 @@ export class MascotaDashboardComponent implements OnInit {
     } else {
       this.router.navigate(['/mascota/gestion-mascotas']);
     }
-  }
+  }  
 }

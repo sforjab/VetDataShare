@@ -144,10 +144,6 @@ public class ConsultaController {
         }
 
         List<ConsultaDTO> consultas = consultaService.getConsultasPorIdMascota(idMascota);
-        if (consultas.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiError("No se encontraron consultas para la mascota con ID: " + idMascota));
-        }
         return ResponseEntity.ok(consultas);
     }
 

@@ -43,7 +43,7 @@
       </table>
 
       <!-- Paginador -->
-      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Paginador para la tabla de mascotas"></mat-paginator>
+      <mat-paginator *ngIf="dataSource.data.length > 0" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Paginador para la tabla de mascotas"></mat-paginator>
 
       <!-- Mensaje de "No se encontraron mascotas" -->
       <p *ngIf="dataSource.data.length === 0" class="no-mascotas">

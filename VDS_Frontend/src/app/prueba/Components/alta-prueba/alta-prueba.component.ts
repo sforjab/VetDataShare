@@ -20,7 +20,8 @@ export class AltaPruebaComponent implements OnInit {
   tiposPrueba = Object.values(TipoPrueba);
   isLoading: boolean = false; 
   mascota: Mascota | null = null; 
-  origenPrevio: string | null = null;
+  origen: string | null = null;
+  origenPrincipal: string | null = null;
 
   constructor(
     private pruebaService: PruebaService,
@@ -36,7 +37,8 @@ export class AltaPruebaComponent implements OnInit {
     this.inicializarFormulario();
 
     const idConsulta = this.route.snapshot.paramMap.get('idConsulta');
-    this.origenPrevio = this.route.snapshot.queryParamMap.get('origenPrevio');
+    this.origen = this.route.snapshot.queryParamMap.get('origen');
+    this.origenPrincipal = this.route.snapshot.queryParamMap.get('origenPrincipal');
     if (idConsulta) {
       this.altaPruebaForm.get('consultaId')?.setValue(+idConsulta);
       this.cargarConsultaYObtenerMascota(+idConsulta);
@@ -116,7 +118,10 @@ export class AltaPruebaComponent implements OnInit {
   volver(): void {
     const idConsulta = this.altaPruebaForm.get('consultaId')?.value;
     this.router.navigate([`/consulta/detalle/${idConsulta}`], {
-      queryParams: { origen: this.origenPrevio }
+      queryParams: { 
+        origen: this.origen,
+        origenPrincipal: this.origenPrincipal 
+      }
     });
 
     ;

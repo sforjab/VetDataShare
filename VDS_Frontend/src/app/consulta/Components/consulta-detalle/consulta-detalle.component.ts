@@ -40,6 +40,7 @@ export class ConsultaDetalleComponent implements OnInit {
   idConsulta: number | null = null;
   isLoading: boolean = false;
   origen: string | null = null;
+  origenPrincipal: string | null = null;
 
   constructor(private consultaService: ConsultaService, private usuarioService: UsuarioService, private clinicaService: ClinicaService,
               private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
@@ -53,6 +54,7 @@ export class ConsultaDetalleComponent implements OnInit {
 
     this.route.queryParams.subscribe(queryParams => {
       this.origen = queryParams['origen'] || null;
+      this.origenPrincipal = queryParams['origenPrincipal'] || null;
     });
   
     if (!this.idConsulta) {
@@ -197,14 +199,20 @@ export class ConsultaDetalleComponent implements OnInit {
   nuevaPrueba(): void {
     if (this.idConsulta) {
       this.router.navigate([`/prueba/alta-prueba/${this.idConsulta}`], {
-        queryParams: { origenPrevio: this.origen }
+        queryParams: { 
+          origen: this.origen,
+          origenPrincipal: this.origenPrincipal 
+        }
       });
     }
   }
 
   editarPrueba(prueba: Prueba): void {
     this.router.navigate([`/prueba/detalle/${prueba.id}`], {
-      queryParams: { origenPrevio: this.origen }
+      queryParams: { 
+        origen: this.origen,
+        origenPrincipal: this.origenPrincipal 
+      }
     });
   }
 
@@ -232,7 +240,10 @@ export class ConsultaDetalleComponent implements OnInit {
   nuevaVacuna(): void {
     if (this.idConsulta) {
       this.router.navigate([`/vacuna/alta-vacuna/${this.idConsulta}`], {
-        queryParams: { origenPrevio: this.origen }
+        queryParams: { 
+          origen: this.origen,
+          origenPrincipal: this.origenPrincipal 
+        }
       });
       ;
     } 
@@ -240,7 +251,10 @@ export class ConsultaDetalleComponent implements OnInit {
 
   editarVacuna(vacuna: Vacuna): void {
     this.router.navigate([`/vacuna/detalle/${vacuna.id}`], {
-      queryParams: { origenPrevio: this.origen }
+      queryParams: { 
+        origen: this.origen,
+        origenPrincipal: this.origenPrincipal 
+      }
     });
     ;
   }
@@ -273,9 +287,15 @@ export class ConsultaDetalleComponent implements OnInit {
   
   volver(): void {
     if (this.origen === 'mascota-consultas-list' && this.mascota) {
-      this.router.navigate([`/consulta/mascota-consultas-list/${this.mascota.id}`]);
+      this.router.navigate([`/consulta/mascota-consultas-list/${this.mascota.id}`], {
+        queryParams: { 
+          origen: this.origenPrincipal
+        }
+      });
     } else if (this.origen === 'mascota-dashboard' && this.mascota) {
-      this.router.navigate([`/mascota/dashboard/${this.mascota.id}`]);
+      this.router.navigate([`/mascota/dashboard/${this.mascota.id}`], {
+        queryParams: { origen: this.origenPrincipal }
+      });
     } else {
       this.router.navigate(['/']);
     }

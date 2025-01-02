@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, EMPTY, Observable, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -17,15 +17,26 @@ export class AuthInterceptor implements HttpInterceptor {
 
     // Si hay un token temporal, verificamos su expiración
     if (jwtTemporal && this.isTokenExpired(jwtTemporal)) {
-      console.log('El token temporal ha expirado. Eliminándolo de la sesión.');
-      sessionStorage.removeItem('jwtTemporal');
+      console.log('El token temporal ha expirado. Limpiando la sesión y redirigiendo.');
+      sessionStorage.clear(); // Se eliminan todos los datos de sesión
+      this.authService.usuarioActualLogin.next(false);
+      this.router.navigate(['/sesion-caducada']);
+      return EMPTY;
+    }
+
+    // Si hay token de autenticación del resto de roles
+    if (tokenUsuario && this.isTokenExpired(tokenUsuario)) {
+      console.log('El token ha expirado. Limpiando la sesión y redirigiendo.');
+      sessionStorage.clear(); // Se eliminan todos los datos de sesión
+      this.authService.usuarioActualLogin.next(false);
+      this.router.navigate(['/sesion-caducada']);
+      return EMPTY;
     }
 
     // Si el usuario está iniciando sesión con usuario y contraseña, se elimina el 'jwtTemporal'
     if (jwtTemporal && req.url.includes('/login')) {
       console.log('Borrando jwtTemporal para nueva autenticación');
-      sessionStorage.removeItem('jwtTemporal');
-      sessionStorage.removeItem('rol');
+      sessionStorage.clear();
     }
 
     let modifiedReq = req;

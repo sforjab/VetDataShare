@@ -42,7 +42,7 @@ export class PruebaDetalleComponent implements OnInit {
   numColegiado: string = '';
   idClinicaConsulta: number | undefined;
   documentos: DocumentoPrueba[] = [];
-  origenPrevio: string | null = null;
+  origenPrincipal: string | null = null;
   origen: string | null = null;
   columnasTabla: string[] = ['nombreArchivo', 'acciones'];
 
@@ -66,8 +66,8 @@ export class PruebaDetalleComponent implements OnInit {
 
   ngOnInit(): void {
     this.pruebaId = +this.route.snapshot.paramMap.get('idPrueba')!;
-    this.origenPrevio = this.route.snapshot.queryParamMap.get('origenPrevio');
     this.origen = this.route.snapshot.queryParamMap.get('origen');
+    this.origenPrincipal = this.route.snapshot.queryParamMap.get('origenPrincipal');
     this.rol = sessionStorage.getItem('rol');
 
     this.inicializarFormulario();
@@ -110,28 +110,25 @@ export class PruebaDetalleComponent implements OnInit {
         });
 
         this.cargarMascota(pruebaDetalle.mascotaId);
-        /* this.cargarConsulta(pruebaDetalle.consultaId); */
 
         // Cargamos consulta y se asigna la clínica
         this.consultaService.getConsultaPorId(pruebaDetalle.consultaId).subscribe({
           next: (consulta: Consulta) => {
             this.idClinicaConsulta = consulta.clinicaId;
             this.cargarNumColegiado(consulta.veterinarioId);
-            // Evaluar permisos después de asignar la clínica
+            // Evaluamos permisos después de asignar la clínica
             this.evaluarPermisos();
           },
           error: (err: HttpErrorResponse) => {
             console.error('Error cargando consulta:', err);
             this.snackBar.open('Error cargando los datos de la consulta', 'Cerrar', { duration: 3000 });
-            this.evaluarPermisos(); // Asegúrate de que siempre se evalúen los permisos
+            this.evaluarPermisos();
           }
         });
 
         if ('usuario' in responses) {
           this.usuarioLogueado = responses['usuario'];
         }
-
-        /* this.evaluarPermisos(); */
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error cargando los datos:', err);
@@ -292,7 +289,21 @@ export class PruebaDetalleComponent implements OnInit {
     this.pruebaService.updatePrueba(this.prueba.id!, datosActualizados).subscribe({
       next: () => {
         this.snackBar.open('Prueba actualizada con éxito', 'Cerrar', { duration: 3000 });
-        this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`]);
+        if(this.origen === 'mascota-pruebas-list') {
+          this.router.navigate([`/prueba/mascota-pruebas-list/${this.prueba.mascotaId}`], {
+            queryParams: { 
+              origen: this.origen,
+              origenPrincipal: this.origenPrincipal 
+            }
+          });
+        } else {
+          this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`], {
+            queryParams: { 
+              origen: this.origen,
+              origenPrincipal: this.origenPrincipal 
+            }
+          });
+        } 
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al actualizar la prueba:', err);
@@ -312,16 +323,23 @@ export class PruebaDetalleComponent implements OnInit {
   volver(): void {
     if (this.origen) {
       if (this.origen === 'mascota-pruebas-list') {
-        this.router.navigate([`/prueba/mascota-pruebas-list/${this.prueba.mascotaId}`]);
+        this.router.navigate([`/prueba/mascota-pruebas-list/${this.prueba.mascotaId}`], {
+          queryParams: { origen: this.origenPrincipal }
+        });
       } else if (this.origen === 'mascota-dashboard') {
-        this.router.navigate([`/mascota/dashboard/${this.prueba.mascotaId}`]);
+        this.router.navigate([`/mascota/dashboard/${this.prueba.mascotaId}`], {
+          queryParams: { origen: this.origenPrincipal }
+        });
       } else {
-        this.router.navigate(['/']);
+        this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`], {
+          queryParams: { 
+            origen: this.origen,
+            origenPrincipal: this.origenPrincipal
+          }
+        });
       }
     } else {
-      this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`], {
-        queryParams: { origen: this.origenPrevio }
-      });
+      this.router.navigate(['/']);
     }
   }
 }

@@ -5,6 +5,7 @@ import { AccesoRestringidoComponent } from './shared/Components/acceso-restringi
 import { AyudaComponent } from './shared/Components/pages/ayuda/ayuda.component';
 import { PoliticaPrivacidadComponent } from './shared/Components/pages/politica-privacidad/politica-privacidad.component';
 import { SobreNosotrosComponent } from './shared/Components/pages/sobre-nosotros/sobre-nosotros.component';
+import { SesionCaducadaComponent } from './shared/Components/sesion-caducada/sesion-caducada.component';
 
 const routes: Routes = [
   {
@@ -54,6 +55,10 @@ const routes: Routes = [
   {
     path: 'acceso-no-autorizado',
     component: AccesoRestringidoComponent,
+  },
+  {
+    path: 'sesion-caducada',
+    component: SesionCaducadaComponent
   },
   { path: 'ayuda', component: AyudaComponent },
   { path: 'sobre-nosotros', component: SobreNosotrosComponent },

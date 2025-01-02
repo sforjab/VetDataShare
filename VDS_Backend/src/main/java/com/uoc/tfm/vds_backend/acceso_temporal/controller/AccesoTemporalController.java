@@ -67,30 +67,6 @@ public class AccesoTemporalController {
         }
     }
 
-    /* @PutMapping("/actualizar")
-    public ResponseEntity<Map<String, String>> actualizarAccesoTemporal(@RequestBody ActualizarAccesoRequestDTO request) {
-        // Buscamos el acceso temporal existente
-        AccesoTemporalDTO accesoDTO = accesoTemporalService.findByToken(request.getToken())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Acceso temporal no encontrado"));
-
-        // Actualizamos los datos del acceso temporal
-        accesoDTO.setNumColegiado(request.getNumColegiado());
-        accesoDTO.setFechaExpiracion(LocalDateTime.now().plusHours(1));
-
-        // Se guardan los cambios en el registro existente
-        accesoTemporalService.update(accesoDTO);
-
-        // Se genera el JWT temporal
-        String jwtTemporal = accesoTemporalService.generarTokenTemporal(request.getToken(), accesoDTO.getMascotaId());
-
-        // Respuesta
-        Map<String, String> response = new HashMap<>();
-        response.put("jwtTemporal", jwtTemporal);
-        response.put("idMascota", String.valueOf(accesoDTO.getMascotaId()));
-
-        return ResponseEntity.ok(response);
-    } */
-
     @PutMapping("/actualizar")
     public ResponseEntity<Map<String, String>> actualizarAccesoTemporal(@RequestBody ActualizarAccesoRequestDTO request) {
         // Buscamos el acceso temporal existente
@@ -98,7 +74,7 @@ public class AccesoTemporalController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Acceso temporal no encontrado"));
 
         // Calculamos la fecha de expiración una sola vez
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(30); // Media hora
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(1); // Media hora
 
         // Actualizamos los datos del acceso temporal
         accesoDTO.setNumColegiado(request.getNumColegiado());

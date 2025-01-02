@@ -12,7 +12,6 @@ import { Mascota } from 'src/app/mascota/Models/mascota.dto';
 })
 export class AccesoTemporalGenerarComponent {
   mascotaId!: number;
-  /* numChip!: string; */
   mascota: Mascota | null = null;
   codigoGeneradoQR: string | null = null;
   codigoGeneradoNumerico: string | null = null;

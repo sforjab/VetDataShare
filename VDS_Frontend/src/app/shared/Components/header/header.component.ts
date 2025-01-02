@@ -25,6 +25,8 @@ export class HeaderComponent implements OnInit {
       this.isLogged = isLogged;
       if (this.isLogged) {
         this.obtenerDatosUsuario();
+      } else {
+        this.usuario = null;
       }
     });
   }
@@ -53,12 +55,11 @@ export class HeaderComponent implements OnInit {
 
   // Método para cerrar sesión
   logout(): void {
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("rol");
-    sessionStorage.removeItem("idUsuario");
+    sessionStorage.clear();
     this.authService.usuarioActualLogin.next(false);
     this.authService.usuarioActualRol.next('');
     this.authService.usuarioActualId.next('');
+    this.usuario = null;
 
     this.router.navigate(['/']);
   }

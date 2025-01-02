@@ -19,13 +19,10 @@ export class MascotaVacunasListComponent implements OnInit {
   mascota: Mascota | null = null; // Datos de la mascota
   columnasTabla: string[] = ['fecha', 'nombre'];
   isLoading: boolean = false;
+  origen: string | null = null;
 
-  constructor(
-    private vacunaService: VacunaService,
-    private mascotaService: MascotaService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private vacunaService: VacunaService, private mascotaService: MascotaService,
+              private route: ActivatedRoute, private router: Router) {}
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
@@ -53,6 +50,10 @@ export class MascotaVacunasListComponent implements OnInit {
       } else {
         this.router.navigate(['/acceso-no-autorizado']);
       }
+    });
+
+    this.route.queryParams.subscribe(queryParams => {
+      this.origen = queryParams['origen'] || null;
     });
   }
 
@@ -97,6 +98,8 @@ export class MascotaVacunasListComponent implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate([`/mascota/dashboard/${this.idMascota}`]);
+    this.router.navigate([`/mascota/dashboard/${this.idMascota}`], {
+      queryParams: { origen: this.origen }
+    });
   }
 }

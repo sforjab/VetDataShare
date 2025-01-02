@@ -15,6 +15,7 @@ export class AltaConsultaComponent implements OnInit {
   altaConsultaForm!: FormGroup;
   usuarioId: number | null = null;
   rol: string | null = null;
+  origen: string | null = null;
 
   constructor(private consultaService: ConsultaService, private usuarioService: UsuarioService, private fb: FormBuilder, 
               private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
@@ -29,6 +30,10 @@ export class AltaConsultaComponent implements OnInit {
 
     this.usuarioId = +sessionStorage.getItem('idUsuario')!;
     this.rol = sessionStorage.getItem('rol');
+
+    this.route.queryParams.subscribe(queryParams => {
+      this.origen = queryParams['origen'] || null;
+    });
 
     this.inicializarFormulario(+idMascota);
     this.cargarClinica();
@@ -86,6 +91,10 @@ export class AltaConsultaComponent implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate([`/consulta/mascota-consultas-list/${this.altaConsultaForm.get('mascotaId')?.value}`]);
+    this.router.navigate([`/consulta/mascota-consultas-list/${this.altaConsultaForm.get('mascotaId')?.value}`], {
+      queryParams: {
+        origen: this.origen,
+      }
+    });
   }
 }

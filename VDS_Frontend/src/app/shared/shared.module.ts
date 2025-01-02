@@ -11,6 +11,7 @@ import { PoliticaPrivacidadComponent } from './Components/pages/politica-privaci
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { SesionCaducadaComponent } from './Components/sesion-caducada/sesion-caducada.component';
 
 
 
@@ -19,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     HeaderComponent,
     FooterComponent,
     AccesoRestringidoComponent,
+    SesionCaducadaComponent,
     AyudaComponent,
     SobreNosotrosComponent,
     PoliticaPrivacidadComponent,

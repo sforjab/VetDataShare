@@ -20,6 +20,7 @@ export class MascotaDetalleComponent implements OnInit {
   idMascota: number | null = null;
   isLoading: boolean = false;
   puedeEditar: boolean = false;
+  origen: string | null = null;
 
   constructor(
     private mascotaService: MascotaService,
@@ -40,6 +41,10 @@ export class MascotaDetalleComponent implements OnInit {
         this.router.navigate(['/acceso-no-autorizado']);
         return;
       }
+
+      this.route.queryParams.subscribe(queryParams => {
+        this.origen = queryParams['origen'] || null;
+      });
 
       this.idMascota = +id;
 
@@ -166,6 +171,8 @@ export class MascotaDetalleComponent implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate([`/mascota/dashboard/${this.idMascota}`]);
+    this.router.navigate([`/mascota/dashboard/${this.idMascota}`], {
+      queryParams: { origen: this.origen }
+    });
   }
 }

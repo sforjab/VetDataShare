@@ -19,6 +19,7 @@ export class MascotaPruebasListComponent implements OnInit {
   mascota: Mascota | null = null; // Datos de la mascota
   columnasTabla: string[] = ['tipo', 'fecha', 'acciones'];
   isLoading: boolean = false;
+  origen: string | null = null;
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
@@ -54,6 +55,10 @@ export class MascotaPruebasListComponent implements OnInit {
       } else {
         this.router.navigate(['/acceso-no-autorizado']);
       }
+    });
+
+    this.route.queryParams.subscribe(queryParams => {
+      this.origen = queryParams['origen'] || null;
     });
   }
 
@@ -98,11 +103,16 @@ export class MascotaPruebasListComponent implements OnInit {
 
   verDetallePrueba(idPrueba: number): void {
     this.router.navigate([`/prueba/detalle/${idPrueba}`], {
-      queryParams: { origen: 'mascota-pruebas-list' }
+      queryParams: {
+        origen: 'mascota-pruebas-list',
+        origenPrincipal: this.origen
+      },
     });
   }
 
   volver(): void {
-    this.router.navigate([`/mascota/dashboard/${this.idMascota}`]);
+    this.router.navigate([`/mascota/dashboard/${this.idMascota}`], {
+      queryParams: { origen: this.origen }
+    });
   }
 }

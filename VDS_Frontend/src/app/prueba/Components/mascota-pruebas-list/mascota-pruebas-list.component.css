@@ -57,6 +57,13 @@ tr:hover {
   margin-top: 20px;
 }
 
+/* Mensajes */
+p {
+  text-align: center;
+  color: red;
+  font-weight: bold;
+}
+
 /* Paginador */
 mat-paginator {
   background-color: #ffffff; /* Fondo del paginador */

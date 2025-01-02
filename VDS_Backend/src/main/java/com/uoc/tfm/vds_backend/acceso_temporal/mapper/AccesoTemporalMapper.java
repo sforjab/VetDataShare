@@ -27,8 +27,8 @@ public class AccesoTemporalMapper {
         entity.setToken(dto.getToken());
         entity.setFechaExpiracion(dto.getFechaExpiracion());
         entity.setNumColegiado(dto.getNumColegiado());
-        entity.setUsuario(usuario); // Asignar el Usuario ya gestionado por JPA
-        entity.setMascota(mascota); // Asignar la Mascota ya gestionada por JPA
+        entity.setUsuario(usuario);
+        entity.setMascota(mascota); 
         return entity;
     }
 
@@ -38,7 +38,7 @@ public class AccesoTemporalMapper {
         entity.setToken(dto.getToken());
         entity.setFechaExpiracion(dto.getFechaExpiracion());
         entity.setNumColegiado(dto.getNumColegiado());
-        // Usuario y Mascota deben asignarse fuera de este método
+        
         return entity;
     }
 }

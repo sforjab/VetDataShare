@@ -27,7 +27,8 @@ export class VacunaDetalleComponent implements OnInit {
   mascota: Mascota | null = null;
   vacunaId: number | null = null;
   isLoading: boolean = false;
-  origenPrevio: string | null = null;
+  origen: string | null = null;
+  origenPrincipal: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,7 +44,8 @@ export class VacunaDetalleComponent implements OnInit {
     this.inicializarFormulario();
 
     this.vacunaId = +this.route.snapshot.paramMap.get('idVacuna')!;
-    this.origenPrevio = this.route.snapshot.queryParamMap.get('origenPrevio');
+    this.origen = this.route.snapshot.queryParamMap.get('origen');
+    this.origenPrincipal = this.route.snapshot.queryParamMap.get('origenPrincipal');
     if (this.vacunaId) {
       this.cargarVacuna(this.vacunaId);
     } else {
@@ -120,7 +122,12 @@ export class VacunaDetalleComponent implements OnInit {
     this.vacunaService.updateVacuna(this.vacuna.id!, datosActualizados).subscribe({
       next: () => {
         this.snackBar.open('Vacuna actualizada con éxito', 'Cerrar', { duration: 3000 });
-        this.router.navigate([`/consulta/detalle/${this.vacuna.consultaId}`]);
+        this.router.navigate([`/consulta/detalle/${this.vacuna.consultaId}`], {
+          queryParams: { 
+            origen: this.origen,
+            origenPrincipal: this.origenPrincipal 
+          }
+        });
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al actualizar la vacuna:', err);
@@ -139,8 +146,10 @@ export class VacunaDetalleComponent implements OnInit {
 
   volver(): void {
     this.router.navigate([`/consulta/detalle/${this.vacuna?.consultaId}`], {
-      queryParams: { origen: this.origenPrevio }
+      queryParams: { 
+        origen: this.origen,
+        origenPrincipal: this.origenPrincipal 
+      }
     });
-    ;
   }
 }

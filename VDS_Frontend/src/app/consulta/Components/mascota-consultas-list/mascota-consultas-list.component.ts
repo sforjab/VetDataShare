@@ -24,20 +24,15 @@ export class MascotaConsultasListComponent implements OnInit, AfterViewInit {
   rolUsuarioSesion: string | null = null;
   isLoading: boolean = false;
   clinicaUsuarioSesion: number | null | undefined = null;
+  origen: string | null = null;
 
   columnasTabla: string[] = ['fecha', 'acciones'];
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
-  constructor(
-    private consultaService: ConsultaService,
-    private mascotaService: MascotaService,
-    private usuarioService: UsuarioService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialog: MatDialog
-  ) {}
+  constructor(private consultaService: ConsultaService, private mascotaService: MascotaService, private usuarioService: UsuarioService,
+              private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.rolUsuarioSesion = sessionStorage.getItem('rol');
@@ -70,6 +65,10 @@ export class MascotaConsultasListComponent implements OnInit, AfterViewInit {
       } else {
         this.router.navigate(['/acceso-no-autorizado']);
       }
+    });
+
+    this.route.queryParams.subscribe(queryParams => {
+      this.origen = queryParams['origen'] || null; // Recupera el origen
     });
   }
 
@@ -176,7 +175,11 @@ export class MascotaConsultasListComponent implements OnInit, AfterViewInit {
 
   nuevaConsulta(): void {
     if (this.idMascota) {
-      this.router.navigate([`/consulta/alta-consulta/${this.idMascota}`]);
+      this.router.navigate([`/consulta/alta-consulta/${this.idMascota}`], {
+        queryParams: {
+          origen: this.origen,
+        },
+      });
     } else {
       console.error('ID de mascota no encontrado.');
     }
@@ -184,9 +187,11 @@ export class MascotaConsultasListComponent implements OnInit, AfterViewInit {
 
   verDetalleConsulta(idConsulta: number): void {
     this.router.navigate([`/consulta/detalle/${idConsulta}`], {
-      queryParams: { origen: 'mascota-consultas-list' },
+      queryParams: {
+        origen: 'mascota-consultas-list',
+        origenPrincipal: this.origen,
+      },
     });
-
   }
 
   eliminarConsulta(consulta: Consulta): void {
@@ -211,7 +216,11 @@ export class MascotaConsultasListComponent implements OnInit, AfterViewInit {
 
   volver(): void {
     if (this.idMascota) {
-      this.router.navigate([`/mascota/dashboard/${this.idMascota}`]);
+      this.router.navigate([`/mascota/dashboard/${this.idMascota}`], {
+        queryParams: { origen: this.origen },
+      });
+    } else {
+      console.error('ID de mascota no encontrado para volver.');
     }
-  }
+  }  
 }

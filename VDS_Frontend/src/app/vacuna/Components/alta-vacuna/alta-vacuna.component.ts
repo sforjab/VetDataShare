@@ -17,7 +17,8 @@ export class AltaVacunaComponent implements OnInit {
   altaVacunaForm!: FormGroup;
   mascota: Mascota | null = null;
   isLoading: boolean = false;
-  origenPrevio: string | null = null;
+  origen: string | null = null;
+  origenPrincipal: string | null = null;
 
   constructor(
     private vacunaService: VacunaService,
@@ -33,7 +34,8 @@ export class AltaVacunaComponent implements OnInit {
     this.inicializarFormulario();
 
     const idConsulta = this.route.snapshot.paramMap.get('idConsulta');
-    this.origenPrevio = this.route.snapshot.queryParamMap.get('origenPrevio');
+    this.origen = this.route.snapshot.queryParamMap.get('origen');
+    this.origenPrincipal = this.route.snapshot.queryParamMap.get('origenPrincipal');
     if (idConsulta) {
       this.altaVacunaForm.get('consultaId')?.setValue(+idConsulta);
       this.altaVacunaForm.get('veterinarioId')?.setValue(+sessionStorage.getItem('idUsuario')!);
@@ -109,7 +111,10 @@ export class AltaVacunaComponent implements OnInit {
   volver(): void {
     const consultaId = this.altaVacunaForm.get('consultaId')?.value;
     this.router.navigate([`/consulta/detalle/${consultaId}`], {
-      queryParams: { origen: this.origenPrevio }
+      queryParams: { 
+        origen: this.origen,
+        origenPrincipal: this.origenPrincipal 
+      }
     });
 
     ;
