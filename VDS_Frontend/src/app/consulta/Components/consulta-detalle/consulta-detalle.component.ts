@@ -41,6 +41,7 @@ export class ConsultaDetalleComponent implements OnInit {
   isLoading: boolean = false;
   origen: string | null = null;
   origenPrincipal: string | null = null;
+  deCons: string  | null = null;
 
   constructor(private consultaService: ConsultaService, private usuarioService: UsuarioService, private clinicaService: ClinicaService,
               private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog) {}
@@ -211,7 +212,8 @@ export class ConsultaDetalleComponent implements OnInit {
     this.router.navigate([`/prueba/detalle/${prueba.id}`], {
       queryParams: { 
         origen: this.origen,
-        origenPrincipal: this.origenPrincipal 
+        origenPrincipal: this.origenPrincipal,
+        deCons: 's'
       }
     });
   }

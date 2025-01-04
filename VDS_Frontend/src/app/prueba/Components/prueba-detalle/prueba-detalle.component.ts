@@ -44,6 +44,7 @@ export class PruebaDetalleComponent implements OnInit {
   documentos: DocumentoPrueba[] = [];
   origenPrincipal: string | null = null;
   origen: string | null = null;
+  deCons: string | null = null
   columnasTabla: string[] = ['nombreArchivo', 'acciones'];
 
   // Permisos
@@ -68,6 +69,7 @@ export class PruebaDetalleComponent implements OnInit {
     this.pruebaId = +this.route.snapshot.paramMap.get('idPrueba')!;
     this.origen = this.route.snapshot.queryParamMap.get('origen');
     this.origenPrincipal = this.route.snapshot.queryParamMap.get('origenPrincipal');
+    this.deCons = this.route.snapshot.queryParamMap.get('deCons');
     this.rol = sessionStorage.getItem('rol');
 
     this.inicializarFormulario();
@@ -327,9 +329,18 @@ export class PruebaDetalleComponent implements OnInit {
           queryParams: { origen: this.origenPrincipal }
         });
       } else if (this.origen === 'mascota-dashboard') {
-        this.router.navigate([`/mascota/dashboard/${this.prueba.mascotaId}`], {
-          queryParams: { origen: this.origenPrincipal }
-        });
+        if (this.deCons === 's') {
+          this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`], {
+            queryParams: { 
+              origen: this.origen,
+              origenPrincipal: this.origenPrincipal
+            }
+          });
+        } else {
+          this.router.navigate([`/mascota/dashboard/${this.prueba.mascotaId}`], {
+            queryParams: { origen: this.origenPrincipal }
+          });
+        } 
       } else {
         this.router.navigate([`/consulta/detalle/${this.prueba.consultaId}`], {
           queryParams: { 

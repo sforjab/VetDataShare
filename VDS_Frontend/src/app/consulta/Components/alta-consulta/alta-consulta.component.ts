@@ -78,7 +78,8 @@ export class AltaConsultaComponent implements OnInit {
         this.snackBar.open('Consulta creada con éxito', 'Cerrar', { duration: 3000 });
         this.router.navigate([`/consulta/detalle/${consulta.id}`], {
           queryParams: {
-            origen: this.origen,
+            origenPrincipal: this.origen,
+            origen: 'mascota-consultas-list'
           }
         });
       },
@@ -98,6 +99,7 @@ export class AltaConsultaComponent implements OnInit {
     this.router.navigate([`/consulta/mascota-consultas-list/${this.altaConsultaForm.get('mascotaId')?.value}`], {
       queryParams: {
         origen: this.origen,
+        
       }
     });
   }
