@@ -76,7 +76,11 @@ export class AltaConsultaComponent implements OnInit {
     this.consultaService.createConsulta(consulta).subscribe({
       next: (consulta) => {
         this.snackBar.open('Consulta creada con éxito', 'Cerrar', { duration: 3000 });
-        this.router.navigate([`/consulta/detalle/${consulta.id}`]);
+        this.router.navigate([`/consulta/detalle/${consulta.id}`], {
+          queryParams: {
+            origen: this.origen,
+          }
+        });
       },
       error: (err) => {
         console.error('Error al crear la consulta:', err);
