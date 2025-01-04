@@ -17,7 +17,7 @@ export class MascotaPruebasListComponent implements OnInit {
   dataSource = new MatTableDataSource<Prueba>();
   idMascota: number | undefined;
   mascota: Mascota | null = null; // Datos de la mascota
-  columnasTabla: string[] = ['tipo', 'fecha', 'acciones'];
+  columnasTabla: string[] = ['fecha', 'descripcion', 'acciones'];
   isLoading: boolean = false;
   origen: string | null = null;
 
